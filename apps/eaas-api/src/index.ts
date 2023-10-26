@@ -1,10 +1,10 @@
 import express, { Request, Response } from "express";
 import cors from "cors";
-import { validateEnvVars } from "./utils/validate-env";
 import { logging } from "./utils/logger";
 import { UNCAUGHT_EXCEPTION } from "./utils/exit-codes";
-import { SendEncryptedPayloadParams } from "../../packages/types";
+import { SendEncryptedPayloadParams } from "../../../packages/types";
 import { runEmbalm } from "./utils/embalm";
+import { validateEnvVars } from "./utils/validate-env";
 
 const app = express();
 const port = 4000;

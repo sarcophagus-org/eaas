@@ -1,5 +1,5 @@
 import { NodeSarcoClient } from "@sarcophagus-org/sarcophagus-v2-sdk";
-import { PreparedEncryptedPayload } from "../../../packages/types";
+import { PreparedEncryptedPayload } from "../../../../packages/types";
 
 export interface ArweaveUploadArgs {
   sarco: NodeSarcoClient;
