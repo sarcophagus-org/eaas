@@ -3,7 +3,7 @@ import cors from "cors";
 import { validateEnvVars } from "./utils/validate-env";
 import { logging } from "./utils/logger";
 import { UNCAUGHT_EXCEPTION } from "./utils/exit-codes";
-import { SendEncryptedPayloadParams } from "../common/types";
+import { SendEncryptedPayloadParams } from "../../packages/types";
 import { runEmbalm } from "./utils/embalm";
 
 const app = express();

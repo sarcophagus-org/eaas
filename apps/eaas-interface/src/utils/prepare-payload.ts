@@ -2,7 +2,7 @@ import { encrypt } from "ecies-geth";
 import { ethers } from "ethers";
 import { split } from "shamirs-secret-sharing-ts";
 import { readFileDataAsBase64 } from "@sarcophagus-org/sarcophagus-v2-sdk";
-import { PreparedEncryptedPayload } from "../../common/types";
+import { PreparedEncryptedPayload } from "../../../common/types";
 
 interface PreparePayloadArgs {
   nArchs: number;
