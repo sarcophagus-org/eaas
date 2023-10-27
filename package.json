@@ -20,6 +20,5 @@
   },
   "engines": {
     "node": "v18.17.0"
-  },
-  "dependencies": {}
+  }
 }
