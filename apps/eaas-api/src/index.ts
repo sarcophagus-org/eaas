@@ -30,16 +30,15 @@ app.get("/", (req: Request, res: Response) => {
 
 app.post("/send-payload", async (req: Request, res: Response) => {
   try {
-    const { preparedEncryptedPayload, nArchs, threshold, resurrectionTime, sarcophagusName } =
+    const { preparedEncryptedPayload, threshold, resurrectionTime, sarcophagusName, chainId } =
       req.body as SendEncryptedPayloadParams;
 
     // TODO: Add client user auth. Obtain user info Request.
     // TODO: Validate params?
 
     await runEmbalm({
-      chainId: 1,
+      chainId,
       preparedEncryptedPayload,
-      totalArchaeologists: nArchs,
       requiredArchaeologists: threshold,
       resurrectionTime,
       sarcophagusName,

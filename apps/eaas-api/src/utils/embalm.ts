@@ -6,7 +6,6 @@ export interface EmbalmOptions {
   chainId: number;
   sarcophagusName: string;
   resurrectionTime: number;
-  totalArchaeologists: number;
   requiredArchaeologists: number;
   preparedEncryptedPayload: PreparedEncryptedPayload;
 }
@@ -27,7 +26,7 @@ export async function runEmbalm(options: EmbalmOptions) {
     zeroExApiKey: process.env.ZERO_EX_API_KEY!,
   });
 
-  sarco.init();
+  await sarco.init();
 
   const allArchaeologists = await sarco.archaeologist
     .getFullArchProfiles({ filterOffline: true })
@@ -36,7 +35,7 @@ export async function runEmbalm(options: EmbalmOptions) {
       throw error;
     });
 
-  const nArchs = 1;
+  const nArchs = preparedEncryptedPayload.recipientInnerEncryptedkeyShares.length;
 
   // TODO: select archaeologists
   // Possible logic: randomly select` nArchs * 2` archaeologists.

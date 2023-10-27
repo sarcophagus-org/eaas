@@ -12,7 +12,7 @@ export interface PreparedEncryptedPayload {
 
 export interface SendEncryptedPayloadParams {
   preparedEncryptedPayload: PreparedEncryptedPayload;
-  nArchs: number;
+  chainId: number;
   threshold: number;
   resurrectionTime: number;
   sarcophagusName: string;
