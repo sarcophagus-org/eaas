@@ -3,7 +3,7 @@ import cors from "cors";
 import { logging } from "./utils/logger";
 import { UNCAUGHT_EXCEPTION } from "./utils/exit-codes";
 import { SendEncryptedPayloadParams } from "../../../packages/types";
-import { runEmbalm } from "./utils/embalm";
+import { formatPreparedEncryptedPayload, runEmbalm } from "./utils/embalm";
 import { validateEnvVars } from "./utils/validate-env";
 
 const app = express();
@@ -38,7 +38,7 @@ app.post("/send-payload", async (req: Request, res: Response) => {
 
     await runEmbalm({
       chainId,
-      preparedEncryptedPayload,
+      preparedEncryptedPayload: formatPreparedEncryptedPayload(preparedEncryptedPayload),
       requiredArchaeologists: threshold,
       resurrectionTime,
       sarcophagusName,

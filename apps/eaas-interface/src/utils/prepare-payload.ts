@@ -1,8 +1,7 @@
 import { encrypt } from "ecies-geth";
 import { ethers } from "ethers";
 import { split } from "shamirs-secret-sharing-ts";
-import { PreparedEncryptedPayload } from "../../../../packages/types";
-import { Buffer } from "buffer/";
+import { Buffer } from "buffer";
 
 interface PreparePayloadArgs {
   nArchs: number;
@@ -50,9 +49,7 @@ function readFileDataAsBase64(file: File): Promise<{ type: string; data: Buffer 
 /**
  * Prepare the payload for upload to the Embalmer-X Server.
  */
-export const preparePayload = async (
-  args: PreparePayloadArgs,
-): Promise<PreparedEncryptedPayload> => {
+export const preparePayload = async (args: PreparePayloadArgs) => {
   const { nArchs, file, recipientPublicKey } = args;
 
   const randomWallet = ethers.Wallet.createRandom();
@@ -74,9 +71,12 @@ export const preparePayload = async (
     threshold: nArchs,
   });
 
-  const recipientInnerEncryptedkeyShares = await Promise.all(
+  const recipientInnerEncryptedkeyShares: Buffer[] = await Promise.all(
     keyShares.map(async (keyShare) => {
-      return encrypt(Buffer.from(ethers.utils.arrayify(recipientPublicKey)), Buffer.from(keyShare));
+      return await encrypt(
+        Buffer.from(ethers.utils.arrayify(recipientPublicKey)),
+        Buffer.from(keyShare),
+      );
     }),
   );
 

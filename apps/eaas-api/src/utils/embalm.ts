@@ -1,6 +1,9 @@
 import { ArchaeologistExceptionCode, NodeSarcoClient } from "@sarcophagus-org/sarcophagus-v2-sdk";
 import { uploadEncryptedPayloadToArweave } from "./arweave";
-import { PreparedEncryptedPayload } from "../../../../packages/types";
+import {
+  PreparedEncryptedPayload,
+  PreparedEncryptedPayloadApiBody,
+} from "../../../../packages/types";
 
 export interface EmbalmOptions {
   chainId: number;
@@ -8,6 +11,19 @@ export interface EmbalmOptions {
   resurrectionTime: number;
   requiredArchaeologists: number;
   preparedEncryptedPayload: PreparedEncryptedPayload;
+}
+
+export function formatPreparedEncryptedPayload(
+  arg: PreparedEncryptedPayloadApiBody,
+): PreparedEncryptedPayload {
+  return {
+    preEncryptedPayload: arg.preEncryptedPayload.data,
+    recipientInnerEncryptedkeyShares: arg.recipientInnerEncryptedkeyShares.map(
+      (x) => x["data"] as Uint8Array,
+    ),
+    recipientPublicKey: arg.recipientPublicKey,
+    preEncryptedPayloadMetadata: arg.preEncryptedPayloadMetadata,
+  };
 }
 
 export async function runEmbalm(options: EmbalmOptions) {
@@ -29,7 +45,7 @@ export async function runEmbalm(options: EmbalmOptions) {
   await sarco.init();
 
   const allArchaeologists = await sarco.archaeologist
-    .getFullArchProfiles({ filterOffline: true })
+    .getFullArchProfiles({ filterOffline: false })
     .catch((error) => {
       console.error("Failed to get archaeologist profiles");
       throw error;
