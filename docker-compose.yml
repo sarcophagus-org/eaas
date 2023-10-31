@@ -1,0 +1,48 @@
+version: "2.4"
+
+services:
+  db:
+    image: postgres:13.5
+    ports:
+      - "5432:5432"
+    expose:
+      - "5432"
+    restart: always
+    volumes:
+      - ./db:/docker-entrypoint-initdb.d
+    environment:
+      POSTGRES_MULTIPLE_DATABASES: db,db_test
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: pass
+
+  api:
+    build:
+      context: ./apps/eaas-api
+    env_file:
+      - ./apps/eaas-api/.env
+    depends_on:
+      - db
+    volumes:
+      - ./apps/common/:/home/apps/common
+      # TODO: temporary workaround to include unpublished sdk.
+      # As this is system dependent, you'll likely have to edit it to the relative 
+      # path from this project's root.
+      - ../sarcophagus-v2-sdk/:/home/../../../sarcophagus-v2-sdk
+    ports:
+      - 4000:4000
+    expose:
+      - "4000"
+    command: npm run dev
+    environment:
+      CLIENT_URL: http://localhost:3000
+      PORT: 4000
+      MIGRATIONS_DIR: "./src/db/migrations"
+      # S3_DOCUMENTS_FOLDER_NAME: documents
+      # S3_PROFILE_PICTURES_FOLDER_NAME: profile-pictures
+      # This exists as a temporary invite token so we don't have to rely on an invite for testing
+      TEMP_INVITE_TOKEN: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkM2ZhOTIxZC0zOGMxLTQ1ZDMtOGQzZC1lMTAyZDNkY2I5M2MiLCJpYXQiOjE2NDI3NDM5MzgsImV4cCI6MTY0NTMzNTkzOCwidHlwZSI6ImFjY2VzcyJ9.iVgy7VFwnyCepbaH1aouCIypzF-ZPkXLEeTbNcbfPjo
+
+      # This is used to load the logo in emails.
+      # TODO: Need to set this up publicly outside of sendgrid
+      # LOGO_URL: http://cdn.mcauto-images-production.sendgrid.net/46f46ef30e2f596d/53011a3a-e006-48f1-a957-54d010231a14/190x51.png
+

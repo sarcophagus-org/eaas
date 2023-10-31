@@ -2,7 +2,7 @@ import express, { Request, Response } from "express";
 import cors from "cors";
 import { logging } from "./utils/logger";
 import { UNCAUGHT_EXCEPTION } from "./utils/exit-codes";
-import { SendEncryptedPayloadParams } from "../../../packages/types";
+import { SendEncryptedPayloadParams } from "../../common/types";
 import { formatPreparedEncryptedPayload, runEmbalm } from "./utils/embalm";
 import { validateEnvVars } from "./utils/validate-env";
 

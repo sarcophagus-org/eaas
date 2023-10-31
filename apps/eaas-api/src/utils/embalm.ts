@@ -3,7 +3,7 @@ import { uploadEncryptedPayloadToArweave } from "./arweave";
 import {
   PreparedEncryptedPayload,
   PreparedEncryptedPayloadApiBody,
-} from "../../../../packages/types";
+} from "../../../common/types";
 
 export interface EmbalmOptions {
   chainId: number;
