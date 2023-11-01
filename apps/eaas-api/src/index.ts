@@ -5,6 +5,7 @@ import { UNCAUGHT_EXCEPTION } from "./utils/exit-codes";
 import { SendEncryptedPayloadParams } from "../../common/types";
 import { formatPreparedEncryptedPayload, runEmbalm } from "./utils/embalm";
 import { validateEnvVars } from "./utils/validate-env";
+import { eaasKnex } from "./database";
 
 const app = express();
 const port = 4000;
@@ -25,6 +26,10 @@ app.use(cors());
 app.use(express.json());
 
 app.get("/", (req: Request, res: Response) => {
+  // eaasKnex("testing").insert({
+  //   name: "test"
+  // }).returning(["test"]).then(dbRes => console.log("dbRes", dbRes));
+  
   res.send("Embalmer-X online");
 });
 

@@ -12,6 +12,7 @@
     "dev:app": "npx turbo run dev --scope eaas-interface",
     "dev:api": "npx turbo run dev --scope eaas-api",
     "test:api": "npx turbo run test --scope eaas-api",
+    "migrate:make": "npx turbo run migrate:make --scope eaas-api",
     "lint": "npx turbo run lint",
     "prettier": "npx prettier@latest --write \"**/*.{ts,tsx,md}\""
   },
