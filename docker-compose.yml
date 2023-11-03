@@ -2,7 +2,7 @@ version: "2.4"
 
 services:
   db:
-    image: postgres:13.5
+    image: postgres:16.0
     ports:
       - "5432:5432"
     expose:

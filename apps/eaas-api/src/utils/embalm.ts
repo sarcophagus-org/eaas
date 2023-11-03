@@ -1,9 +1,6 @@
 import { ArchaeologistExceptionCode, NodeSarcoClient } from "@sarcophagus-org/sarcophagus-v2-sdk";
 import { uploadEncryptedPayloadToArweave } from "./arweave";
-import {
-  PreparedEncryptedPayload,
-  PreparedEncryptedPayloadApiBody,
-} from "../../../common/types";
+import { PreparedEncryptedPayload, PreparedEncryptedPayloadApiBody } from "../../../common/types";
 
 export interface EmbalmOptions {
   chainId: number;

@@ -29,7 +29,7 @@ app.get("/", (req: Request, res: Response) => {
   // eaasKnex("testing").insert({
   //   name: "test"
   // }).returning(["test"]).then(dbRes => console.log("dbRes", dbRes));
-  
+
   res.send("Embalmer-X online");
 });
 
