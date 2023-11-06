@@ -12,7 +12,7 @@
     "migrate:latest": "NODE_OPTIONS=\"--loader ts-node/esm\" knex migrate:latest  --migrations-directory ./src/database/migrations --env development",
     "migrate:latest:production": "NODE_OPTIONS=\"--loader ts-node/esm\" NODE_ENV=production knex migrate:latest --env production",
     "migrate:test": "NODE_OPTIONS=\"--loader ts-node/esm\" NODE_ENV=test knex migrate:latest --env test",
-    "migrate:test:ci": "NODE_OPTIONS=\"--loader ts-node/esm\" NODE_ENV=test DATABASE_URL_TEST=postgres://postgres:postgres@localhost:5432/postgres knex migrate:latest --env test --connection postgres://postgres:postgres@localhost:5432/postgres",
+    "migrate:test:ci": "NODE_OPTIONS=\"--loader ts-node/esm\" NODE_ENV=test knex migrate:latest --env test --connection postgres://postgres:postgres@localhost:5432/eaas_db",
     "test": ""
   },
   "repository": {
@@ -35,6 +35,7 @@
     "express": "^4.18.2",
     "firebase": "^9.16.0",
     "fs": "^0.0.1-security",
+    "joi": "^17.11.0",
     "knex": "^3.0.1",
     "node-schedule": "^2.1.1",
     "pg": "^8.11.3",
