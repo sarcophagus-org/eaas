@@ -5,6 +5,12 @@ import { userController } from "../controllers/user.controller";
 export const userRouter = () => {
   const router = Router();
 
+  router.post(
+    "/register",
+    // validate(createUserSchema),
+    userController.createUserWithInvite,
+  );
+
   router.get(
     "/me",
     passport.authenticate("jwt", { session: false }),

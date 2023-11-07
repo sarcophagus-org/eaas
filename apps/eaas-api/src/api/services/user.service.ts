@@ -1,10 +1,9 @@
 import bcrypt from "bcrypt";
-import { tokenService } from "./token.service";
 import { eaasKnex } from "../../database";
 import { Identifiable } from "../../types/Identifiable";
-import { JwtPayload } from "../../../src/types/JwtPayload";
 import { EaasUser } from "../../../src/types/EaasUser";
-import { invitationService } from "./invitation.service";
+import { invitationService, tokenService } from "src/app/services";
+import { JwtPayload } from "src/types/JwtPayload";
 
 interface NewUser extends Identifiable {
   name: string;
@@ -13,7 +12,7 @@ interface NewUser extends Identifiable {
 }
 
 const getAllUsers = async (): Promise<EaasUser[]> => {
-  return await eaasKnex("users").select("*");
+  return eaasKnex("users");
 };
 
 /**
@@ -22,6 +21,7 @@ const getAllUsers = async (): Promise<EaasUser[]> => {
  * @param name
  * @param email
  * @param password
+ * @param passwordConfirm
  * @param phone
  * @returns a new user object
  */
@@ -132,20 +132,6 @@ const getUsersByIds = async (ids: string[]): Promise<EaasUser[]> => {
         "name",
         "is_email_verified",
       );
-  } catch (error) {
-    throw new Error(error);
-  }
-};
-
-/**
- * Gets a user by id
- *
- * @param id the user id
- * @returns the user
- */
-const getUserById = async (id: string): Promise<EaasUser> => {
-  try {
-    return (await getUsersByIds([id]))[0];
   } catch (error) {
     throw new Error(error);
   }
@@ -339,7 +325,6 @@ export const deleteUser = async (id: string): Promise<void> => {
 export const userService = {
   createUser,
   getAllUsers,
-  getUserById,
   createUserWithInvite,
   getUserByEmail,
   getUsersByIds,

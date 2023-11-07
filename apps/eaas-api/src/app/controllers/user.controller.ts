@@ -1,6 +1,36 @@
 import { Request, Response } from "express";
 import { userService } from "../../../src/app/services/user.service";
 import { EaasUser, RequestWithUser } from "../../../src/types/EaasUser";
+import { tokenService } from "../services";
+
+const createUserWithInvite = async (req: Request, res: Response) => {
+  try {
+    const { user, inviteToken } = req.body;
+    const { name, password, phone } = user;
+    const { user: dbUser } = await userService.createUserWithInvite({
+      name,
+      password,
+      phone,
+      inviteToken,
+    });
+
+    if (!dbUser || !dbUser.id) {
+      res.status(400).json({ error: "could not create user" });
+    } else {
+      const tokens = await tokenService.generateAuthTokens(dbUser.id);
+      res.status(201).json({
+        user: dbUser,
+        tokens,
+      });
+    }
+  } catch (error) {
+    if (error.message.includes("duplicate key value")) {
+      res.status(409).json({ error: "email is already taken" });
+    } else {
+      res.status(400).json({ error: error.message });
+    }
+  }
+};
 
 const getUser = async (req: Request, res: Response) => {
   const { id } = req.params;
@@ -64,6 +94,7 @@ const deleteUser = async (req: RequestWithUser, res: Response) => {
 };
 
 export const userController = {
+  createUserWithInvite,
   getUser,
   getCurrentUser,
   getUsersByIds,
