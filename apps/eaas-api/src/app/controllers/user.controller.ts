@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { userService } from "src/services/user.service";
+import { userService } from "src/app/services/user.service";
 import { EaasUser, RequestWithUser } from "src/types/EaasUser";
 
 const createUser = async (req: Request, res: Response) => {
@@ -17,6 +17,25 @@ const getUser = async (req: Request, res: Response) => {
   try {
     const user = await userService.getUsersByIds([id]);
     res.status(200).json(user);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
+const getCurrentUser = async (req: RequestWithUser, res: Response) => {
+  const { id } = req.user;
+  try {
+    const user = await userService.getUsersByIds([id]);
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
+const getAllUsers = async (req: RequestWithUser, res: Response) => {
+  try {
+    const users = await userService.getAllUsers();
+    res.status(200).json(users);
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
@@ -57,7 +76,9 @@ const deleteUser = async (req: RequestWithUser, res: Response) => {
 export const userController = {
   createUser,
   getUser,
+  getCurrentUser,
   getUsersByIds,
+  getAllUsers,
   updateUser,
   deleteUser,
 };

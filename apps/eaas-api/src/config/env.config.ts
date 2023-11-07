@@ -10,6 +10,8 @@ if (process.env.NODE_ENV === "development") {
 
 const envVarsSchema = Joi.object()
   .keys({
+    CLIENT_URL: Joi.string().default("http://localhost:5173").required(),
+
     /**
      * Required ENV Vars
      */
@@ -59,4 +61,7 @@ export const envConfig = {
     inviteExpirationDays: envVars.JWT_INVITE_EXPIRATION_DAYS,
   },
   databaseUrl: envVars.DATABASE_URL,
+  client: {
+    url: envVars.CLIENT_URL,
+  },
 };
