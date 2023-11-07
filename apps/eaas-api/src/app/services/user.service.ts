@@ -2,8 +2,8 @@ import bcrypt from "bcrypt";
 import { tokenService } from "./token.service";
 import { eaasKnex } from "../../database";
 import { Identifiable } from "../../types/Identifiable";
-import { JwtPayload } from "src/types/JwtPayload";
-import { EaasUser } from "src/types/EaasUser";
+import { JwtPayload } from "../../../src/types/JwtPayload";
+import { EaasUser } from "../../../src/types/EaasUser";
 import { invitationService } from "./invitation.service";
 
 interface NewUser extends Identifiable {

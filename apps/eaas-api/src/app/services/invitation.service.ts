@@ -1,5 +1,5 @@
-import { eaasKnex } from "src/database";
-import { Invitation } from "src/types/Invitation";
+import { eaasKnex } from "../../../src/database";
+import { Invitation } from "../../../src/types/Invitation";
 
 /**
  * Get an invitation by id or throw error

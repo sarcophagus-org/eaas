@@ -1,10 +1,10 @@
 import jwt, { Secret } from "jsonwebtoken";
 import moment, { Moment } from "moment";
 import { eaasKnex } from "../../database";
-import { envConfig } from "src/config/env.config";
-import { AuthTokenTypes, TokenObject, TokenType } from "src/types/Token";
+import { envConfig } from "../../../src/config/env.config";
+import { AuthTokenTypes, TokenObject, TokenType } from "../../../src/types/Token";
 import { userService } from "./user.service";
-import { JwtPayload } from "src/types/JwtPayload";
+import { JwtPayload } from "../../../src/types/JwtPayload";
 
 /**
  * Generate auth tokens

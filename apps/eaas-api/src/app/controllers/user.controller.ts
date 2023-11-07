@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import { userService } from "src/app/services/user.service";
-import { EaasUser, RequestWithUser } from "src/types/EaasUser";
+import { userService } from "../../../src/app/services/user.service";
+import { EaasUser, RequestWithUser } from "../../../src/types/EaasUser";
 
 const getUser = async (req: Request, res: Response) => {
   const { id } = req.params;

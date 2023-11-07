@@ -1,10 +1,10 @@
 import express from "express";
 import cors from "cors";
 import { logging } from "src/utils/logger";
-import { validateEnvVars } from "src/utils/validate-env";
-import { UNCAUGHT_EXCEPTION } from "src/utils/exit-codes";
-import { envConfig } from "src/config/env.config";
 import { Router, Request, Response, Express } from "express";
+import { validateEnvVars } from "../../src/utils/validate-env";
+import { UNCAUGHT_EXCEPTION } from "../../src/utils/exit-codes";
+import { envConfig } from "../../src/config/env.config";
 import { userRouter } from "./routers/user.router";
 
 export function initialiseApp() {

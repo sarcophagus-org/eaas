@@ -1,4 +1,4 @@
-import { envConfig } from "src/config/env.config";
+import { envConfig } from "./src/config/env.config";
 
 const DATABASE_URL = envConfig.databaseUrl;
 const DATABASE_URL_TEST = `${DATABASE_URL}-test`;
