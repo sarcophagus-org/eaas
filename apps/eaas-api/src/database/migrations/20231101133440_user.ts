@@ -10,8 +10,6 @@ export async function up(knex: Knex): Promise<void> {
     table.string("phone").notNullable();
     table.string("name").notNullable();
     table.boolean("is_email_verified").defaultTo("false");
-    table.string("permission").defaultTo("default");
-    table.string("role");
     table.string("profile_picture_key");
   });
 }

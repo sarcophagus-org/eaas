@@ -2,16 +2,6 @@ import { Request, Response } from "express";
 import { userService } from "src/app/services/user.service";
 import { EaasUser, RequestWithUser } from "src/types/EaasUser";
 
-const createUser = async (req: Request, res: Response) => {
-  try {
-    const { name, email, password, phone } = req.body;
-    const dbUser = await userService.createUser({ name, email, password, phone });
-    res.status(200).json(dbUser);
-  } catch (error) {
-    res.status(400).json({ error: error.message });
-  }
-};
-
 const getUser = async (req: Request, res: Response) => {
   const { id } = req.params;
   try {
@@ -74,7 +64,6 @@ const deleteUser = async (req: RequestWithUser, res: Response) => {
 };
 
 export const userController = {
-  createUser,
   getUser,
   getCurrentUser,
   getUsersByIds,

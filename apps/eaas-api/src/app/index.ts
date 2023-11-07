@@ -46,7 +46,7 @@ export function setupRoutes(app: Express) {
   rootRouter.get("/", (req: Request, res: Response) => res.send("Embalmer-X online"));
   app.use(rootRouter);
 
-    app.use("/user", userRouter());
+  app.use("/user", userRouter());
   //   app.use("/auth", authRouter);
   //   app.use("/invitation", invitationRouter);
 }

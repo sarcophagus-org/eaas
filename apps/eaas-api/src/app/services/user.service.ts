@@ -13,7 +13,7 @@ interface NewUser extends Identifiable {
 }
 
 const getAllUsers = async (): Promise<EaasUser[]> => {
-  return eaasKnex("users");
+  return await eaasKnex("users").select("*");
 };
 
 /**
@@ -22,7 +22,6 @@ const getAllUsers = async (): Promise<EaasUser[]> => {
  * @param name
  * @param email
  * @param password
- * @param passwordConfirm
  * @param phone
  * @returns a new user object
  */
