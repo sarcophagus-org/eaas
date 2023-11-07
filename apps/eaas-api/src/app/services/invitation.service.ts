@@ -83,7 +83,7 @@ const acceptInvitation = async (inviteToken: string): Promise<{ user: EaasUser }
         client_id: recipient.id,
       });
     } catch (error) {
-      console.error("cant create embalmer_has_client record");
+      console.error("cant create embalmer_has_client record", error);
     }
 
     await tokenService.findAndDeleteToken(inviteToken);

@@ -44,7 +44,7 @@ export async function runEmbalm(options: EmbalmOptions) {
   const allArchaeologists = await sarco.archaeologist
     .getFullArchProfiles({ filterOffline: false })
     .catch((error) => {
-      console.error("Failed to get archaeologist profiles");
+      console.error("Failed to get archaeologist profiles", error);
       throw error;
     });
 
@@ -59,14 +59,14 @@ export async function runEmbalm(options: EmbalmOptions) {
   await Promise.all(
     selectedArchaeologists.map(async (arch) => {
       const connection = await sarco.archaeologist.dialArchaeologist(arch).catch((error) => {
-        console.error(`Failed to dial archaeologist ${arch.profile.archAddress}`);
+        console.error(`Failed to dial archaeologist ${arch.profile.archAddress}`, error);
         throw error;
       });
 
       arch.connection = connection;
     }),
   ).catch((error) => {
-    console.error("Failed to dial archaeologists");
+    console.error("Failed to dial archaeologists", error);
     throw error;
   });
 
