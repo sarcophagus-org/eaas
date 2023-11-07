@@ -17,6 +17,7 @@ export function initialiseApp() {
   //     credentials: false,
   //   }),
   // );
+  app.use(cors());
   app.use(express.json());
 
   return app;
