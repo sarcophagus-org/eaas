@@ -2,10 +2,10 @@ import dotenv from "dotenv";
 import Joi from "joi";
 import path from "path";
 
-if (process.env.NODE_ENV === "development") {
-  dotenv.config({ path: path.join(__dirname, ".env") });
-} else if (process.env.NODE_ENV === "test") {
-  dotenv.config({ path: path.join(__dirname, ".env.test") });
+dotenv.config();
+
+if (process.env.NODE_ENV === "test") {
+  dotenv.config({ path: path.join(__dirname, "./.env.test") });
 }
 
 const dbUrlSchema = Joi.object()

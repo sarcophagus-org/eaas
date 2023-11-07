@@ -18,11 +18,11 @@ const generateAuthTokens = async (userId: string): Promise<TokenObject> => {
 
     const refreshTokenExpires = moment().add(envConfig.jwt.refreshExpirationDays, "days");
 
-    const accessToken = generateToken(userId, accessTokenExpires, TokenType.Access);
-    const refreshToken = generateToken(userId, refreshTokenExpires, TokenType.Refresh);
+    const accessToken = generateToken(userId, accessTokenExpires, TokenType.access);
+    const refreshToken = generateToken(userId, refreshTokenExpires, TokenType.refresh);
 
-    await saveToken(accessToken, userId, accessTokenExpires, TokenType.Access);
-    await saveToken(refreshToken, userId, refreshTokenExpires, TokenType.Refresh);
+    await saveToken(accessToken, userId, accessTokenExpires, TokenType.access);
+    await saveToken(refreshToken, userId, refreshTokenExpires, TokenType.refresh);
 
     return {
       access: {
@@ -147,13 +147,13 @@ const generateResetPasswordToken = async (email: string): Promise<string> => {
 
     const expires = moment().add(resetPasswordExpirationMinutes, "minutes");
 
-    const resetPasswordToken = generateToken(user.id, expires, TokenType.ResetPassword);
+    const resetPasswordToken = generateToken(user.id, expires, TokenType.resetPassword);
 
     await eaasKnex("tokens").insert({
       token: resetPasswordToken,
       user_id: user.id,
       expires: expires.toISOString(),
-      type: TokenType.ResetPassword,
+      type: TokenType.resetPassword,
     });
     return resetPasswordToken;
   } catch (error) {
@@ -164,12 +164,12 @@ const generateResetPasswordToken = async (email: string): Promise<string> => {
 const generateVerifyEmailToken = async (userId: string): Promise<string> => {
   try {
     const expires = moment().add(envConfig.jwt.verifyEmailExpirationMinutes, "minutes");
-    const verifyEmailToken = generateToken(userId, expires, TokenType.VerifyEmail);
+    const verifyEmailToken = generateToken(userId, expires, TokenType.verifyEmail);
     await eaasKnex("tokens").insert({
       token: verifyEmailToken,
       user_id: userId,
       expires: expires.toISOString(),
-      type: TokenType.VerifyEmail,
+      type: TokenType.verifyEmail,
     });
     return verifyEmailToken;
   } catch (error) {
@@ -192,7 +192,7 @@ const generateInviteToken = async (senderId: string, invitationId: string): Prom
       sub: senderId,
       iat: moment().unix(),
       exp: expires.unix(),
-      type: TokenType.Invite,
+      type: TokenType.invite,
       invitationId,
     };
 
@@ -207,7 +207,7 @@ const generateInviteToken = async (senderId: string, invitationId: string): Prom
       token: inviteToken,
       user_id: senderId,
       expires: expires.toISOString(),
-      type: TokenType.Invite,
+      type: TokenType.invite,
     });
     return inviteToken;
   } catch (error) {

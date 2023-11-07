@@ -34,7 +34,7 @@ const loginWithEmailAndPassword = async (email: string, password: string): Promi
 const logout = async (token: string): Promise<void> => {
   try {
     const deletedToken = await eaasKnex("tokens")
-      .where({ token, type: TokenType.Refresh, blacklisted: false })
+      .where({ token, type: TokenType.refresh, blacklisted: false })
       .delete()
       .returning("*")
       .then((x) => x[0]);

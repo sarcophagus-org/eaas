@@ -20,11 +20,11 @@ export interface TokenObject {
 }
 
 export enum TokenType {
-  Access = "access",
-  Refresh = "refresh",
-  ResetPassword = "reset_password",
-  VerifyEmail = "verify_email",
-  Invite = "invite",
+  access = "access",
+  refresh = "refresh",
+  resetPassword = "reset_password",
+  verifyEmail = "verify_email",
+  invite = "invite",
 }
 
-export const AuthTokenTypes = [TokenType.Access, TokenType.Refresh];
+export const AuthTokenTypes = [TokenType.access, TokenType.refresh];
