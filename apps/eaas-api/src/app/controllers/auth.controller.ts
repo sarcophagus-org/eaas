@@ -1,9 +1,8 @@
 import { Request, Response } from "express";
 import { authService, tokenService, userService } from "../services";
-import { catchAsync } from "../utils/catchAsync";
 import { envConfig } from "../../../src/config/env.config";
 
-const verifyToken = catchAsync(async (req: Request, res: Response) => {
+const verifyToken = async (req: Request, res: Response) => {
   try {
     const { token } = req.body;
     await tokenService.verifyToken(token, envConfig.jwt.secret);
@@ -12,9 +11,9 @@ const verifyToken = catchAsync(async (req: Request, res: Response) => {
     console.error(error);
     res.status(400).json({ error: "this invitation is invalid" });
   }
-});
+};
 
-const register = catchAsync(async (req: Request, res: Response) => {
+const register = async (req: Request, res: Response) => {
   try {
     const { user, inviteToken } = req.body;
     const { name, password, passwordConfirm, phone } = user;
@@ -41,9 +40,9 @@ const register = catchAsync(async (req: Request, res: Response) => {
       res.status(400).json({ error: error.message });
     }
   }
-});
+};
 
-const login = catchAsync(async (req: Request, res: Response) => {
+const login = async (req: Request, res: Response) => {
   const { email, password } = req.body;
 
   try {
@@ -55,9 +54,9 @@ const login = catchAsync(async (req: Request, res: Response) => {
     console.error(error);
     res.status(400).json({ error: error.message });
   }
-});
+};
 
-const logout = catchAsync(async (req: Request, res: Response) => {
+const logout = async (req: Request, res: Response) => {
   const { refreshToken } = req.body;
   try {
     await authService.logout(refreshToken);
@@ -66,9 +65,9 @@ const logout = catchAsync(async (req: Request, res: Response) => {
     console.error(error);
     res.status(404).json({ error: error.message });
   }
-});
+};
 
-const refreshTokens = catchAsync(async (req: Request, res: Response) => {
+const refreshTokens = async (req: Request, res: Response) => {
   try {
     const { refreshToken } = req.body;
     const tokens = await authService.refreshAuth(refreshToken);
@@ -84,9 +83,9 @@ const refreshTokens = catchAsync(async (req: Request, res: Response) => {
       res.status(400).json({ error: error.message });
     }
   }
-});
+};
 
-const resetPassword = catchAsync(async (req: Request, res: Response) => {
+const resetPassword = async (req: Request, res: Response) => {
   try {
     const { password, token } = req.body;
     if (token) {
@@ -104,9 +103,9 @@ const resetPassword = catchAsync(async (req: Request, res: Response) => {
       res.status(400).json({ error: error.message });
     }
   }
-});
+};
 
-// const forgotPassword = catchAsync(
+// const forgotPassword = (
 //   async (req: Request, res: Response) => {
 //     try {
 //       const { email } = req.body;
@@ -125,7 +124,7 @@ const resetPassword = catchAsync(async (req: Request, res: Response) => {
 //   }
 // );
 
-// const sendVerificationEmail = catchAsync(
+// const sendVerificationEmail = (
 //   async (req: RequestWithUser, res: Response) => {
 //     const user = req.user as User;
 //     try {
@@ -140,7 +139,7 @@ const resetPassword = catchAsync(async (req: Request, res: Response) => {
 //   }
 // );
 
-const verifyEmail = catchAsync(async (req: Request, res: Response) => {
+const verifyEmail = async (req: Request, res: Response) => {
   try {
     const token = req.query.token as string;
     if (!token) {
@@ -151,7 +150,7 @@ const verifyEmail = catchAsync(async (req: Request, res: Response) => {
   } catch (error) {
     res.status(400).send({ error: error.message });
   }
-});
+};
 
 export const authController = {
   verifyToken,
