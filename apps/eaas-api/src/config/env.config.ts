@@ -14,7 +14,11 @@ if (process.env.NODE_ENV === "development") {
 
 const envVarsSchema = Joi.object()
   .keys({
-    CLIENT_URL: Joi.string().default("http://localhost:5173").required(),
+    PRIVATE_KEY: Joi.string().required().description("Embalmer private key"),
+    PROVIDER_URL: Joi.string().required().description("Ethereum provider url"),
+    ZERO_EX_API_KEY: Joi.string().required().description("0x API key"),
+
+    CLIENT_URL: Joi.string().default("http://localhost:5173"),
 
     /**
      * Required ENV Vars
@@ -68,4 +72,7 @@ export const envConfig = {
   client: {
     url: envVars.CLIENT_URL,
   },
+  privateKey: envVars.PRIVATE_KEY,
+  providerUrl: envVars.PROVIDER_URL,
+  zeroExApiKey: envVars.ZERO_EX_API_KEY,
 };

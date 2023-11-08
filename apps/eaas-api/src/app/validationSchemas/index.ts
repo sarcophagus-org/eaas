@@ -6,7 +6,6 @@ export const createInvitationSchema = Joi.object({
 
 export const resetPasswordSchema = Joi.object({
   password: Joi.string().min(8).required(),
-  passwordConfirm: Joi.string().min(8).required(),
 });
 
 export const forgotPasswordSchema = Joi.object({
@@ -16,7 +15,6 @@ export const forgotPasswordSchema = Joi.object({
 const userSchema = Joi.object({
   name: Joi.string().required(),
   password: Joi.string().min(8).required(),
-  passwordConfirm: Joi.string().min(8).required(),
   phone: Joi.string().required(),
 }).options({ abortEarly: false });
 

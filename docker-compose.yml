@@ -40,8 +40,6 @@ services:
       - "4000"
     command: npm run dev
     environment:
-      CLIENT_URL: http://localhost:3000
-      PORT: 4000
       # S3_DOCUMENTS_FOLDER_NAME: documents
       # S3_PROFILE_PICTURES_FOLDER_NAME: profile-pictures
       # This exists as a temporary invite token so we don't have to rely on an invite for testing

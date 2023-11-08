@@ -3,7 +3,6 @@ import cors from "cors";
 import passport from "passport";
 import { logging } from "../../src/utils/logger";
 import { Router, Request, Response, Express } from "express";
-import { validateEnvVars } from "../utils/validate-env";
 import { UNCAUGHT_EXCEPTION } from "../../src/utils/exit-codes";
 import { userRouter } from "./routers/user.router";
 import { authRouter, invitationRouter, jwtStrategy } from "./routers";
@@ -31,7 +30,6 @@ export function startApp(params: { app: express.Express; port?: number }) {
 
   app.listen(_port, async () => {
     logging.debug("App start");
-    validateEnvVars();
 
     [`exit`, `SIGINT`, `SIGUSR1`, `SIGUSR2`, `uncaughtException`, `SIGTERM`].forEach(
       (eventType) => {

@@ -16,7 +16,7 @@ const verifyToken = async (req: Request, res: Response) => {
 const register = async (req: Request, res: Response) => {
   try {
     const { user, inviteToken } = req.body;
-    const { name, password, passwordConfirm, phone } = user;
+    const { name, password, phone } = user;
     const { user: dbUser } = await userService.createUserWithInvite({
       name,
       password,
