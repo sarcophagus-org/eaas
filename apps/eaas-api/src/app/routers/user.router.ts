@@ -1,13 +1,15 @@
 import { Router } from "express";
 import passport from "passport";
 import { userController } from "../controllers/user.controller";
+import { createUserSchema } from "../validationSchemas";
+import { validateRequestBody } from "../middleware/validateRequestBody";
 
 export const userRouter = () => {
   const router = Router();
 
   router.post(
     "/register",
-    // validate(createUserSchema),
+    validateRequestBody(createUserSchema),
     userController.createUserWithInvite,
   );
 

@@ -1,6 +1,8 @@
 import { Router } from "express";
 import passport from "passport";
 import { invitationController } from "../controllers";
+import { validateRequestBody } from "../middleware/validateRequestBody";
+import { createInvitationSchema } from "../validationSchemas";
 
 export const invitationRouter = () => {
   const router = Router();
@@ -12,7 +14,7 @@ export const invitationRouter = () => {
   );
   router.post(
     "/create",
-    // validate(createInvitationSchema),
+    validateRequestBody(createInvitationSchema),
     passport.authenticate("jwt", { session: false }),
     invitationController.createInvitation,
   );

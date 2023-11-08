@@ -1,7 +1,7 @@
-import passport from "passport";
 import { Router } from "express";
 import { authController } from "../controllers";
-// import { validate } from "../middleware/validate";
+import { validateRequestBody } from "../middleware/validateRequestBody";
+import { resetPasswordSchema } from "../validationSchemas";
 
 export const authRouter = () => {
   const router = Router();
@@ -12,10 +12,10 @@ export const authRouter = () => {
   router.post("/refresh-tokens", authController.refreshTokens);
   router.post(
     "/reset-password",
-    // validate(resetPasswordSchema),
+    validateRequestBody(resetPasswordSchema),
     authController.resetPassword,
   );
-  // router.post("/forgot-password", validate(forgotPasswordSchema), forgotPassword);
+  // router.post("/forgot-password", validateRequestBody(forgotPasswordSchema), forgotPassword);
   router.post("/verify-email", authController.verifyEmail);
   // router.post(
   //   "/send-verification-email",
