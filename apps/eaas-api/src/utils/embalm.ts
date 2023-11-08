@@ -15,9 +15,7 @@ export function formatPreparedEncryptedPayload(
 ): PreparedEncryptedPayload {
   return {
     encryptedPayload: arg.encryptedPayload.data,
-    innerEncryptedkeyShares: arg.innerEncryptedkeyShares.map(
-      (x) => x["data"] as Uint8Array,
-    ),
+    innerEncryptedkeyShares: arg.innerEncryptedkeyShares.map((x) => x["data"] as Uint8Array),
     recipientPublicKey: arg.recipientPublicKey,
     encryptedPayloadMetadata: arg.encryptedPayloadMetadata,
   };

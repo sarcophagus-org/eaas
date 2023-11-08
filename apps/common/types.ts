@@ -10,10 +10,13 @@ export interface PreparedEncryptedPayload {
   recipientPublicKey: string;
 }
 
-export type PreparedEncryptedPayloadApiBody = Pick<PreparedEncryptedPayload, 'recipientPublicKey' | 'encryptedPayloadMetadata'> & {
+export type PreparedEncryptedPayloadApiBody = Pick<
+  PreparedEncryptedPayload,
+  "recipientPublicKey" | "encryptedPayloadMetadata"
+> & {
   encryptedPayload: { type: string; data: Buffer };
   innerEncryptedkeyShares: { type: string; data: Buffer }[];
-}
+};
 
 export interface SendEncryptedPayloadParams {
   preparedEncryptedPayload: PreparedEncryptedPayloadApiBody;
