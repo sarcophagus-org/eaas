@@ -9,7 +9,6 @@ export default defineConfig({
     target: "esnext",
   },
   optimizeDeps: {
-    include: ["buffer-polyfill.js"],
     esbuildOptions: {
       define: {
         global: "globalThis",

@@ -23,4 +23,4 @@ const userSchema = Joi.object({
 export const createUserSchema = Joi.object({
   user: userSchema,
   inviteToken: Joi.string(),
-})
+});
