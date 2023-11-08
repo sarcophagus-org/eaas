@@ -1,6 +1,6 @@
 import { ArchaeologistExceptionCode, NodeSarcoClient } from "@sarcophagus-org/sarcophagus-v2-sdk";
 import { uploadEncryptedPayloadToArweave } from "./arweave";
-import { PreparedEncryptedPayload, PreparedEncryptedPayloadApiBody } from "../../../common/types";
+import { ApiBufferType, PreparedEncryptedPayload } from "../../../common/types";
 
 export interface EmbalmOptions {
   chainId: number;
@@ -11,11 +11,11 @@ export interface EmbalmOptions {
 }
 
 export function formatPreparedEncryptedPayload(
-  arg: PreparedEncryptedPayloadApiBody,
+  arg: PreparedEncryptedPayload,
 ): PreparedEncryptedPayload {
   return {
-    encryptedPayload: arg.encryptedPayload.data,
-    innerEncryptedkeyShares: arg.innerEncryptedkeyShares.map((x) => x["data"] as Uint8Array),
+    encryptedPayload: (arg.encryptedPayload as ApiBufferType).data,
+    innerEncryptedkeyShares: (arg.innerEncryptedkeyShares as ApiBufferType[]).map((x) => x["data"] as Buffer),
     recipientPublicKey: arg.recipientPublicKey,
     encryptedPayloadMetadata: arg.encryptedPayloadMetadata,
   };

@@ -31,8 +31,8 @@ export const uploadEncryptedPayloadToArweave = async (args: ArweaveUploadArgs) =
           throw new Error(msg);
         },
         onUploadComplete: (uploadId: string) => resolve(uploadId),
-        encryptedPayload,
-        innerEncryptedkeyShares,
+        encryptedPayload: encryptedPayload as Buffer,
+        innerEncryptedkeyShares: innerEncryptedkeyShares as Buffer[],
         encryptedPayloadMetadata,
       });
 
