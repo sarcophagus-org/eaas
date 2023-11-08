@@ -23,8 +23,8 @@ if (error) {
 // TODO: Use envConfig instead. For some reason, its import is currently not working.
 const DATABASE_URL = env.DATABASE_URL;
 const DATABASE_URL_TEST = `${DATABASE_URL}-test`;
-const MIGRATIONS_DIR = "../migrations";
-const SEEDS_DIR = "../seeds";
+const MIGRATIONS_DIR = "./src/database/migrations";
+const SEEDS_DIR = "./src/database/seeds";
 
 export default {
   production: {
