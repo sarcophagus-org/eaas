@@ -3,31 +3,27 @@ import { PreparedEncryptedPayload } from "../../../common/types";
 
 export interface ArweaveUploadArgs {
   sarco: NodeSarcoClient;
-  nShares: number;
-  threshold: number;
   archaeologistPublicKeys: string[];
   preparedEncryptedPayload: PreparedEncryptedPayload;
 }
 
 export const uploadEncryptedPayloadToArweave = async (args: ArweaveUploadArgs) => {
-  const { sarco, archaeologistPublicKeys, nShares, threshold } = args;
+  const { sarco, archaeologistPublicKeys } = args;
 
   const {
     recipientPublicKey,
     preEncryptedPayload,
-    recipientInnerEncryptedkeyShares,
+    innerEncryptedkeyShares,
     preEncryptedPayloadMetadata,
   } = args.preparedEncryptedPayload;
 
   return new Promise<string>(async (resolve, reject) => {
     try {
-      const uploadPromise = sarco.api.uploadFileToArweave({
+      const uploadPromise = sarco.api.uploadPreEncryptedPayloadToArweave({
         archaeologistPublicKeys,
         onStep: (step: string) => console.log(`Uploading To Arweave: ${step}`),
         recipientPublicKey,
-        shares: nShares,
-        threshold,
-        onUploadChunk: (chunkedUploader: any, chunkedUploadProgress: number) => {
+        onUploadChunk: (_: any, chunkedUploadProgress: number) => {
           console.log(`Upload Progress: ${chunkedUploadProgress}%`);
         },
         onUploadChunkError: (msg: string) => {
@@ -36,7 +32,7 @@ export const uploadEncryptedPayloadToArweave = async (args: ArweaveUploadArgs) =
         },
         onUploadComplete: (uploadId: string) => resolve(uploadId),
         preEncryptedPayload,
-        recipientInnerEncryptedkeyShares,
+        innerEncryptedkeyShares,
         preEncryptedPayloadMetadata,
       });
 

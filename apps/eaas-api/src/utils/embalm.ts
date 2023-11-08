@@ -15,7 +15,7 @@ export function formatPreparedEncryptedPayload(
 ): PreparedEncryptedPayload {
   return {
     preEncryptedPayload: arg.preEncryptedPayload.data,
-    recipientInnerEncryptedkeyShares: arg.recipientInnerEncryptedkeyShares.map(
+    innerEncryptedkeyShares: arg.recipientInnerEncryptedkeyShares.map(
       (x) => x["data"] as Uint8Array,
     ),
     recipientPublicKey: arg.recipientPublicKey,
@@ -48,7 +48,7 @@ export async function runEmbalm(options: EmbalmOptions) {
       throw error;
     });
 
-  const nArchs = preparedEncryptedPayload.recipientInnerEncryptedkeyShares.length;
+  const nArchs = preparedEncryptedPayload.innerEncryptedkeyShares.length;
 
   // TODO: select archaeologists
   // Possible logic: randomly select` nArchs * 2` archaeologists.
@@ -98,9 +98,7 @@ export async function runEmbalm(options: EmbalmOptions) {
 
     const sarcophagusPayloadTxId = await uploadEncryptedPayloadToArweave({
       archaeologistPublicKeys: Array.from(archaeologistPublicKeys.values()),
-      nShares: selectedArchaeologists.length,
       sarco,
-      threshold: requiredArchaeologists,
       preparedEncryptedPayload,
     });
 
