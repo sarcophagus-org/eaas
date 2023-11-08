@@ -28,8 +28,7 @@ export const Home = () => {
             const recipientPublicKey =
               "0x04848ae25e147c8f16e84d058f94b7c52babc0254321fb3dc3cf21ed53f9ee0e555ed2ba5110649f506c3dea5d5c9bf1a1b6c905739d5346c6179aa28f1fe364b1";
 
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            const preparedEncryptedPayload: any = await preparePayload({
+            const preparedEncryptedPayload = await preparePayload({
               file,
               nArchs: 1,
               recipientPublicKey,

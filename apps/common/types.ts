@@ -4,22 +4,14 @@ interface PayloadMetadata {
 }
 
 export interface PreparedEncryptedPayload {
-  encryptedPayload: Buffer;
-  innerEncryptedkeyShares: Uint8Array[];
   encryptedPayloadMetadata: PayloadMetadata;
   recipientPublicKey: string;
-}
-
-export type PreparedEncryptedPayloadApiBody = Pick<
-  PreparedEncryptedPayload,
-  "recipientPublicKey" | "encryptedPayloadMetadata"
-> & {
-  encryptedPayload: { type: string; data: Buffer };
-  innerEncryptedkeyShares: { type: string; data: Buffer }[];
+  encryptedPayload:  Buffer | { type: string; data: Buffer };
+  innerEncryptedkeyShares: Buffer[] | { type: string; data: Buffer }[];
 };
 
 export interface SendEncryptedPayloadParams {
-  preparedEncryptedPayload: PreparedEncryptedPayloadApiBody;
+  preparedEncryptedPayload: PreparedEncryptedPayload;
   chainId: number;
   threshold: number;
   resurrectionTime: number;

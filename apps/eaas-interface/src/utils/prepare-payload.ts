@@ -9,6 +9,16 @@ interface PreparePayloadArgs {
   recipientPublicKey: string;
 }
 
+interface PreparePayloadResult {
+    encryptedPayload: Buffer | {type: string, data: Buffer};
+    innerEncryptedkeyShares: Buffer[] | {type: string, data: Buffer}[];
+    encryptedPayloadMetadata: {
+        fileName: string;
+        type: string;
+    };
+    recipientPublicKey: string;
+}
+
 /**
  * Returns base64 data of a given File object
  * @param file The File object
@@ -49,7 +59,7 @@ function readFileDataAsBase64(file: File): Promise<{ type: string; data: Buffer 
 /**
  * Prepare the payload for upload to the Embalmer-X Server.
  */
-export const preparePayload = async (args: PreparePayloadArgs) => {
+export const preparePayload = async (args: PreparePayloadArgs): Promise<PreparePayloadResult> => {
   const { nArchs, file, recipientPublicKey } = args;
 
   const randomWallet = ethers.Wallet.createRandom();
@@ -71,7 +81,7 @@ export const preparePayload = async (args: PreparePayloadArgs) => {
     threshold: nArchs,
   });
 
-  const innerEncryptedkeyShares: Buffer[] = await Promise.all(
+  const innerEncryptedkeyShares = await Promise.all(
     keyShares.map(async (keyShare) => {
       return await encrypt(
         Buffer.from(ethers.utils.arrayify(recipientPublicKey)),
