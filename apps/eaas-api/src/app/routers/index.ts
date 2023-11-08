@@ -1,9 +1,12 @@
+import dotenv from "dotenv";
+
 import { Strategy as JwtStrategy, ExtractJwt } from "passport-jwt";
 
 import { userService } from "../services";
 import { EaasUser } from "../../../src/types/EaasUser";
 
-require("dotenv").config();
+dotenv.config();
+
 const jwtOptions = {
     secretOrKey: process.env.JWT_SECRET,
     jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
