@@ -1,3 +1,4 @@
+import passport from "passport";
 import { Router } from "express";
 import { authController } from "../controllers";
 // import { validate } from "../middleware/validate";

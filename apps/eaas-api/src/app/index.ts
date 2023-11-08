@@ -1,12 +1,12 @@
 import express from "express";
 import cors from "cors";
+import passport from "passport";
 import { logging } from "../../src/utils/logger";
 import { Router, Request, Response, Express } from "express";
 import { validateEnvVars } from "../utils/validate-env";
 import { UNCAUGHT_EXCEPTION } from "../../src/utils/exit-codes";
-import { envConfig } from "../config/env.config";
 import { userRouter } from "./routers/user.router";
-import { authRouter, invitationRouter } from "./routers";
+import { authRouter, invitationRouter, jwtStrategy } from "./routers";
 
 export function initialiseApp() {
   const app = express();
@@ -19,6 +19,8 @@ export function initialiseApp() {
   // );
   app.use(cors());
   app.use(express.json());
+  app.use(passport.initialize());
+  passport.use("jwt", jwtStrategy);
 
   return app;
 }
