@@ -14,12 +14,12 @@ export function formatPreparedEncryptedPayload(
   arg: PreparedEncryptedPayloadApiBody,
 ): PreparedEncryptedPayload {
   return {
-    preEncryptedPayload: arg.preEncryptedPayload.data,
-    innerEncryptedkeyShares: arg.recipientInnerEncryptedkeyShares.map(
+    encryptedPayload: arg.encryptedPayload.data,
+    innerEncryptedkeyShares: arg.innerEncryptedkeyShares.map(
       (x) => x["data"] as Uint8Array,
     ),
     recipientPublicKey: arg.recipientPublicKey,
-    preEncryptedPayloadMetadata: arg.preEncryptedPayloadMetadata,
+    encryptedPayloadMetadata: arg.encryptedPayloadMetadata,
   };
 }
 

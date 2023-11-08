@@ -12,9 +12,9 @@ export const uploadEncryptedPayloadToArweave = async (args: ArweaveUploadArgs) =
 
   const {
     recipientPublicKey,
-    preEncryptedPayload,
+    encryptedPayload,
     innerEncryptedkeyShares,
-    preEncryptedPayloadMetadata,
+    encryptedPayloadMetadata,
   } = args.preparedEncryptedPayload;
 
   return new Promise<string>(async (resolve, reject) => {
@@ -31,9 +31,9 @@ export const uploadEncryptedPayloadToArweave = async (args: ArweaveUploadArgs) =
           throw new Error(msg);
         },
         onUploadComplete: (uploadId: string) => resolve(uploadId),
-        preEncryptedPayload,
+        encryptedPayload,
         innerEncryptedkeyShares,
-        preEncryptedPayloadMetadata,
+        encryptedPayloadMetadata,
       });
 
       await uploadPromise;
