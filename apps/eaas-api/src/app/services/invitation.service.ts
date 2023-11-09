@@ -13,42 +13,38 @@ import { authService } from "./auth.service";
  * @returns the invitation id
  */
 const createInvitation = async (recipientEmail: string, senderId: string): Promise<string> => {
-  try {
-    const user = await userService.getUserByEmail(recipientEmail);
-    if (user) {
-      throw new Error("User already exists");
-    }
-
-    const invitations = await eaasKnex("invitations").where({
-      recipient_email: recipientEmail.toLowerCase(),
-    });
-    if (invitations.length > 0) {
-      throw new Error("User already invited");
-    }
-
-    const invitationId = await eaasKnex("invitations")
-      .insert({
-        recipient_email: recipientEmail,
-        sender_id: senderId,
-      })
-      .returning("id")
-      .then((x) => x[0]);
-
-    if (!invitationId) throw new Error("could not create invitation");
-
-    // Add the invitation id to the token for looking up the invitation when
-    // the recipient accepts the invitations
-    const inviteToken = await tokenService.generateInviteToken(senderId, invitationId);
-
-    //  await emailService.sendNewUserInviteEmail(
-    //   recipientEmail,
-    //   inviteToken
-    // );
-
-    return invitationId;
-  } catch (error) {
-    throw new Error(error);
+  const user = await userService.getUserByEmail(recipientEmail);
+  if (user) {
+    throw new Error("User already exists");
   }
+
+  const invitations = await eaasKnex("invitations").where({
+    recipient_email: recipientEmail.toLowerCase(),
+  });
+  if (invitations.length > 0) {
+    throw new Error("User already invited");
+  }
+
+  const invitationId = await eaasKnex("invitations")
+    .insert({
+      recipient_email: recipientEmail,
+      sender_id: senderId,
+    })
+    .returning("id")
+    .then((x) => x[0]);
+
+  if (!invitationId) throw new Error("could not create invitation");
+
+  // Add the invitation id to the token for looking up the invitation when
+  // the recipient accepts the invitations
+  const inviteToken = await tokenService.generateInviteToken(senderId, invitationId);
+
+  //  await emailService.sendNewUserInviteEmail(
+  //   recipientEmail,
+  //   inviteToken
+  // );
+
+  return invitationId;
 };
 
 /**
@@ -57,42 +53,39 @@ const createInvitation = async (recipientEmail: string, senderId: string): Promi
  * @param inviteToken the invite token
  */
 const acceptInvitation = async (inviteToken: string): Promise<{ user: EaasUser }> => {
-  try {
-    // get invitation id from payload of inviteToken and delete the inviteToken
-    const payload = await tokenService.consumeToken(inviteToken, true);
-    const { invitationId } = payload;
-    if (!invitationId) {
-      throw new Error("there is no invitation linked to this inviteToken");
-    }
-
-    // look up invitation by the invitation id
-    const invitation = await getInvitationOrThrowError(invitationId);
-
-    // look up recipient in the users table by email
-    const recipient = await userService.getUserByEmail(invitation.recipient_email);
-
-    if (!recipient) {
-      throw Error(`No user found with email: ${invitation.recipient_email}`);
-    }
-
-    // create a record in the connections table with the sender id and the recipient id
-    // this currently has no use in the application, but may be useful in the future
-    try {
-      await eaasKnex("embalmer_has_client").insert({
-        embalmer_id: invitation.sender_id,
-        client_id: recipient.id,
-      });
-    } catch (error) {
-      console.error("cant create embalmer_has_client record", error);
-    }
-
-    await tokenService.findAndDeleteToken(inviteToken);
-    await deleteInvitation(invitation.sender_id, invitation.id);
-
-    return { user: recipient };
-  } catch (error) {
-    throw new Error(error);
+  // get invitation id from payload of inviteToken and delete the inviteToken
+  const payload = await tokenService.consumeToken(inviteToken, true);
+  const { invitationId } = payload;
+  if (!invitationId) {
+    throw new Error("there is no invitation linked to this inviteToken");
   }
+
+  // look up invitation by the invitation id
+  const invitation = await getInvitationOrThrowError(invitationId);
+
+  // look up recipient in the users table by email
+  const recipient = await userService.getUserByEmail(invitation.recipient_email);
+
+  if (!recipient) {
+    throw Error(`No user found with email: ${invitation.recipient_email}`);
+  }
+
+  // create a record in the connections table with the sender id and the recipient id
+  // this currently has no use in the application, but may be useful in the future
+
+  try {
+    await eaasKnex("embalmer_has_client").insert({
+      embalmer_id: invitation.sender_id,
+      client_id: recipient.id,
+    });
+  } catch (error) {
+    console.error("cant create embalmer_has_client record", error);
+  }
+
+  await tokenService.findAndDeleteToken(inviteToken);
+  await deleteInvitation(invitation.sender_id, invitation.id);
+
+  return { user: recipient };
 };
 
 /**
@@ -101,18 +94,14 @@ const acceptInvitation = async (inviteToken: string): Promise<{ user: EaasUser }
  * @return User | undefined
  */
 const validateInviteToken = async (inviteToken: string): Promise<EaasUser | undefined> => {
-  try {
-    const payload = await tokenService.consumeToken(inviteToken, true);
-    const { invitationId } = payload;
-    if (!invitationId) {
-      throw new Error("there is no invitation linked to this inviteToken");
-    }
-    const invitation = await getInvitationOrThrowError(invitationId);
-
-    return userService.getUserByEmail(invitation.recipient_email);
-  } catch (error) {
-    throw new Error(error);
+  const payload = await tokenService.consumeToken(inviteToken, true);
+  const { invitationId } = payload;
+  if (!invitationId) {
+    throw new Error("there is no invitation linked to this inviteToken");
   }
+  const invitation = await getInvitationOrThrowError(invitationId);
+
+  return userService.getUserByEmail(invitation.recipient_email);
 };
 
 /**
@@ -149,20 +138,16 @@ const authorizeSender = async (senderId: string): Promise<void> => {
  * @returns the invitation record
  */
 const getInvitationOrThrowError = async (id: string): Promise<Invitation> => {
-  try {
-    const invitation = await eaasKnex("invitations")
-      .where({ id })
-      .select("*")
-      .then((x) => x[0]);
+  const invitation = await eaasKnex("invitations")
+    .where({ id })
+    .select("*")
+    .then((x) => x[0]);
 
-    if (!invitation) {
-      throw new Error(`No invitation found with ID: ${id}`);
-    }
-
-    return invitation;
-  } catch (error) {
-    throw new Error(error);
+  if (!invitation) {
+    throw new Error(`No invitation found with ID: ${id}`);
   }
+
+  return invitation;
 };
 
 /**
@@ -171,11 +156,7 @@ const getInvitationOrThrowError = async (id: string): Promise<Invitation> => {
  * @param id the invitatoin id
  */
 const deleteInvitation = async (userId: string, id: string): Promise<void> => {
-  try {
-    await eaasKnex("invitations").where({ id, sender_id: userId }).delete();
-  } catch (error) {
-    throw new Error(error);
-  }
+  await eaasKnex("invitations").where({ id, sender_id: userId }).delete();
 };
 
 export const invitationService = {

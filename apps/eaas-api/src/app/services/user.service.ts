@@ -31,25 +31,21 @@ const createUser = async (params: {
   password: string;
   phone: string;
 }): Promise<NewUser> => {
-  try {
-    const { name, email, password, phone } = params;
+  const { name, email, password, phone } = params;
 
-    const hashedPassword = await bcrypt.hash(password, 10);
+  const hashedPassword = await bcrypt.hash(password, 10);
 
-    const user = await eaasKnex("users")
-      .insert({
-        name,
-        email: email.toLowerCase(),
-        password: hashedPassword,
-        phone,
-      })
-      .returning(["id", "created_at", "updated_at", "name", "email", "phone"])
-      .then((x) => x[0]);
+  const user = await eaasKnex("users")
+    .insert({
+      name,
+      email: email.toLowerCase(),
+      password: hashedPassword,
+      phone,
+    })
+    .returning(["id", "created_at", "updated_at", "name", "email", "phone"])
+    .then((x) => x[0]);
 
-    return user;
-  } catch (error) {
-    throw new Error(error);
-  }
+  return user;
 };
 
 /**
@@ -67,31 +63,27 @@ const createUserWithInvite = async (params: {
   phone: string;
   inviteToken: string;
 }): Promise<{ user: NewUser }> => {
-  try {
-    const { name, password, phone, inviteToken } = params;
-    // user must have an invite to be created
-    if (!inviteToken) throw new Error("missing invite token");
+  const { name, password, phone, inviteToken } = params;
+  // user must have an invite to be created
+  if (!inviteToken) throw new Error("missing invite token");
 
-    const { invitationId } =
-      (await tokenService.consumeToken(inviteToken, true)) || ({} as JwtPayload);
+  const { invitationId } =
+    (await tokenService.consumeToken(inviteToken, true)) || ({} as JwtPayload);
 
-    // payload of invite token must include the invitation id
-    if (!invitationId) {
-      throw new Error("invitation id not included in invite token payload");
-    }
-
-    // if invitation is not found the user should not be created
-    const invitation = await invitationService.getInvitationOrThrowError(invitationId);
-
-    const user = await createUser({ name, email: invitation.recipient_email, password, phone });
-
-    await tokenService.findAndDeleteToken(inviteToken);
-    await invitationService.deleteInvitation(invitation.sender_id, invitation.id);
-
-    return { user };
-  } catch (error) {
-    throw new Error(error);
+  // payload of invite token must include the invitation id
+  if (!invitationId) {
+    throw new Error("invitation id not included in invite token payload");
   }
+
+  // if invitation is not found the user should not be created
+  const invitation = await invitationService.getInvitationOrThrowError(invitationId);
+
+  const user = await createUser({ name, email: invitation.recipient_email, password, phone });
+
+  await tokenService.findAndDeleteToken(inviteToken);
+  await invitationService.deleteInvitation(invitation.sender_id, invitation.id);
+
+  return { user };
 };
 
 /**
@@ -101,15 +93,11 @@ const createUserWithInvite = async (params: {
  * @returns The user
  */
 const getUserByEmail = async (email: string): Promise<EaasUser> => {
-  try {
-    const user = await eaasKnex("users")
-      .where({ email: email.toLowerCase() })
-      .select("*")
-      .then((x) => x[0]);
-    return user;
-  } catch (error) {
-    throw new Error(error);
-  }
+  const user = await eaasKnex("users")
+    .where({ email: email.toLowerCase() })
+    .select("*")
+    .then((x) => x[0]);
+  return user;
 };
 
 /**
@@ -119,22 +107,18 @@ const getUserByEmail = async (email: string): Promise<EaasUser> => {
  * @returns a list of users
  */
 const getUsersByIds = async (ids: string[]): Promise<EaasUser[]> => {
-  try {
-    return await eaasKnex("users")
-      .whereIn("id", ids)
-      .select(
-        "id",
-        "created_at",
-        "updated_at",
-        "email",
-        "is_admin",
-        "phone",
-        "name",
-        "is_email_verified",
-      );
-  } catch (error) {
-    throw new Error(error);
-  }
+  return await eaasKnex("users")
+    .whereIn("id", ids)
+    .select(
+      "id",
+      "created_at",
+      "updated_at",
+      "email",
+      "is_admin",
+      "phone",
+      "name",
+      "is_email_verified",
+    );
 };
 
 /**
@@ -144,11 +128,7 @@ const getUsersByIds = async (ids: string[]): Promise<EaasUser[]> => {
  * @returns the user
  */
 const getUserById = async (id: string): Promise<EaasUser> => {
-  try {
-    return (await getUsersByIds([id]))[0];
-  } catch (error) {
-    throw new Error(error);
-  }
+  return (await getUsersByIds([id]))[0];
 };
 
 // TODO: Implement fuzzy search
@@ -187,40 +167,36 @@ const getUserById = async (id: string): Promise<EaasUser> => {
  * @returns a list of users with the fields id, name, and email
  */
 const searchUsers = async (pattern: string): Promise<Partial<EaasUser>[]> => {
-  try {
-    // an empty string should return an empty array
-    if (pattern.trim().length === 0) {
-      return [];
-    }
+  // an empty string should return an empty array
+  if (pattern.trim().length === 0) {
+    return [];
+  }
 
-    // if pattern contains a space, search only for names and use the "and" operator
-    if (pattern.trim().indexOf(" ") >= 0) {
-      const words = pattern.trim().split(" ");
+  // if pattern contains a space, search only for names and use the "and" operator
+  if (pattern.trim().indexOf(" ") >= 0) {
+    const words = pattern.trim().split(" ");
 
-      // Build a query with an whereRaw method for each word.
-      // The result would look something like this:
-      // knex("users")
-      //  .whereRaw("LOWER(name) LIKE ?", `%${words[0].toLowerCase()}%`))
-      //  .whereRaw("LOWER(name) LIKE ?", `%${words[1].toLowerCase()}%`))
-      //  ...
-      //
-      // Supports unlimited words. Because why not?
-      // The query is not case sensitive.
-      const query = words.reduce(
-        (prev, word) => prev.whereRaw("LOWER(name) LIKE ?", `%${word.toLowerCase()}%`),
-        eaasKnex("users"),
-      );
+    // Build a query with an whereRaw method for each word.
+    // The result would look something like this:
+    // knex("users")
+    //  .whereRaw("LOWER(name) LIKE ?", `%${words[0].toLowerCase()}%`))
+    //  .whereRaw("LOWER(name) LIKE ?", `%${words[1].toLowerCase()}%`))
+    //  ...
+    //
+    // Supports unlimited words. Because why not?
+    // The query is not case sensitive.
+    const query = words.reduce(
+      (prev, word) => prev.whereRaw("LOWER(name) LIKE ?", `%${word.toLowerCase()}%`),
+      eaasKnex("users"),
+    );
 
-      return await query.select("id", "name", "email");
-    } else {
-      // The assumption is that an email should never has spaces, but a name may also have no spaces
-      return await eaasKnex("users")
-        .whereRaw("LOWER(name) LIKE ?", `%${pattern.toLowerCase()}%`)
-        .orWhereRaw("LOWER(email) LIKE ?", `%${pattern.toLowerCase()}%`)
-        .select("id", "name", "email", "profile_picture_key");
-    }
-  } catch (error) {
-    throw new Error(error);
+    return await query.select("id", "name", "email");
+  } else {
+    // The assumption is that an email should never has spaces, but a name may also have no spaces
+    return await eaasKnex("users")
+      .whereRaw("LOWER(name) LIKE ?", `%${pattern.toLowerCase()}%`)
+      .orWhereRaw("LOWER(email) LIKE ?", `%${pattern.toLowerCase()}%`)
+      .select("id", "name", "email", "profile_picture_key");
   }
 };
 
@@ -232,33 +208,29 @@ const searchUsers = async (pattern: string): Promise<Partial<EaasUser>[]> => {
  * @returns The updated user
  */
 const updateUserById = async (id: string, updateBody: Partial<EaasUser>): Promise<EaasUser> => {
-  try {
-    // TODO: manage whitelist with joi
-    // Only allow whitelisted fields to be updated
-    const whitelisted = ["email", "phone", "name"];
-    const notAllowed = Object.keys(updateBody).filter((x) => !whitelisted.includes(x));
-    if (notAllowed.length > 0) {
-      throw new Error(`tried to update non-whitelisted fields: ${JSON.stringify(notAllowed)}`);
-    }
-
-    const user = await eaasKnex("users")
-      .where({ id })
-      .select("*")
-      .then((x) => x[0]);
-
-    if (!user) throw new Error("user not found");
-
-    Object.assign(user, updateBody);
-
-    const updatedUser = await eaasKnex("users")
-      .where({ id })
-      .update(user)
-      .returning("*")
-      .then((x) => x[0]);
-    return updatedUser;
-  } catch (error) {
-    throw new Error(error);
+  // TODO: manage whitelist with joi
+  // Only allow whitelisted fields to be updated
+  const whitelisted = ["email", "phone", "name"];
+  const notAllowed = Object.keys(updateBody).filter((x) => !whitelisted.includes(x));
+  if (notAllowed.length > 0) {
+    throw new Error(`tried to update non-whitelisted fields: ${JSON.stringify(notAllowed)}`);
   }
+
+  const user = await eaasKnex("users")
+    .where({ id })
+    .select("*")
+    .then((x) => x[0]);
+
+  if (!user) throw new Error("user not found");
+
+  Object.assign(user, updateBody);
+
+  const updatedUser = await eaasKnex("users")
+    .where({ id })
+    .update(user)
+    .returning("*")
+    .then((x) => x[0]);
+  return updatedUser;
 };
 
 /**
@@ -271,18 +243,14 @@ const updatePassword = async (params: {
   userId: string;
   hashedPassword: string;
 }): Promise<void> => {
-  try {
-    const { userId, hashedPassword } = params;
-    const user = await eaasKnex("users")
-      .where({ id: userId })
-      .select("*")
-      .then((x) => x[0]);
-    if (!user) throw new Error("could not find user");
-    Object.assign(user, { password: hashedPassword });
-    await eaasKnex("users").where({ id: userId }).update(user);
-  } catch (error) {
-    throw new Error(error);
-  }
+  const { userId, hashedPassword } = params;
+  const user = await eaasKnex("users")
+    .where({ id: userId })
+    .select("*")
+    .then((x) => x[0]);
+  if (!user) throw new Error("could not find user");
+  Object.assign(user, { password: hashedPassword });
+  await eaasKnex("users").where({ id: userId }).update(user);
 };
 
 /**
@@ -292,17 +260,13 @@ const updatePassword = async (params: {
  * @param isEmailVerified
  */
 const setEmailVerifiedStatus = async (userId: string, isEmailVerified: boolean): Promise<void> => {
-  try {
-    const user = await eaasKnex("users")
-      .where({ id: userId })
-      .select("*")
-      .then((x) => x[0]);
-    if (!user) throw new Error("could not find user");
-    Object.assign(user, { is_email_verified: isEmailVerified });
-    await eaasKnex("users").where({ id: userId }).update(user);
-  } catch (error) {
-    throw new Error(error);
-  }
+  const user = await eaasKnex("users")
+    .where({ id: userId })
+    .select("*")
+    .then((x) => x[0]);
+  if (!user) throw new Error("could not find user");
+  Object.assign(user, { is_email_verified: isEmailVerified });
+  await eaasKnex("users").where({ id: userId }).update(user);
 };
 
 /**
@@ -311,11 +275,7 @@ const setEmailVerifiedStatus = async (userId: string, isEmailVerified: boolean):
  * @param userId the user id
  */
 const deleteTokensFromUser = async (userId: string): Promise<void> => {
-  try {
-    await eaasKnex("tokens").where({ user_id: userId }).delete();
-  } catch (error) {
-    throw new Error(error);
-  }
+  await eaasKnex("tokens").where({ user_id: userId }).delete();
 };
 
 /**
@@ -324,16 +284,12 @@ const deleteTokensFromUser = async (userId: string): Promise<void> => {
  * @param id
  */
 export const deleteUser = async (id: string): Promise<void> => {
-  try {
-    const user = await eaasKnex("users")
-      .where({ id })
-      .select("id")
-      .then((x) => x[0]);
-    if (!user) throw new Error("user not found");
-    await eaasKnex("users").where({ id }).delete();
-  } catch (error) {
-    throw new Error(error);
-  }
+  const user = await eaasKnex("users")
+    .where({ id })
+    .select("id")
+    .then((x) => x[0]);
+  if (!user) throw new Error("user not found");
+  await eaasKnex("users").where({ id }).delete();
 };
 
 export const userService = {
