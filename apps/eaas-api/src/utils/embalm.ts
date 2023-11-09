@@ -15,7 +15,9 @@ export function formatPreparedEncryptedPayload(
 ): PreparedEncryptedPayload {
   return {
     encryptedPayload: (arg.encryptedPayload as ApiBufferType).data,
-    innerEncryptedkeyShares: (arg.innerEncryptedkeyShares as ApiBufferType[]).map((x) => x["data"] as Buffer),
+    innerEncryptedkeyShares: (arg.innerEncryptedkeyShares as ApiBufferType[]).map(
+      (x) => x["data"] as Buffer,
+    ),
     recipientPublicKey: arg.recipientPublicKey,
     encryptedPayloadMetadata: arg.encryptedPayloadMetadata,
   };

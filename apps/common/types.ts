@@ -4,16 +4,16 @@ interface PayloadMetadata {
 }
 
 export interface ApiBufferType {
-    type: string;
-    data: Buffer;
+  type: string;
+  data: Buffer;
 }
 
 export interface PreparedEncryptedPayload {
   encryptedPayloadMetadata: PayloadMetadata;
   recipientPublicKey: string;
-  encryptedPayload:  Buffer | ApiBufferType;
+  encryptedPayload: Buffer | ApiBufferType;
   innerEncryptedkeyShares: Buffer[] | ApiBufferType[];
-};
+}
 
 export interface SendEncryptedPayloadParams {
   preparedEncryptedPayload: PreparedEncryptedPayload;

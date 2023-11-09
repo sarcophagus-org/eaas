@@ -10,13 +10,13 @@ interface PreparePayloadArgs {
 }
 
 interface PreparePayloadResult {
-    encryptedPayload: Buffer | {type: string, data: Buffer};
-    innerEncryptedkeyShares: Buffer[] | {type: string, data: Buffer}[];
-    encryptedPayloadMetadata: {
-        fileName: string;
-        type: string;
-    };
-    recipientPublicKey: string;
+  encryptedPayload: Buffer | { type: string; data: Buffer };
+  innerEncryptedkeyShares: Buffer[] | { type: string; data: Buffer }[];
+  encryptedPayloadMetadata: {
+    fileName: string;
+    type: string;
+  };
+  recipientPublicKey: string;
 }
 
 /**
