@@ -1,8 +1,8 @@
 import { Response } from "express";
 
-export class ApiError {
+export interface ApiError {
   msg: string;
-  code: number;
+  errorCode: number;
 }
 
 export interface ApiErrors {
@@ -16,31 +16,31 @@ export interface ApiErrors {
 export const apiErrors: ApiErrors = {
   userNotFound: {
     msg: "user not found",
-    code: 404,
+    errorCode: 404,
   },
   incorrectPassword: {
     msg: "incorrect password",
-    code: 400,
+    errorCode: 400,
   },
   tokenNotFound: {
     msg: "token not found",
-    code: 404,
+    errorCode: 404,
   },
   noUserFoundOnToken: {
     msg: "no user found on token",
-    code: 400,
+    errorCode: 400,
   },
   invalidUserOnToken: {
     msg: "invalid user on token",
-    code: 400,
+    errorCode: 400,
   },
 };
 
 export function handleApiError(res: Response, error: any) {
-  console.error("API ERROR");
   console.error(error);
-  if (error instanceof ApiError) {
-    res.status(error.code).json({ error: error.msg });
+  if (error.errorCode) {
+    const { errorCode, msg } = error as ApiError;
+    res.status(errorCode).json({ error: msg });
   } else {
     res.status(500).json({ error: error.message });
   }
