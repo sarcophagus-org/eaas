@@ -15,6 +15,7 @@ export async function seed(knex: Knex): Promise<void> {
         email: "admin@example.com",
         password: await hashPassword("admin"),
         phone: "8888888888",
+        isAdmin: true,
       },
     ])
     .returning("id");

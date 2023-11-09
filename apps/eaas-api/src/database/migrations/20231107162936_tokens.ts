@@ -6,6 +6,8 @@ export async function up(knex: Knex): Promise<void> {
     table.timestamps(true, true);
     table.uuid("user_id").notNullable().references("id").inTable("users").onDelete("CASCADE");
     table.string("expires").notNullable();
+    table.string("token").notNullable();
+    table.boolean("blacklisted").notNullable().defaultTo("false");
     table
       .enum("type", ["access", "refresh", "reset_password", "verify_email", "invite"])
       .notNullable();
