@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { authService, tokenService, userService } from "../services";
 import { envConfig } from "../../../src/config/env.config";
+import { handleApiError } from "../utils/errors";
 
 const verifyToken = async (req: Request, res: Response) => {
   try {
@@ -34,11 +35,7 @@ const register = async (req: Request, res: Response) => {
       });
     }
   } catch (error) {
-    if (error.message.includes("duplicate key value")) {
-      res.status(409).json({ error: "email is already taken" });
-    } else {
-      res.status(400).json({ error: error.message });
-    }
+    handleApiError(res, error);
   }
 };
 
@@ -51,8 +48,7 @@ const login = async (req: Request, res: Response) => {
 
     res.status(200).json({ user, tokens });
   } catch (error) {
-    console.error(error);
-    res.status(400).json({ error: error.message });
+    handleApiError(res, error);
   }
 };
 
@@ -62,8 +58,7 @@ const logout = async (req: Request, res: Response) => {
     await authService.logout(refreshToken);
     res.status(204).send();
   } catch (error) {
-    console.error(error);
-    res.status(404).json({ error: error.message });
+    handleApiError(res, error);
   }
 };
 
@@ -148,7 +143,7 @@ const verifyEmail = async (req: Request, res: Response) => {
     await authService.verifyEmail(token);
     res.status(204).send();
   } catch (error) {
-    res.status(400).send({ error: error.message });
+    handleApiError(res, error);
   }
 };
 
