@@ -37,11 +37,11 @@ export const apiErrors: ApiErrors = {
 };
 
 export function handleApiError(res: Response, error: any) {
-  console.error(error);
+  console.error("Api error", error);
   if (error.errorCode) {
     const { errorCode, msg } = error as ApiError;
     res.status(errorCode).json({ error: msg });
   } else {
-    res.status(500).json({ error: error.message });
+    res.status(500).json({ error: "Something went wrong" });
   }
 }
