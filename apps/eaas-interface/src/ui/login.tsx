@@ -1,9 +1,18 @@
 import React, { useState } from "react";
-import { login } from "../api";
+import { login } from "../api/user";
+import { useNavigate } from "react-router-dom";
+import {
+  FormControl,
+  FormLabel,
+  Input,
+  Button,
+  VStack,
+} from "@chakra-ui/react";
 
 export const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
   const handleUsernameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(event.target.value);
@@ -13,24 +22,28 @@ export const Login = () => {
     setPassword(event.target.value);
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    login({ email, password });
+    const response = await login({ email, password });
+    if (response?.user) {
+      // TOOO: extract response into global store
+      navigate("/dashboard/admin", { state: { user: response.user, tokens: response.tokens } });
+    }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <label>
-        Username:
-        <input type="text" value={email} onChange={handleUsernameChange} />
-      </label>
-      <br />
-      <label>
-        Password:
-        <input type="password" value={password} onChange={handlePasswordChange} />
-      </label>
-      <br />
-      <button type="submit">Login</button>
-    </form>
+    <VStack spacing={4} align="stretch">
+      <FormControl id="email">
+        <FormLabel>Email address</FormLabel>
+        <Input type="email" value={email} onChange={handleUsernameChange} />
+      </FormControl>
+      <FormControl id="password">
+        <FormLabel>Password</FormLabel>
+        <Input type="password" value={password} onChange={handlePasswordChange} />
+      </FormControl>
+      <Button colorScheme="blue" type="submit" onClick={() => handleSubmit}>
+        Login
+      </Button>
+    </VStack>
   );
 };

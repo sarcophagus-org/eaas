@@ -5,9 +5,10 @@ import { RequestWithUser } from "src/types/EaasUser";
 const createInvitation = async (req: RequestWithUser, res: Response) => {
   try {
     const sender = req.user;
-    const { recipientEmail } = req.body;
-
     await invitationService.authorizeSender(sender.id);
+
+    const { recipients } = req.body;
+    const recipientEmail = recipients[0];
 
     await invitationService.createInvitation(recipientEmail, sender.id);
 

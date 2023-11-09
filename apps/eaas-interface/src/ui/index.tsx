@@ -3,6 +3,8 @@ import { Login } from "./login";
 import { RouteKey, RoutesPathMap } from "./routerConstants";
 import { NotFoundPage } from "./notFound";
 import Home from "./home";
+import { AdminDashboard } from "./admin/dashboard";
+import { ClientDashboard } from "./client/dashboard";
 
 export function AppRoutes() {
   const routes = [
@@ -15,6 +17,16 @@ export function AppRoutes() {
       path: RoutesPathMap[RouteKey.LOGIN_PAGE],
       element: <Login />,
       label: "Login",
+    },
+    {
+      path: RoutesPathMap[RouteKey.ADMIN_DASHBOARD_PAGE],
+      element: <AdminDashboard />,
+      label: "Admin Dashboard",
+    },
+    {
+      path: RoutesPathMap[RouteKey.CLIENT_DASHBOARD_PAGE],
+      element: <ClientDashboard />,
+      label: "Client Dashboard",
     },
   ];
 
