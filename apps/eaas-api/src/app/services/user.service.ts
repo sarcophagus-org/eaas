@@ -12,8 +12,19 @@ interface NewUser extends Identifiable {
   phone: string;
 }
 
+const userFields = [
+  "id",
+  "created_at",
+  "updated_at",
+  "email",
+  "is_admin",
+  "phone",
+  "name",
+  "is_email_verified",
+];
+
 const getAllUsers = async (): Promise<EaasUser[]> => {
-  return await eaasKnex("users").select("*");
+  return await eaasKnex("users").select(...userFields);
 };
 
 /**
@@ -95,7 +106,7 @@ const createUserWithInvite = async (params: {
 const getUserByEmail = async (email: string): Promise<EaasUser> => {
   const user = await eaasKnex("users")
     .where({ email: email.toLowerCase() })
-    .select("*")
+    .select(...userFields)
     .then((x) => x[0]);
   return user;
 };
@@ -228,7 +239,7 @@ const updateUserById = async (id: string, updateBody: Partial<EaasUser>): Promis
   const updatedUser = await eaasKnex("users")
     .where({ id })
     .update(user)
-    .returning("*")
+    .returning(userFields)
     .then((x) => x[0]);
   return updatedUser;
 };
