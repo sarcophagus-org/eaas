@@ -47,6 +47,22 @@ export default {
       directory: `${SEEDS_DIR}`,
     },
   },
+  developmentlocal: {
+    client: "postgres",
+    connection: {
+      host: process.env.DB_HOST,
+      user: process.env.DB_USER,
+      password: process.env.DB_PASS,
+      port: process.env.DB_PORT,
+      database: process.env.DB_NAME,
+    },
+    migrations: {
+      directory: `${MIGRATIONS_DIR}`,
+    },
+    seeds: {
+      directory: `${SEEDS_DIR}`,
+    },
+  },
   test: {
     client: "postgres",
     connection: `${DATABASE_URL_TEST}`,
