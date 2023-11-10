@@ -175,7 +175,7 @@ const generateInviteToken = async (senderId: string, invitationId: string): Prom
     invitationId,
   };
 
-  const jwtSecret = process.env.JWT_SECRET;
+  const jwtSecret = envConfig.jwt.secret;
   if (!jwtSecret) {
     throw Error("Missing env var JWT_SECRET");
   }
