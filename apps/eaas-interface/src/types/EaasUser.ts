@@ -1,3 +1,9 @@
+export interface RegisterUser {
+  name: string;
+  phone: string;
+  password: string;
+}
+
 export interface EaasUser {
   id: string;
   email: string;

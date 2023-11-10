@@ -31,13 +31,15 @@ const createInvitation = async (params: {
     throw new Error("User already invited");
   }
 
-  const invitationId = await eaasKnex("invitations")
+  const invitation = await eaasKnex("invitations")
     .insert({
       recipient_email: recipientEmail.toLowerCase(),
       sender_id: sender.id,
     })
     .returning("id")
     .then((x) => x[0]);
+
+    const invitationId = invitation.id;
 
   if (!invitationId) throw new Error("could not create invitation");
 

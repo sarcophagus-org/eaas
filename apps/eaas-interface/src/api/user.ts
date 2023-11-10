@@ -1,6 +1,6 @@
 import axios from "axios";
 import { handleApiError } from "./utils";
-import { EaasUser, EaasLoginResponse } from "../types/EaasUser";
+import { EaasUser, EaasLoginResponse, RegisterUser } from "../types/EaasUser";
 import { adminTokens } from "../store/tempMemoryStore";
 
 export async function login(params: {
@@ -18,6 +18,20 @@ export async function login(params: {
     return res.data as EaasLoginResponse;
   } catch (error) {
     // TODO: sort out a way to cleanly bubble up this error to the UI
+    handleApiError(error);
+  }
+}
+
+export async function clientRegister(params: { user: RegisterUser; inviteToken: string }) {
+  try {
+    const { user, inviteToken } = params;
+
+    const res = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/user/register`, {
+      user,
+      inviteToken,
+    });
+    return res.status === 201;
+  } catch (error) {
     handleApiError(error);
   }
 }
