@@ -1,6 +1,6 @@
 import axios from "axios";
 import { handleApiError } from "./utils";
-import { adminTokens } from "../store/tempMemoryStore";
+import { userTokens } from "../store/tempMemoryStore";
 
 export async function inviteClient(email: string) {
   try {
@@ -11,7 +11,7 @@ export async function inviteClient(email: string) {
       },
       {
         headers: {
-          Authorization: `Bearer ${adminTokens?.access.token}`,
+          Authorization: `Bearer ${userTokens?.access.token}`,
           "Content-Type": "application/json",
         },
       },

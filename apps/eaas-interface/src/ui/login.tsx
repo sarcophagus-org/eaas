@@ -25,7 +25,7 @@ export const Login = () => {
       setTokens(response.tokens);
       setUser(response.user);
 
-      navigate("/dashboard/admin", { replace: true });
+      navigate(`/dashboard/${response.user.is_admin ? "admin" : "client"}`, { replace: true });
     }
   };
 
