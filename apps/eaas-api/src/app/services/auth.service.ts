@@ -14,13 +14,13 @@ import { apiErrors } from "../utils/errors";
  * @returns The user if login is sucessful, else null
  */
 const loginWithEmailAndPassword = async (email: string, password: string): Promise<EaasUser> => {
-  const dbUser = await userService.getUserByEmail(email);
+  const [dbUser, hashedPassword] = await userService.getUserAndPasswordByEmail(email);
 
   if (!dbUser) {
     throw apiErrors.userNotFound;
   }
 
-  if (await bcrypt.compare(password, dbUser.password)) {
+  if (await bcrypt.compare(password, hashedPassword)) {
     return dbUser;
   } else {
     throw apiErrors.incorrectPassword;

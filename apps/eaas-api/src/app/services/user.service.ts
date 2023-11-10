@@ -103,6 +103,23 @@ const createUserWithInvite = async (params: {
  * @param email The user's email
  * @returns The user
  */
+const getUserAndPasswordByEmail = async (email: string): Promise<[EaasUser, string]> => {
+  const user = await eaasKnex("users")
+    .where({ email: email.toLowerCase() })
+    .select(...userFields, "password")
+    .then((x) => x[0]);
+
+  const password = user.password;
+  delete user.password;
+  return [user, password];
+};
+
+/**
+ * Get a user by email
+ *
+ * @param email The user's email
+ * @returns The user
+ */
 const getUserByEmail = async (email: string): Promise<EaasUser> => {
   const user = await eaasKnex("users")
     .where({ email: email.toLowerCase() })
@@ -309,6 +326,7 @@ export const userService = {
   getUserById,
   createUserWithInvite,
   getUserByEmail,
+  getUserAndPasswordByEmail,
   getUsersByIds,
   updateUserById,
   updatePassword,

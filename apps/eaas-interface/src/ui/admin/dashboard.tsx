@@ -16,8 +16,7 @@ export const AdminDashboard: React.FC = () => {
       setAdminEmail(adminData.email);
 
       const userListResponse = await getUserList();
-      if (userListResponse) 
-        setUserList(userListResponse);
+      if (userListResponse) setUserList(userListResponse);
     };
 
     fetchUserData();
