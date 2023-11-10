@@ -68,8 +68,6 @@ export const ClientOnboarding: React.FC = () => {
       return;
     }
 
-    // Call register API method here
-    console.log("Registering user with name:", name, "password:", password, "phone:", phone);
     const response = await clientRegister({
       user: {
         name,

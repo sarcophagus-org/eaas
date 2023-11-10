@@ -16,7 +16,6 @@ export async function inviteClient(email: string) {
         },
       },
     );
-    console.log(res.data);
     return res.status === 200;
   } catch (error) {
     handleApiError(error);
