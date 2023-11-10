@@ -22,7 +22,10 @@ export async function login(params: {
   }
 }
 
-export async function clientRegister(params: { user: RegisterUser; inviteToken: string }): Promise<EaasLoginResponse | undefined> {
+export async function clientRegister(params: {
+  user: RegisterUser;
+  inviteToken: string;
+}): Promise<EaasLoginResponse | undefined> {
   try {
     const { user, inviteToken } = params;
 

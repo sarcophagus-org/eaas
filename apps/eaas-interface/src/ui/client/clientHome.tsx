@@ -1,9 +1,9 @@
 import { Button, Container, Spinner, Text, useToast } from "@chakra-ui/react";
-import { sendPayload, testApi } from "../api";
-import { preparePayload } from "../utils/prepare-payload";
+import { sendPayload, testApi } from "../../api";
+import { preparePayload } from "../../utils/prepare-payload";
 import { useState } from "react";
 
-export const Home = () => {
+export const ClientHome = () => {
   const toast = useToast();
   const [isUploading, setIsUploading] = useState(false);
 
@@ -63,5 +63,3 @@ export const Home = () => {
     </Container>
   );
 };
-
-export default Home;

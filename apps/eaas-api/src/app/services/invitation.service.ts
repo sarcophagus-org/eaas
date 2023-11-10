@@ -39,7 +39,7 @@ const createInvitation = async (params: {
     .returning("id")
     .then((x) => x[0]);
 
-    const invitationId = invitation.id;
+  const invitationId = invitation.id;
 
   if (!invitationId) throw new Error("could not create invitation");
 

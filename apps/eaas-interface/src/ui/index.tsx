@@ -2,7 +2,6 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { Login } from "./login";
 import { RouteKey, RoutesPathMap } from "./routerConstants";
 import { NotFoundPage } from "./notFound";
-import Home from "./home";
 import { AdminDashboard } from "./admin/dashboard";
 import { ClientDashboard } from "./client/dashboard";
 import { ClientOnboarding } from "./client/onboarding";
@@ -11,7 +10,7 @@ export function AppRoutes() {
   const routes = [
     {
       path: RoutesPathMap[RouteKey.HOME_PAGE],
-      element: <Home />,
+      element: <Login />,
       label: "Home",
     },
     {
