@@ -6,12 +6,6 @@ import { JwtPayload } from "../../../src/types/JwtPayload";
 import { EaasUser } from "../../../src/types/EaasUser";
 import { invitationService } from "./invitation.service";
 
-interface NewUser extends Identifiable {
-  name: string;
-  email: string;
-  phone: string;
-}
-
 const userFields = [
   "id",
   "created_at",
@@ -41,7 +35,7 @@ const createUser = async (params: {
   email: string;
   password: string;
   phone: string;
-}): Promise<NewUser> => {
+}): Promise<EaasUser> => {
   const { name, email, password, phone } = params;
 
   const hashedPassword = await bcrypt.hash(password, 10);
@@ -53,7 +47,7 @@ const createUser = async (params: {
       password: hashedPassword,
       phone,
     })
-    .returning(["id", "created_at", "updated_at", "name", "email", "phone"])
+    .returning([...userFields])
     .then((x) => x[0]);
 
   return user;
@@ -73,7 +67,7 @@ const createUserWithInvite = async (params: {
   password: string;
   phone: string;
   inviteToken: string;
-}): Promise<{ user: NewUser }> => {
+}): Promise<{ user: EaasUser }> => {
   const { name, password, phone, inviteToken } = params;
   // user must have an invite to be created
   if (!inviteToken) throw new Error("missing invite token");

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { login } from "../api/user";
 import { useNavigate } from "react-router-dom";
 import { FormControl, FormLabel, Input, Button, VStack } from "@chakra-ui/react";
-import { setAdminUser, setTokens } from "../store/tempMemoryStore";
+import { setUser, setTokens } from "../store/tempMemoryStore";
 
 export const Login = () => {
   const [email, setEmail] = useState("");
@@ -23,9 +23,9 @@ export const Login = () => {
     if (response?.user) {
       // TOOO: extract response into global store
       setTokens(response.tokens);
-      setAdminUser(response.user);
+      setUser(response.user);
 
-      navigate("/dashboard/admin");
+      navigate("/dashboard/admin", { replace: true });
     }
   };
 

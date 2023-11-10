@@ -22,7 +22,7 @@ export async function login(params: {
   }
 }
 
-export async function clientRegister(params: { user: RegisterUser; inviteToken: string }) {
+export async function clientRegister(params: { user: RegisterUser; inviteToken: string }): Promise<EaasLoginResponse | undefined> {
   try {
     const { user, inviteToken } = params;
 
@@ -30,7 +30,8 @@ export async function clientRegister(params: { user: RegisterUser; inviteToken: 
       user,
       inviteToken,
     });
-    return res.status === 201;
+
+    return res.data as EaasLoginResponse;
   } catch (error) {
     handleApiError(error);
   }

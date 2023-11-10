@@ -12,6 +12,8 @@ import React from "react";
 import { useQuery } from "../../hooks/useQuery";
 import { useState } from "react";
 import { clientRegister } from "../../api/user";
+import { setUser, setTokens } from "../../store/tempMemoryStore";
+import { useNavigate } from "react-router-dom";
 
 interface FormFieldValidation {
   name?: string;
@@ -26,6 +28,8 @@ export const ClientOnboarding: React.FC = () => {
   const [password, setPassword] = useState("");
   const [phone, setPhone] = useState("");
   const [formErrors, setFormErrors] = useState<FormFieldValidation>({});
+
+  const navigate = useNavigate();
 
   const validateName = () => {
     if (!name) {
@@ -66,7 +70,7 @@ export const ClientOnboarding: React.FC = () => {
 
     // Call register API method here
     console.log("Registering user with name:", name, "password:", password, "phone:", phone);
-    clientRegister({
+    const response = await clientRegister({
       user: {
         name,
         password,
@@ -74,6 +78,14 @@ export const ClientOnboarding: React.FC = () => {
       },
       inviteToken: token!,
     });
+
+    if (response?.user) {
+      // TOOO: extract response into global store
+      setTokens(response.tokens);
+      setUser(response.user);
+
+      navigate("/dashboard/client", { replace: true });
+    }
   };
 
   return (
