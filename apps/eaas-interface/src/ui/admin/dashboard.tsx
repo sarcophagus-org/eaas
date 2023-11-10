@@ -7,7 +7,7 @@ import { EaasUser } from "../../types/EaasUser";
 import { adminUser } from "../../store/tempMemoryStore";
 
 export const AdminDashboard: React.FC = () => {
-  const [userList, setUserList] = useState<EaasUser[]>([]); 
+  const [userList, setUserList] = useState<EaasUser[]>([]);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -31,13 +31,9 @@ export const AdminDashboard: React.FC = () => {
 
   return (
     <Box>
-      <Heading>
-        Admin Dashboard
-      </Heading>
+      <Heading>Admin Dashboard</Heading>
       <Text>Admin email: {adminUser?.email}</Text>
-      <Heading size={"sm"}>
-        User List
-      </Heading>
+      <Heading size={"sm"}>User List</Heading>
       <List>
         {userList.map((user) => (
           <ListItem key={user.id}>

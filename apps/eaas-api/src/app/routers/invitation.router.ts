@@ -18,7 +18,6 @@ export const invitationRouter = () => {
     passport.authenticate("jwt", { session: false }),
     invitationController.createInvitation,
   );
-  router.post("/accept", invitationController.acceptInvite);
   router.post("/validate", invitationController.validateInviteToken);
   router.delete(
     "/",

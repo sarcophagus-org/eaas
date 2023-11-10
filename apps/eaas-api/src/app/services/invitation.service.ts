@@ -55,47 +55,6 @@ const createInvitation = async (params: {
 };
 
 /**
- * Accepts an invite to a resource, like an aircraft or a transaction.
- *
- * @param inviteToken the invite token
- */
-const acceptInvitation = async (inviteToken: string): Promise<{ user: EaasUser }> => {
-  // get invitation id from payload of inviteToken and delete the inviteToken
-  const payload = await tokenService.consumeToken(inviteToken, true);
-  const { invitationId } = payload;
-  if (!invitationId) {
-    throw new Error("there is no invitation linked to this inviteToken");
-  }
-
-  // look up invitation by the invitation id
-  const invitation = await getInvitationOrThrowError(invitationId);
-
-  // look up recipient in the users table by email
-  const recipient = await userService.getUserByEmail(invitation.recipient_email);
-
-  if (!recipient) {
-    throw Error(`No user found with email: ${invitation.recipient_email}`);
-  }
-
-  // create a record in the connections table with the sender id and the recipient id
-  // this currently has no use in the application, but may be useful in the future
-
-  try {
-    await eaasKnex("embalmer_has_client").insert({
-      embalmer_id: invitation.sender_id,
-      client_id: recipient.id,
-    });
-  } catch (error) {
-    console.error("cant create embalmer_has_client record", error);
-  }
-
-  await tokenService.findAndDeleteToken(inviteToken);
-  await deleteInvitation(invitation.sender_id, invitation.id);
-
-  return { user: recipient };
-};
-
-/**
  * Validates the invite token
  * @param inviteToken
  * @return User | undefined
@@ -169,7 +128,6 @@ const deleteInvitation = async (userId: string, id: string): Promise<void> => {
 export const invitationService = {
   createInvitation,
   validateInviteToken,
-  acceptInvitation,
   getSenderInvitations,
   authorizeSender,
   getInvitationOrThrowError,

@@ -24,7 +24,7 @@ export const Login = () => {
       // TOOO: extract response into global store
       setTokens(response.tokens);
       setAdminUser(response.user);
-      
+
       navigate("/dashboard/admin");
     }
   };

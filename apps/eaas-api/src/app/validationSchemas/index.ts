@@ -18,7 +18,7 @@ const userSchema = Joi.object({
   phone: Joi.string().required(),
 }).options({ abortEarly: false });
 
-export const createUserSchema = Joi.object({
+export const createUserWithInviteSchema = Joi.object({
   user: userSchema,
   inviteToken: Joi.string(),
 });

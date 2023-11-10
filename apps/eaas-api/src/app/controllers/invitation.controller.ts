@@ -21,18 +21,6 @@ const createInvitation = async (req: RequestWithUser, res: Response) => {
   }
 };
 
-const acceptInvite = async (req: Request, res: Response) => {
-  try {
-    const { token } = req.body;
-    const { user } = await invitationService.acceptInvitation(token);
-    const tokens = await tokenService.generateAuthTokens(user.id);
-
-    res.status(200).json({ user, tokens });
-  } catch (error) {
-    res.status(400).json({ error: error.message });
-  }
-};
-
 const validateInviteToken = async (req: Request, res: Response) => {
   try {
     const { token } = req.body;
@@ -71,7 +59,6 @@ const deleteInvitation = async (req: RequestWithUser, res: Response) => {
 
 export const invitationController = {
   createInvitation,
-  acceptInvite,
   validateInviteToken,
   getSenderInvitations,
   deleteInvitation,
