@@ -12,10 +12,12 @@ export interface EaasToken {
   expires: Date;
 }
 
+export interface EaasTokens {
+  access: EaasToken;
+  refresh: EaasToken;
+}
+
 export interface EaasLoginResponse {
   user: EaasUser;
-  tokens: {
-    access: EaasToken;
-    refresh: EaasToken;
-  };
+  tokens: EaasTokens;
 }

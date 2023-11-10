@@ -4,17 +4,13 @@ import { inviteClient } from "../../api/invite";
 import { Box, Button, Heading, Input, List, ListItem, Text } from "@chakra-ui/react";
 
 import { EaasUser } from "../../types/EaasUser";
+import { adminUser } from "../../store/tempMemoryStore";
 
 export const AdminDashboard: React.FC = () => {
-  const [userList, setUserList] = useState<EaasUser[]>([]);
-  const [adminEmail, setAdminEmail] = useState<string>("");
+  const [userList, setUserList] = useState<EaasUser[]>([]); 
 
   useEffect(() => {
     const fetchUserData = async () => {
-      const adminResponse = await fetch("/api/admin");
-      const adminData = await adminResponse.json();
-      setAdminEmail(adminData.email);
-
       const userListResponse = await getUserList();
       if (userListResponse) setUserList(userListResponse);
     };
@@ -35,17 +31,17 @@ export const AdminDashboard: React.FC = () => {
 
   return (
     <Box>
-      <Heading as="h1" size="xl">
+      <Heading>
         Admin Dashboard
       </Heading>
-      <Text>Admin email: {adminEmail}</Text>
-      <Heading as="h2" size="lg">
+      <Text>Admin email: {adminUser?.email}</Text>
+      <Heading size={"sm"}>
         User List
       </Heading>
       <List>
         {userList.map((user) => (
           <ListItem key={user.id}>
-            {user.name} ({user.email})
+            {"->"} {user.name} ({user.email})
           </ListItem>
         ))}
       </List>

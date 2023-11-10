@@ -1,6 +1,7 @@
 import axios from "axios";
 import { handleApiError } from "./utils";
 import { EaasUser, EaasLoginResponse } from "../types/EaasUser";
+import { adminTokens } from "../store/tempMemoryStore";
 
 export async function login(params: {
   email: string;
@@ -23,7 +24,12 @@ export async function login(params: {
 
 export async function getUserList(): Promise<EaasUser[] | undefined> {
   try {
-    const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/user/all`);
+    const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/user/all`, {
+      headers: {
+        Authorization: `Bearer ${adminTokens?.access.token}`,
+        "Content-Type": "application/json",
+      },
+    });
     return res.data as EaasUser[];
   } catch (error) {
     handleApiError(error);
