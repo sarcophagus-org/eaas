@@ -5,6 +5,7 @@ import { NotFoundPage } from "./notFound";
 import Home from "./home";
 import { AdminDashboard } from "./admin/dashboard";
 import { ClientDashboard } from "./client/dashboard";
+import { ClientOnboarding } from "./client/onboarding";
 
 export function AppRoutes() {
   const routes = [
@@ -22,6 +23,11 @@ export function AppRoutes() {
       path: RoutesPathMap[RouteKey.ADMIN_DASHBOARD_PAGE],
       element: <AdminDashboard />,
       label: "Admin Dashboard",
+    },
+    {
+      path: RoutesPathMap[RouteKey.CLIENT_ONBOARDING_PAGE],
+      element: <ClientOnboarding />,
+      label: "Client Onboarding",
     },
     {
       path: RoutesPathMap[RouteKey.CLIENT_DASHBOARD_PAGE],

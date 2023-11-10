@@ -3,6 +3,7 @@ export enum RouteKey {
   LOGIN_PAGE,
   ADMIN_DASHBOARD_PAGE,
   CLIENT_DASHBOARD_PAGE,
+  CLIENT_ONBOARDING_PAGE,
 }
 
 export const RoutesPathMap: { [key: number]: string } = {
@@ -10,4 +11,5 @@ export const RoutesPathMap: { [key: number]: string } = {
   [RouteKey.LOGIN_PAGE]: "/login",
   [RouteKey.ADMIN_DASHBOARD_PAGE]: "/dashboard/admin",
   [RouteKey.CLIENT_DASHBOARD_PAGE]: "/dashboard/client",
+  [RouteKey.CLIENT_ONBOARDING_PAGE]: "/onboard",
 };
