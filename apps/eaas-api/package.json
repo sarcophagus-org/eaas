@@ -29,6 +29,7 @@
   "homepage": "https://github.com/sarcophagus-org/sarcophagus-eaas#readme",
   "dependencies": {
     "@sarcophagus-org/sarcophagus-v2-sdk": "file:../../../sarcophagus-v2-sdk",
+    "@sendgrid/mail": "^7.7.0",
     "bcrypt": "^5.1.1",
     "chalk": "^5.0.1",
     "cors": "^2.8.5",

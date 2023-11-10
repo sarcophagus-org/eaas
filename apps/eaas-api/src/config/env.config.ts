@@ -25,6 +25,8 @@ const envVarsSchema = Joi.object()
      */
     JWT_SECRET: Joi.string().required().description("JWT secret key"),
     DATABASE_URL: Joi.string().required().description("database connection url"),
+    SENDGRID_EMAIL: Joi.string().required().description("Sendgrid from email"),
+    SENDGRID_API_KEY: Joi.string().required().description("Sendgrid API key"),
 
     /**
      * Optional ENV vars
@@ -71,6 +73,11 @@ export const envConfig = {
   databaseUrl: envVars.DATABASE_URL,
   client: {
     url: envVars.CLIENT_URL,
+  },
+  sendGrid: {
+    fromEmail: envVars.SENDGRID_EMAIL,
+    apiKey: envVars.SENDGRID_API_KEY,
+    eaasLogoUrl: "",
   },
   privateKey: envVars.PRIVATE_KEY,
   providerUrl: envVars.PROVIDER_URL,

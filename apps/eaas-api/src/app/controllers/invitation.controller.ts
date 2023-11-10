@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { invitationService, tokenService } from "../services";
-import { RequestWithUser } from "src/types/EaasUser";
+import { RequestWithUser } from "../../../src/types/EaasUser";
 
 const createInvitation = async (req: RequestWithUser, res: Response) => {
   try {
@@ -10,9 +10,10 @@ const createInvitation = async (req: RequestWithUser, res: Response) => {
     const { recipients } = req.body;
     const recipientEmail = recipients[0];
 
-    await invitationService.createInvitation(recipientEmail, sender.id);
-
-    // TODO: send email to recipients
+    await invitationService.createInvitation({
+      recipientEmail,
+      sender,
+    });
 
     res.status(201).send();
   } catch (error) {

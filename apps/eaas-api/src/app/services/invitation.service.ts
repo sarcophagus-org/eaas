@@ -4,15 +4,21 @@ import { Invitation } from "../../../src/types/Invitation";
 import { tokenService } from "./token.service";
 import { userService } from "./user.service";
 import { authService } from "./auth.service";
+import { emailService } from "./email.service";
 
 /**
  * Creates an invitation record
  *
  * @param recipientEmail the email of the recipient
- * @param senderId the user id of the sender
+ * @param sender the sender's EaasUser
  * @returns the invitation id
  */
-const createInvitation = async (recipientEmail: string, senderId: string): Promise<string> => {
+const createInvitation = async (params: {
+  recipientEmail: string;
+  sender: EaasUser;
+}): Promise<string> => {
+  const { recipientEmail, sender } = params;
+
   const user = await userService.getUserByEmail(recipientEmail);
   if (user) {
     throw new Error("User already exists");
@@ -27,8 +33,8 @@ const createInvitation = async (recipientEmail: string, senderId: string): Promi
 
   const invitationId = await eaasKnex("invitations")
     .insert({
-      recipient_email: recipientEmail,
-      sender_id: senderId,
+      recipient_email: recipientEmail.toLowerCase(),
+      sender_id: sender.id,
     })
     .returning("id")
     .then((x) => x[0]);
@@ -37,12 +43,13 @@ const createInvitation = async (recipientEmail: string, senderId: string): Promi
 
   // Add the invitation id to the token for looking up the invitation when
   // the recipient accepts the invitations
-  const inviteToken = await tokenService.generateInviteToken(senderId, invitationId);
+  const inviteToken = await tokenService.generateInviteToken(sender.id, invitationId);
 
-  //  await emailService.sendNewUserInviteEmail(
-  //   recipientEmail,
-  //   inviteToken
-  // );
+  await emailService.sendNewUserInviteEmail({
+    to: recipientEmail,
+    token: inviteToken,
+    sender,
+  });
 
   return invitationId;
 };
