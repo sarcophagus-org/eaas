@@ -2,10 +2,19 @@ import express from "express";
 import cors from "cors";
 import passport from "passport";
 import { logging } from "../../src/utils/logger";
-import { Router, Request, Response, Express } from "express";
+import { Router, Response, Express } from "express";
 import { UNCAUGHT_EXCEPTION } from "../../src/utils/exit-codes";
-import { userRouter } from "./routers/user.router";
-import { authRouter, embalmRouter, invitationRouter, jwtStrategy } from "./routers";
+import {
+  authRouter,
+  authRoute,
+  userRouter,
+  userRoute,
+  embalmRouter,
+  embalmRoute,
+  invitationRouter,
+  invitationRoute,
+} from "./routers";
+import { jwtStrategy } from "src/config/jwtConfig";
 
 export function initialiseApp() {
   const app = express();
@@ -48,8 +57,8 @@ export function setupRoutes(app: Express) {
   rootRouter.get("/", (_, res: Response) => res.send("Embalmer-X online!"));
   app.use(rootRouter);
 
-  app.use("/user", userRouter());
-  app.use("/auth", authRouter());
-  app.use("/invitation", invitationRouter());
-  app.use("/embalm", embalmRouter());
+  app.use(userRoute, userRouter());
+  app.use(authRoute, authRouter());
+  app.use(invitationRoute, invitationRouter());
+  app.use(embalmRoute, embalmRouter());
 }

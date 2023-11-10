@@ -4,6 +4,7 @@ import { userController } from "../controllers/user.controller";
 import { validateRequestBody } from "../middleware/validateRequestBody";
 import { createUserWithInviteSchema } from "../validationSchemas";
 
+export const userRoute = "/user";
 export const userRouter = () => {
   const router = Router();
 

@@ -4,6 +4,7 @@ import { embalmController } from "../controllers";
 import { validateRequestBody } from "../middleware/validateRequestBody";
 import { sendEncryptedPayloadSchema } from "../validationSchemas";
 
+export const embalmRoute = "/embalm";
 export const embalmRouter = () => {
   const router = Router();
 

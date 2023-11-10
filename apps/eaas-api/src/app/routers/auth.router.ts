@@ -3,6 +3,7 @@ import { authController } from "../controllers";
 import { validateRequestBody } from "../middleware/validateRequestBody";
 import { resetPasswordSchema } from "../validationSchemas";
 
+export const authRoute = "/auth";
 export const authRouter = () => {
   const router = Router();
 

@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { invitationService, tokenService } from "../services";
+import { invitationService } from "../services";
 import { RequestWithUser } from "../../../src/types/EaasUser";
 
 const createInvitation = async (req: RequestWithUser, res: Response) => {

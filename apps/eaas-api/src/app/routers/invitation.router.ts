@@ -4,6 +4,7 @@ import { invitationController } from "../controllers";
 import { validateRequestBody } from "../middleware/validateRequestBody";
 import { createInvitationSchema } from "../validationSchemas";
 
+export const invitationRoute = "/invitation";
 export const invitationRouter = () => {
   const router = Router();
 
