@@ -1,4 +1,4 @@
-import { EaasTokens, EaasUser } from "../types/EaasUser";
+import { EaasTokens, EaasUser } from "../types/userTypes";
 
 export let adminUser: EaasUser | null = null;
 export let adminTokens: EaasTokens | null = null;

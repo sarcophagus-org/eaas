@@ -1,6 +1,6 @@
 import axios from "axios";
 import { handleApiError } from "./utils";
-import { EaasUser, EaasLoginResponse, RegisterUser } from "../types/EaasUser";
+import { EaasUser, EaasLoginResponse, RegisterUser } from "../types/userTypes";
 import { adminTokens } from "../store/tempMemoryStore";
 
 export async function login(params: {

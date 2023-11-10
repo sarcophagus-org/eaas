@@ -3,7 +3,7 @@ import { getUserList } from "../../api/user";
 import { inviteClient } from "../../api/invite";
 import { Box, Button, Heading, Input, List, ListItem, Text } from "@chakra-ui/react";
 
-import { EaasUser } from "../../types/EaasUser";
+import { EaasUser } from "../../types/userTypes";
 import { adminUser } from "../../store/tempMemoryStore";
 
 export const AdminDashboard: React.FC = () => {
