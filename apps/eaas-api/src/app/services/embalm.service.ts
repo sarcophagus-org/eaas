@@ -1,5 +1,5 @@
 import { ArchaeologistExceptionCode, NodeSarcoClient } from "@sarcophagus-org/sarcophagus-v2-sdk";
-import { ApiBufferType, PreparedEncryptedPayload } from "../../../../common/types";
+import { PreparedEncryptedPayload } from "../../../../common/types";
 
 interface ArweaveUploadArgs {
   sarco: NodeSarcoClient;
@@ -51,17 +51,6 @@ const uploadEncryptedPayloadToArweave = async (args: ArweaveUploadArgs) => {
     }
   });
 };
-
-function formatPreparedEncryptedPayload(arg: PreparedEncryptedPayload): PreparedEncryptedPayload {
-  return {
-    encryptedPayload: (arg.encryptedPayload as ApiBufferType).data,
-    innerEncryptedkeyShares: (arg.innerEncryptedkeyShares as ApiBufferType[]).map(
-      (x) => x["data"] as Buffer,
-    ),
-    recipientPublicKey: arg.recipientPublicKey,
-    encryptedPayloadMetadata: arg.encryptedPayloadMetadata,
-  };
-}
 
 async function runEmbalm(options: EmbalmOptions) {
   const {
@@ -165,6 +154,5 @@ async function runEmbalm(options: EmbalmOptions) {
 }
 
 export const embalmService = {
-  formatPreparedEncryptedPayload,
   runEmbalm,
 };

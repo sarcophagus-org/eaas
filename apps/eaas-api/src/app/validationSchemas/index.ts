@@ -6,16 +6,8 @@ const preparedEncryptedPayloadSchema = Joi.object({
     type: Joi.string().required(),
   }),
   recipientPublicKey: Joi.string().required(),
-  encryptedPayload: Joi.object({
-    type: Joi.string().required(),
-    data: Joi.string().required(),
-  }),
-  innerEncryptedkeyShares: Joi.array().items(
-    Joi.object({
-      type: Joi.string().required(),
-      data: Joi.string().required(),
-    }),
-  ),
+  encryptedPayload: Joi.binary().required(),
+  innerEncryptedkeyShares: Joi.array().items(Joi.binary().required()),
 });
 
 export const sendEncryptedPayloadSchema = Joi.object({

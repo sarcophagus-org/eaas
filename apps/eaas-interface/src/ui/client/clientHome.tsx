@@ -1,7 +1,8 @@
 import { Button, Container, Spinner, Text, useToast } from "@chakra-ui/react";
-import { sendPayload, testApi } from "../../api";
+import { testApi } from "../../api";
 import { preparePayload } from "../../utils/prepare-payload";
 import { useState } from "react";
+import { sendPayload } from "../../api/embalm";
 
 export const ClientHome = () => {
   const toast = useToast();
@@ -47,7 +48,11 @@ export const ClientHome = () => {
 
               console.log("sent", sendSuccess);
 
-              toast({ title: "File uploaded", status: "success" });
+              if (sendSuccess) {
+                toast({ title: "File uploaded", status: "success" });
+              } else {
+                toast({ title: "File upload failed", status: "error" });
+              }
             } catch (e) {
               console.log(e);
             } finally {
