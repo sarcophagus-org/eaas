@@ -5,7 +5,7 @@ import { logging } from "../../src/utils/logger";
 import { Router, Request, Response, Express } from "express";
 import { UNCAUGHT_EXCEPTION } from "../../src/utils/exit-codes";
 import { userRouter } from "./routers/user.router";
-import { authRouter, invitationRouter, jwtStrategy } from "./routers";
+import { authRouter, embalmRouter, invitationRouter, jwtStrategy } from "./routers";
 
 export function initialiseApp() {
   const app = express();
@@ -45,10 +45,11 @@ export function startApp(params: { app: express.Express; port?: number }) {
 
 export function setupRoutes(app: Express) {
   const rootRouter = Router();
-  rootRouter.get("/", (req: Request, res: Response) => res.send("Embalmer-X online!"));
+  rootRouter.get("/", (_, res: Response) => res.send("Embalmer-X online!"));
   app.use(rootRouter);
 
   app.use("/user", userRouter());
   app.use("/auth", authRouter());
   app.use("/invitation", invitationRouter());
+  app.use("/embalm", embalmRouter());
 }

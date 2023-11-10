@@ -4,16 +4,19 @@ import { ClientHome } from "./clientHome";
 
 import { appUser } from "../../store/tempMemoryStore";
 
-
 export const ClientDashboard: React.FC = () => {
-  return  appUser?.is_admin ? (
+  return appUser?.is_admin ? (
     <Box>
       <Text>You are not authorized to view this page.</Text>
     </Box>
   ) : (
     <Box>
-      <Heading as="h1" size="xl">Client Dashboard</Heading>
-      <Text>Your Profile: {appUser?.name} ({appUser?.email})</Text>
+      <Heading as="h1" size="xl">
+        Client Dashboard
+      </Heading>
+      <Text>
+        Your Profile: {appUser?.name} ({appUser?.email})
+      </Text>
 
       <ClientHome />
     </Box>

@@ -32,3 +32,4 @@ export const jwtStrategy = new JwtStrategy(jwtOptions, jwtVerify);
 export { authRouter } from "./auth.router";
 export { userRouter } from "./user.router";
 export { invitationRouter } from "./invitation.router";
+export { embalmRouter } from "./embalm.router";
