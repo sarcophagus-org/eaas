@@ -15,6 +15,9 @@ From project root:
 
 - `docker compose up -d`
 - `cd apps/eaas-api`
+
+If this is the first time running the API docker container, or if previously deleted:
+
 - `npm run migrate:latest`
 - `npm run seed:dev`
 
