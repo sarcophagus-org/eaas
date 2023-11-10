@@ -1,9 +1,8 @@
 import { Response } from "express";
 import { RequestWithUser } from "../../../src/types/EaasUser";
 import { SendEncryptedPayloadParams } from "../../../../common/types";
-import { formatPreparedEncryptedPayload, runEmbalm } from "src/utils/embalm";
-import { logging } from "src/utils/logger";
 import { handleApiError } from "../utils/errors";
+import { embalmService } from "../services";
 
 /**
  * Delete invitation by given id.
@@ -15,9 +14,10 @@ const sendEncryptedPayload = async (req: RequestWithUser, res: Response) => {
       req.body as SendEncryptedPayloadParams;
 
     // TODO: get from embalm.service
-    await runEmbalm({
+    await embalmService.runEmbalm({
       chainId,
-      preparedEncryptedPayload: formatPreparedEncryptedPayload(preparedEncryptedPayload),
+      preparedEncryptedPayload:
+        embalmService.formatPreparedEncryptedPayload(preparedEncryptedPayload),
       requiredArchaeologists: threshold,
       resurrectionTime,
       sarcophagusName,
