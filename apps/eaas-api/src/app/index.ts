@@ -14,7 +14,7 @@ import {
   invitationRouter,
   invitationRoute,
 } from "./routers";
-import { jwtStrategy } from "src/config/jwtConfig";
+import { jwtStrategy } from "../../src/config/jwtConfig";
 
 export function initialiseApp() {
   const app = express();
