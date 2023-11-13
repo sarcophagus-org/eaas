@@ -2,3 +2,7 @@ node_modules
 .vscode
 .env
 .env.local
+.turbo
+build
+build/*
+apps/eaas-api/build/tsconfig.tsbuildinfo

@@ -1,11 +1,13 @@
 import { ArchaeologistExceptionCode, NodeSarcoClient } from "@sarcophagus-org/sarcophagus-v2-sdk";
-import { uploadEncryptedPayloadToArweave } from "./arweave";
-import {
-  PreparedEncryptedPayload,
-  PreparedEncryptedPayloadApiBody,
-} from "../../../../packages/types";
+import { PreparedEncryptedPayload } from "../../../../common/types";
 
-export interface EmbalmOptions {
+interface ArweaveUploadArgs {
+  sarco: NodeSarcoClient;
+  archaeologistPublicKeys: string[];
+  preparedEncryptedPayload: PreparedEncryptedPayload;
+}
+
+interface EmbalmOptions {
   chainId: number;
   sarcophagusName: string;
   resurrectionTime: number;
@@ -13,20 +15,44 @@ export interface EmbalmOptions {
   preparedEncryptedPayload: PreparedEncryptedPayload;
 }
 
-export function formatPreparedEncryptedPayload(
-  arg: PreparedEncryptedPayloadApiBody,
-): PreparedEncryptedPayload {
-  return {
-    preEncryptedPayload: arg.preEncryptedPayload.data,
-    recipientInnerEncryptedkeyShares: arg.recipientInnerEncryptedkeyShares.map(
-      (x) => x["data"] as Uint8Array,
-    ),
-    recipientPublicKey: arg.recipientPublicKey,
-    preEncryptedPayloadMetadata: arg.preEncryptedPayloadMetadata,
-  };
-}
+const uploadEncryptedPayloadToArweave = async (args: ArweaveUploadArgs) => {
+  const { sarco, archaeologistPublicKeys } = args;
 
-export async function runEmbalm(options: EmbalmOptions) {
+  const {
+    recipientPublicKey,
+    encryptedPayload,
+    innerEncryptedkeyShares,
+    encryptedPayloadMetadata,
+  } = args.preparedEncryptedPayload;
+
+  return new Promise<string>(async (resolve, reject) => {
+    try {
+      const uploadPromise = sarco.api.uploadPreEncryptedPayloadToArweave({
+        archaeologistPublicKeys,
+        onStep: (step: string) => console.log(`Uploading To Arweave: ${step}`),
+        recipientPublicKey,
+        onUploadChunk: (_: any, chunkedUploadProgress: number) => {
+          console.log(`Upload Progress: ${chunkedUploadProgress}%`);
+        },
+        onUploadChunkError: (msg: string) => {
+          console.error(msg);
+          throw new Error(msg);
+        },
+        onUploadComplete: (uploadId: string) => resolve(uploadId),
+        encryptedPayload: encryptedPayload as Buffer,
+        innerEncryptedkeyShares: innerEncryptedkeyShares as Buffer[],
+        encryptedPayloadMetadata,
+      });
+
+      await uploadPromise;
+    } catch (error: any) {
+      console.log(error);
+      throw new Error(error.message || "Error uploading payload to Bundlr");
+    }
+  });
+};
+
+async function runEmbalm(options: EmbalmOptions) {
   const {
     chainId,
     sarcophagusName,
@@ -47,11 +73,11 @@ export async function runEmbalm(options: EmbalmOptions) {
   const allArchaeologists = await sarco.archaeologist
     .getFullArchProfiles({ filterOffline: false })
     .catch((error) => {
-      console.error("Failed to get archaeologist profiles");
+      console.error("Failed to get archaeologist profiles", error);
       throw error;
     });
 
-  const nArchs = preparedEncryptedPayload.recipientInnerEncryptedkeyShares.length;
+  const nArchs = preparedEncryptedPayload.innerEncryptedkeyShares.length;
 
   // TODO: select archaeologists
   // Possible logic: randomly select` nArchs * 2` archaeologists.
@@ -62,14 +88,14 @@ export async function runEmbalm(options: EmbalmOptions) {
   await Promise.all(
     selectedArchaeologists.map(async (arch) => {
       const connection = await sarco.archaeologist.dialArchaeologist(arch).catch((error) => {
-        console.error(`Failed to dial archaeologist ${arch.profile.archAddress}`);
+        console.error(`Failed to dial archaeologist ${arch.profile.archAddress}`, error);
         throw error;
       });
 
       arch.connection = connection;
     }),
   ).catch((error) => {
-    console.error("Failed to dial archaeologists");
+    console.error("Failed to dial archaeologists", error);
     throw error;
   });
 
@@ -101,9 +127,7 @@ export async function runEmbalm(options: EmbalmOptions) {
 
     const sarcophagusPayloadTxId = await uploadEncryptedPayloadToArweave({
       archaeologistPublicKeys: Array.from(archaeologistPublicKeys.values()),
-      nShares: selectedArchaeologists.length,
       sarco,
-      threshold: requiredArchaeologists,
       preparedEncryptedPayload,
     });
 
@@ -128,3 +152,7 @@ export async function runEmbalm(options: EmbalmOptions) {
     throw new Error(e);
   }
 }
+
+export const embalmService = {
+  runEmbalm,
+};

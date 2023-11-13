@@ -5,6 +5,16 @@
   "type": "module",
   "scripts": {
     "dev": "NODE_ENV=development nodemon --exec ts-node --experimental-specifier-resolution=node ./src/index.ts",
+    "build": "tsc -p tsconfig.json",
+    "start": "sc -p tsconfig.json && NODE_ENV=production NODE_PATH=./build ts-node --experimental-specifier-resolution=node ./src/index.ts",
+    "migrate:list": "NODE_OPTIONS=\"--loader ts-node/esm\" knex migrate:list help",
+    "migrate:make": "NODE_OPTIONS=\"--loader ts-node/esm\" knex migrate:make -x ts",
+    "migrate:latest": "NODE_OPTIONS=\"--loader ts-node/esm\" knex migrate:latest --migrations-directory ./src/database/migrations --env developmentlocal",
+    "migrate:latest:production": "NODE_OPTIONS=\"--loader ts-node/esm\" NODE_ENV=production knex migrate:latest --env production",
+    "migrate:test": "NODE_OPTIONS=\"--loader ts-node/esm\" NODE_ENV=test knex migrate:latest --env test",
+    "migrate:test:ci": "NODE_OPTIONS=\"--loader ts-node/esm\" NODE_ENV=test knex migrate:latest --env test --connection postgres://postgres:postgres@localhost:5432/eaas_db",
+    "seed:make": "NODE_OPTIONS=\"--loader ts-node/esm\" knex seed:make",
+    "seed:dev": "NODE_OPTIONS=\"--loader ts-node/esm\" knex seed:run --env developmentlocal",
     "test": ""
   },
   "repository": {
@@ -19,6 +29,8 @@
   "homepage": "https://github.com/sarcophagus-org/sarcophagus-eaas#readme",
   "dependencies": {
     "@sarcophagus-org/sarcophagus-v2-sdk": "file:../../../sarcophagus-v2-sdk",
+    "@sendgrid/mail": "^7.7.0",
+    "bcrypt": "^5.1.1",
     "chalk": "^5.0.1",
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
@@ -27,7 +39,16 @@
     "express": "^4.18.2",
     "firebase": "^9.16.0",
     "fs": "^0.0.1-security",
+    "joi": "^17.11.0",
+    "jsonwebtoken": "^9.0.2",
+    "knex": "^3.0.1",
+    "moment": "^2.29.4",
+    "node-fetch": "^3.3.2",
     "node-schedule": "^2.1.1",
+    "passport": "^0.6.0",
+    "passport-jwt": "^4.0.1",
+    "pg": "^8.11.3",
+    "pg-escape": "^0.2.0",
     "shamirs-secret-sharing-ts": "^1.0.2"
   },
   "devDependencies": {

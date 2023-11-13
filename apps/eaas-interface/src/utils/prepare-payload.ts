@@ -9,6 +9,16 @@ interface PreparePayloadArgs {
   recipientPublicKey: string;
 }
 
+interface PreparePayloadResult {
+  encryptedPayload: Buffer;
+  innerEncryptedkeyShares: Buffer[];
+  encryptedPayloadMetadata: {
+    fileName: string;
+    type: string;
+  };
+  recipientPublicKey: string;
+}
+
 /**
  * Returns base64 data of a given File object
  * @param file The File object
@@ -49,29 +59,29 @@ function readFileDataAsBase64(file: File): Promise<{ type: string; data: Buffer 
 /**
  * Prepare the payload for upload to the Embalmer-X Server.
  */
-export const preparePayload = async (args: PreparePayloadArgs) => {
+export const preparePayload = async (args: PreparePayloadArgs): Promise<PreparePayloadResult> => {
   const { nArchs, file, recipientPublicKey } = args;
 
   const randomWallet = ethers.Wallet.createRandom();
 
   const { data, type } = await readFileDataAsBase64(file!);
 
-  const preEncryptedPayloadMetadata = {
+  const encryptedPayloadMetadata = {
     fileName: file.name,
     type,
   };
 
-  const preEncryptedPayload = await encrypt(
+  const encryptedPayload = await encrypt(
     Buffer.from(ethers.utils.arrayify(randomWallet.publicKey)),
     data,
   );
 
-  const keyShares: Uint8Array[] = split(randomWallet.privateKey!, {
+  const keyShares: Uint8Array[] = split(randomWallet.privateKey, {
     shares: nArchs,
     threshold: nArchs,
   });
 
-  const recipientInnerEncryptedkeyShares: Buffer[] = await Promise.all(
+  const innerEncryptedkeyShares = await Promise.all(
     keyShares.map(async (keyShare) => {
       return await encrypt(
         Buffer.from(ethers.utils.arrayify(recipientPublicKey)),
@@ -80,10 +90,25 @@ export const preparePayload = async (args: PreparePayloadArgs) => {
     }),
   );
 
+  // TODO: Uncomment and use this instead when updated sdk is published
+  // const innerEncryptionData = sarco.utils.encryptInnerLayer({
+  //   file,
+  //   recipientPublicKey,
+  //   shares: nArchs,
+  //   threshold: nArchs,
+  //   payloadPrivateKey: randomWallet.privateKey,
+  //   payloadPublicKey: randomWallet.publicKey,
+  // });
+
+  // return {
+  //   ...innerEncryptionData,
+  //   recipientPublicKey,
+  // };
+
   return {
-    preEncryptedPayload,
-    recipientInnerEncryptedkeyShares,
-    preEncryptedPayloadMetadata,
+    encryptedPayload,
+    innerEncryptedkeyShares,
+    encryptedPayloadMetadata,
     recipientPublicKey,
   };
 };
