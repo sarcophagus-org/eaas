@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
-import { handleApiError } from "../utils/errors";
+import { handleApiError } from "./errors";
 import { RequestWithUser } from "src/types/EaasUser";
 
-export const tryRunController = (
+export const getSafeController = (
   controller: (req: Request | RequestWithUser, res: Response) => Promise<void>,
 ) => {
   return async (req: Request | RequestWithUser, res: Response) => {

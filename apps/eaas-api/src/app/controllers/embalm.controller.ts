@@ -2,12 +2,12 @@ import { Response } from "express";
 import { RequestWithUser } from "../../../src/types/EaasUser";
 import { SendEncryptedPayloadParams } from "../../../../common/types";
 import { embalmService } from "../services";
-import { tryRunController } from "./tryRunController";
+import { getSafeController } from "../utils/tryRunController";
 
 /**
  * Embalm the provided payload
  */
-const runEmbalm = tryRunController(async (req: RequestWithUser, res: Response) => {
+const runEmbalm = getSafeController(async (req: RequestWithUser, res: Response) => {
     const { preparedEncryptedPayload, threshold, resurrectionTime, sarcophagusName, chainId } =
       req.body as SendEncryptedPayloadParams;
 
