@@ -19,9 +19,16 @@ const createInvitation = async (params: {
 }): Promise<string> => {
   const { recipientEmail, sender } = params;
 
-  const user = await userService.getUserByEmail(recipientEmail);
-  if (user) {
-    throw apiErrors.userAlreadyExists;
+  // Make sure the recipient doesn't already exist
+  try {
+    const user = await userService.getUserByEmail(recipientEmail);
+    if (user) {
+      throw apiErrors.userAlreadyExists;
+    }
+  } catch (e) {
+    if (e === apiErrors.userNotFound) {
+      // continue
+    }
   }
 
   const invitations = await eaasKnex("invitations").where({

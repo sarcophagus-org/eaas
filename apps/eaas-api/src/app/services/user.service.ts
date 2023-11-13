@@ -63,7 +63,7 @@ const createUserWithInvite = async (params: {
   // user must have an invite to be created
   if (!inviteToken) throw apiErrors.invalidInvitationToken;
 
-  const { invitationId } =
+  const { invitationId, sub } =
     (await tokenService.consumeToken(inviteToken, true)) || ({} as JwtPayload);
 
   // payload of invite token must include the invitation id
@@ -83,6 +83,12 @@ const createUserWithInvite = async (params: {
     if (!user || !user.id) {
       throw apiErrors.userNotFound;
     }
+
+    // Link the user to the embalmer
+    await eaasKnex("embalmer_has_clients").insert({
+      embalmer_id: sub,
+      client_id: user.id,
+    });
 
     return { user };
   } catch (error) {
@@ -140,9 +146,9 @@ const getUsersByIds = async (ids: string[]): Promise<EaasUser[]> => {
   const users = await eaasKnex("users")
     .whereIn("id", ids)
     .select(...userFields);
-  
-    if (!users) throw apiErrors.userNotFound;
-  
+
+  if (!users) throw apiErrors.userNotFound;
+
   return users;
 };
 
@@ -316,7 +322,7 @@ export const deleteUser = async (id: string): Promise<void> => {
     .where({ id })
     .select("id")
     .then((x) => x[0]);
-  
+
   if (!user) throw apiErrors.userNotFound;
 
   await eaasKnex("users").where({ id }).delete();
