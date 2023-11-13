@@ -84,22 +84,6 @@ const getSenderInvitations = async (userId: string) => {
 };
 
 /**
- * Determines if the a user inviting someone is authorized to do so
- *
- * Simply throws an error if sender is not authorized.
- *
- * @param senderId the user id of the sender
- */
-const authorizeSender = async (senderId: string): Promise<void> => {
-  try {
-    const user = await userService.getUserById(senderId);
-    if (user.is_admin) return;
-  } catch (error) {
-    throw apiErrors.unauthorized;
-  }
-};
-
-/**
  * Get an invitation by id or throw error
  *
  * @param id the invitation id
@@ -131,7 +115,6 @@ export const invitationService = {
   createInvitation,
   validateInviteToken,
   getSenderInvitations,
-  authorizeSender,
   getInvitationOrThrowError,
   deleteInvitation,
 };
