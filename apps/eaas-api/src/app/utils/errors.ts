@@ -11,7 +11,9 @@ export interface ApiErrors {
   userAlreadyInvited: ApiError;
   incorrectPassword: ApiError;
   invalidToken: ApiError;
+  invalidSignature: ApiError;
   tokenNotFound: ApiError;
+  tokenExpired: ApiError;
   noUserFoundOnToken: ApiError;
   invalidUserOnToken: ApiError;
   unauthorized: ApiError;
@@ -42,8 +44,16 @@ export const apiErrors: ApiErrors = {
     msg: "invalid token",
     errorCode: 400,
   },
+  invalidSignature: {
+    msg: "invalid signature",
+    errorCode: 400,
+  },
   tokenNotFound: {
     msg: "token not found",
+    errorCode: 404,
+  },
+  tokenExpired: {
+    msg: "token expired",
     errorCode: 404,
   },
   noUserFoundOnToken: {

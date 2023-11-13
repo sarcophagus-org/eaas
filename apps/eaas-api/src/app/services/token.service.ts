@@ -52,6 +52,45 @@ const generateAuthTokens = async (userId: string): Promise<UserTokens> => {
  * @param skipDelete
  * @returns The token from the db if verified, else returns null
  */
+const verifyToken = async (token: string, secret: Secret): Promise<JwtPayload> => {
+  try {
+    return await new Promise<JwtPayload>((resolve, reject) => {
+      jwt.verify(token, secret, (error, payload) => {
+        if (error) {
+          if (error.message.includes("invalid signature")) {
+            reject(apiErrors.invalidSignature);
+          } else if (error.message.includes("token not found")) {
+            reject(apiErrors.tokenNotFound);
+          } else if (error.message.includes("jwt expired")) {
+            reject(apiErrors.tokenExpired);
+          } else {
+            reject(error);
+          }
+        }
+
+        if (payload) {
+          resolve(payload as JwtPayload);
+        } else {
+          reject(apiErrors.invalidToken);
+        }
+      });
+    });
+  } catch (error) {
+    if (error.errorCode) {
+      throw error;
+    }
+
+    throw apiErrors.invalidToken;
+  }
+};
+
+/**
+ * Verifies a token, confirms its existence, and optionally deletes it from the db
+ *
+ * @param token The token to be verified
+ * @param skipDelete Whether or not to delete the token from the db
+ * @returns The token from the db if verified, else returns null
+ */
 const consumeToken = async (token: string, skipDelete?: boolean): Promise<any> => {
   const secret = envConfig.jwt.secret;
 
@@ -124,7 +163,7 @@ const generateResetPasswordToken = async (email: string): Promise<string> => {
   const resetPasswordExpirationMinutes = process.env.JWT_RESET_PASSWORD_EXPIRATION_MINUTES || 30;
 
   const user = await userService.getUserByEmail(email);
-  if (!user) throw new Error("no users found with this email");
+  if (!user) throw apiErrors.userNotFound;
 
   const expires = moment().add(resetPasswordExpirationMinutes, "minutes");
 
@@ -187,26 +226,6 @@ const generateInviteToken = async (senderId: string, invitationId: string): Prom
   });
 
   return inviteToken;
-};
-
-const verifyToken = async (token: string, secret: Secret): Promise<JwtPayload> => {
-  try {
-    return await new Promise<JwtPayload>((resolve, reject) => {
-      jwt.verify(token, secret, (error, payload) => {
-        if (error) {
-          reject(error);
-        }
-
-        if (payload) {
-          resolve(payload as JwtPayload);
-        } else {
-          reject(new Error("Jwt has no payload"));
-        }
-      });
-    });
-  } catch (error) {
-    throw apiErrors.invalidToken;
-  }
 };
 
 export const findAndDeleteToken = async (token: string): Promise<void> => {
