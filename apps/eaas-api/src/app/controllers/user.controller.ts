@@ -5,20 +5,20 @@ import { tokenService } from "../services";
 import { getSafeController } from "../utils/tryRunController";
 
 const createUserWithInvite = getSafeController(async (req: Request, res: Response) => {
-    const { user, inviteToken } = req.body;
-    const { name, password, phone } = user;
-    const { user: dbUser } = await userService.createUserWithInvite({
-      name,
-      password,
-      phone,
-      inviteToken,
-    });
+  const { user, inviteToken } = req.body;
+  const { name, password, phone } = user;
+  const { user: dbUser } = await userService.createUserWithInvite({
+    name,
+    password,
+    phone,
+    inviteToken,
+  });
 
-    const tokens = await tokenService.generateAuthTokens(dbUser.id);
-    res.status(201).json({
-      user: dbUser,
-      tokens,
-    });
+  const tokens = await tokenService.generateAuthTokens(dbUser.id);
+  res.status(201).json({
+    user: dbUser,
+    tokens,
+  });
 });
 
 const getUser = getSafeController(async (req: Request, res: Response) => {
@@ -34,8 +34,8 @@ const getCurrentUser = getSafeController(async (req: RequestWithUser, res: Respo
 });
 
 const getAllUsers = getSafeController(async (req: RequestWithUser, res: Response) => {
-    const users = await userService.getAllUsers();
-    res.status(200).json(users);
+  const users = await userService.getAllUsers();
+  res.status(200).json(users);
 });
 
 const getUsersByIds = getSafeController(async (req: Request, res: Response) => {
