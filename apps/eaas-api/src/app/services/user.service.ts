@@ -14,29 +14,20 @@ const getAllUsers = async (): Promise<EaasUser[]> => {
 
 /**
  * Creates a user
- *
- * @param name
- * @param email
- * @param password
- * @param phone
  * @returns a new user object
  */
 const createUser = async (params: {
-  name: string;
   email: string;
   password: string;
-  phone: string;
 }): Promise<EaasUser> => {
-  const { name, email, password, phone } = params;
+  const { email, password } = params;
 
   const hashedPassword = await bcrypt.hash(password, 10);
 
   const user = await eaasKnex("users")
     .insert({
-      name,
       email: email.toLowerCase(),
       password: hashedPassword,
-      phone,
     })
     .returning([...userFields])
     .then((x) => x[0]);
@@ -46,20 +37,13 @@ const createUser = async (params: {
 
 /**
  * Creates a user given an invitation token
- *
- * @param name
- * @param password
- * @param phone
- * @param inviteToken
  * @returns a new user object
  */
 const createUserWithInvite = async (params: {
-  name: string;
   password: string;
-  phone: string;
   inviteToken: string;
 }): Promise<{ user: EaasUser }> => {
-  const { name, password, phone, inviteToken } = params;
+  const { password, inviteToken } = params;
   // user must have an invite to be created
   if (!inviteToken) throw apiErrors.invalidInvitationToken;
 
@@ -75,7 +59,7 @@ const createUserWithInvite = async (params: {
   const invitation = await invitationService.getInvitationOrThrowError(invitationId);
 
   try {
-    const user = await createUser({ name, email: invitation.recipient_email, password, phone });
+    const user = await createUser({ email: invitation.recipient_email, password });
 
     await tokenService.findAndDeleteToken(inviteToken);
     await invitationService.deleteInvitation(invitation.sender_id, invitation.id);
@@ -240,7 +224,7 @@ const searchUsers = async (pattern: string): Promise<Partial<EaasUser>[]> => {
 const updateUserById = async (id: string, updateBody: Partial<EaasUser>): Promise<EaasUser> => {
   // TODO: manage whitelist with joi
   // Only allow whitelisted fields to be updated
-  const whitelisted = ["email", "phone", "name"];
+  const whitelisted = ["email"];
   const notAllowed = Object.keys(updateBody).filter((x) => !whitelisted.includes(x));
   if (notAllowed.length > 0) {
     throw apiErrors.invalidUpdateFields;

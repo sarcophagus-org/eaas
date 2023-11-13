@@ -6,11 +6,9 @@ import { getSafeController } from "../utils/tryRunController";
 
 const createUserWithInvite = getSafeController(async (req: Request, res: Response) => {
   const { user, inviteToken } = req.body;
-  const { name, password, phone } = user;
+  const { name, password } = user;
   const { user: dbUser } = await userService.createUserWithInvite({
-    name,
     password,
-    phone,
     inviteToken,
   });
 

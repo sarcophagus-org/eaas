@@ -13,11 +13,9 @@ const verifyToken = getSafeController(async (req: Request, res: Response) => {
 
 const register = getSafeController(async (req: Request, res: Response) => {
   const { user, inviteToken } = req.body;
-  const { name, password, phone } = user;
+  const { password } = user;
   const { user: dbUser } = await userService.createUserWithInvite({
-    name,
     password,
-    phone,
     inviteToken,
   });
 
