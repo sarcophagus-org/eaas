@@ -1,10 +1,10 @@
 import bcrypt from "bcrypt";
 import { tokenService } from "./token.service";
 import { eaasKnex } from "../../database";
-import { Identifiable } from "../../types/Identifiable";
 import { JwtPayload } from "../../../src/types/JwtPayload";
 import { EaasUser } from "../../../src/types/EaasUser";
 import { invitationService } from "./invitation.service";
+import { apiErrors } from "../utils/errors";
 
 const userFields = [
   "id",
@@ -77,7 +77,7 @@ const createUserWithInvite = async (params: {
 
   // payload of invite token must include the invitation id
   if (!invitationId) {
-    throw new Error("invitation id not included in invite token payload");
+    throw apiErrors.invalidInvitationToken;
   }
 
   // if invitation is not found the user should not be created

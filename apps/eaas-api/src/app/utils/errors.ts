@@ -7,10 +7,18 @@ export interface ApiError {
 
 export interface ApiErrors {
   userNotFound: ApiError;
+  userAlreadyExists: ApiError;
+  userAlreadyInvited: ApiError;
   incorrectPassword: ApiError;
+  invalidToken: ApiError;
   tokenNotFound: ApiError;
   noUserFoundOnToken: ApiError;
   invalidUserOnToken: ApiError;
+  unauthorized: ApiError;
+  missingJWTSecret: ApiError;
+  invalidInvitationToken: ApiError;
+  noInvitationLinked: ApiError;
+  invitationNotFound: ApiError;
 }
 
 export const apiErrors: ApiErrors = {
@@ -18,8 +26,20 @@ export const apiErrors: ApiErrors = {
     msg: "user not found",
     errorCode: 404,
   },
+  userAlreadyExists: {
+    msg: "user already exists",
+    errorCode: 400,
+  },
+  userAlreadyInvited: {
+    msg: "user already invited",
+    errorCode: 400,
+  },
   incorrectPassword: {
     msg: "incorrect password",
+    errorCode: 400,
+  },
+  invalidToken: {
+    msg: "invalid token",
     errorCode: 400,
   },
   tokenNotFound: {
@@ -34,10 +54,30 @@ export const apiErrors: ApiErrors = {
     msg: "invalid user on token",
     errorCode: 400,
   },
+  noInvitationLinked: {
+    msg: "there is no invitation linked to this inviteToken",
+    errorCode: 400,
+  },
+  invalidInvitationToken: {
+    msg: "invitation token is invalid",
+    errorCode: 400,
+  },
+  unauthorized: {
+    msg: "unauthorized",
+    errorCode: 401,
+  },
+  missingJWTSecret: {
+    msg: "Missing env var JWT_SECRET",
+    errorCode: 500,
+  },
+  invitationNotFound: {
+    msg: "invitation not found",
+    errorCode: 404,
+  },
 };
 
 export function handleApiError(res: Response, error: any) {
-  console.error("Api error", error);
+  console.error("Api error:", error);
   if (error.errorCode) {
     const { errorCode, msg } = error as ApiError;
     res.status(errorCode).json({ error: msg });

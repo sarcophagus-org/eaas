@@ -5,6 +5,7 @@ import { envConfig } from "../../../src/config/env.config";
 import { AuthTokenTypes, UserTokens, TokenType, TokenDb } from "../../../src/types/Token";
 import { userService } from "./user.service";
 import { JwtPayload } from "../../../src/types/JwtPayload";
+import { apiErrors } from "../utils/errors";
 
 /**
  * Generate auth tokens
@@ -58,8 +59,9 @@ const consumeToken = async (token: string, skipDelete?: boolean): Promise<any> =
 
   const userId = payload.sub;
   if (!userId || typeof userId !== "string") {
-    throw new Error("invalid token");
+    throw apiErrors.invalidToken;
   }
+
   skipDelete ? await findToken(token) : await findAndDeleteToken(token);
 
   return payload;
@@ -92,7 +94,7 @@ const generateToken = (
 
   const jwtSecret = secret || process.env.JWT_SECRET;
   if (!jwtSecret) {
-    throw Error("Missing env var JWT_SECRET");
+    throw apiErrors.missingJWTSecret;
   }
 
   return jwt.sign(payload, jwtSecret);
@@ -103,6 +105,7 @@ const generateToken = (
  */
 const saveToken = async (token: TokenDb): Promise<void> => {
   const { user_id, type } = token;
+
   // If this is access or refresh token, delete before inserting
   if (AuthTokenTypes.map(toString).includes(type)) {
     await eaasKnex("tokens").where({ user_id, type }).delete();
@@ -133,18 +136,21 @@ const generateResetPasswordToken = async (email: string): Promise<string> => {
     expires: expires.toISOString(),
     type: TokenType.resetPassword,
   });
+
   return resetPasswordToken;
 };
 
 const generateVerifyEmailToken = async (userId: string): Promise<string> => {
   const expires = moment().add(envConfig.jwt.verifyEmailExpirationMinutes, "minutes");
   const verifyEmailToken = generateToken(userId, expires, TokenType.verifyEmail);
+
   await eaasKnex("tokens").insert({
     token: verifyEmailToken,
     user_id: userId,
     expires: expires.toISOString(),
     type: TokenType.verifyEmail,
   });
+
   return verifyEmailToken;
 };
 
@@ -168,7 +174,7 @@ const generateInviteToken = async (senderId: string, invitationId: string): Prom
 
   const jwtSecret = envConfig.jwt.secret;
   if (!jwtSecret) {
-    throw Error("Missing env var JWT_SECRET");
+    throw apiErrors.missingJWTSecret;
   }
 
   const inviteToken = jwt.sign(payload, jwtSecret);
@@ -179,22 +185,28 @@ const generateInviteToken = async (senderId: string, invitationId: string): Prom
     expires: expires.toISOString(),
     type: TokenType.invite,
   });
+
   return inviteToken;
 };
 
-const verifyToken = (token: string, secret: Secret): Promise<JwtPayload> => {
-  return new Promise((resolve, reject) => {
-    jwt.verify(token, secret, (error, payload) => {
-      if (error) {
-        reject(error);
-      }
-      if (payload) {
-        resolve(payload as JwtPayload);
-      } else {
-        reject(new Error("Jwt has no payload"));
-      }
+const verifyToken = async (token: string, secret: Secret): Promise<JwtPayload> => {
+  try {
+    return await new Promise<JwtPayload>((resolve, reject) => {
+      jwt.verify(token, secret, (error, payload) => {
+        if (error) {
+          reject(error);
+        }
+
+        if (payload) {
+          resolve(payload as JwtPayload);
+        } else {
+          reject(new Error("Jwt has no payload"));
+        }
+      });
     });
-  });
+  } catch (error) {
+    throw apiErrors.invalidToken;
+  }
 };
 
 export const findAndDeleteToken = async (token: string): Promise<void> => {
@@ -209,7 +221,7 @@ export const findAndDeleteToken = async (token: string): Promise<void> => {
     .then((x) => x[0]);
 
   if (!dbToken) {
-    throw new Error("token not found");
+    throw apiErrors.tokenNotFound;
   }
 };
 
@@ -223,7 +235,7 @@ export const findToken = async (token: string): Promise<void> => {
     .then((x) => x[0]);
 
   if (!dbToken) {
-    throw new Error("token not found");
+    throw apiErrors.tokenNotFound;
   }
 };
 

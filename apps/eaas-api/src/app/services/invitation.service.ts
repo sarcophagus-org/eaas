@@ -3,8 +3,8 @@ import { eaasKnex } from "../../../src/database";
 import { Invitation } from "../../../src/types/Invitation";
 import { tokenService } from "./token.service";
 import { userService } from "./user.service";
-import { authService } from "./auth.service";
 import { emailService } from "./email.service";
+import { apiErrors } from "../utils/errors";
 
 /**
  * Creates an invitation record
@@ -21,14 +21,14 @@ const createInvitation = async (params: {
 
   const user = await userService.getUserByEmail(recipientEmail);
   if (user) {
-    throw new Error("User already exists");
+    throw apiErrors.userAlreadyExists;
   }
 
   const invitations = await eaasKnex("invitations").where({
     recipient_email: recipientEmail.toLowerCase(),
   });
   if (invitations.length > 0) {
-    throw new Error("User already invited");
+    throw apiErrors.userAlreadyInvited;
   }
 
   const invitation = await eaasKnex("invitations")
@@ -65,7 +65,7 @@ const validateInviteToken = async (inviteToken: string): Promise<EaasUser | unde
   const payload = await tokenService.consumeToken(inviteToken, true);
   const { invitationId } = payload;
   if (!invitationId) {
-    throw new Error("there is no invitation linked to this inviteToken");
+    throw apiErrors.invalidInvitationToken;
   }
   const invitation = await getInvitationOrThrowError(invitationId);
 
@@ -95,7 +95,7 @@ const authorizeSender = async (senderId: string): Promise<void> => {
     const user = await userService.getUserById(senderId);
     if (user.is_admin) return;
   } catch (error) {
-    throw new Error("User is not authorized to create invitations");
+    throw apiErrors.unauthorized;
   }
 };
 
@@ -112,7 +112,7 @@ const getInvitationOrThrowError = async (id: string): Promise<Invitation> => {
     .then((x) => x[0]);
 
   if (!invitation) {
-    throw new Error(`No invitation found with ID: ${id}`);
+    throw apiErrors.invitationNotFound;
   }
 
   return invitation;
