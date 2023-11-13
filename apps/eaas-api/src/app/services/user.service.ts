@@ -6,14 +6,7 @@ import { EaasUser } from "../../../src/types/EaasUser";
 import { invitationService } from "./invitation.service";
 import { apiErrors } from "../utils/errors";
 
-const userFields = [
-  "id",
-  "created_at",
-  "updated_at",
-  "email",
-  "is_embalmer",
-  "is_email_verified",
-];
+const userFields = ["id", "created_at", "updated_at", "email", "is_embalmer", "is_email_verified"];
 
 const getAllUsers = async (): Promise<EaasUser[]> => {
   return await eaasKnex("users").select(...userFields);
@@ -68,7 +61,7 @@ const createUserWithInvite = async (params: {
 }): Promise<{ user: EaasUser }> => {
   const { name, password, phone, inviteToken } = params;
   // user must have an invite to be created
-  if (!inviteToken) throw new Error("missing invite token");
+  if (!inviteToken) throw apiErrors.invalidInvitationToken;
 
   const { invitationId } =
     (await tokenService.consumeToken(inviteToken, true)) || ({} as JwtPayload);
@@ -88,7 +81,7 @@ const createUserWithInvite = async (params: {
     await invitationService.deleteInvitation(invitation.sender_id, invitation.id);
 
     if (!user || !user.id) {
-      throw new Error("could not create user");
+      throw apiErrors.userNotFound;
     }
 
     return { user };
@@ -113,6 +106,8 @@ const getUserAndPasswordByEmail = async (email: string): Promise<[EaasUser, stri
     .select(...userFields, "password")
     .then((x) => x[0]);
 
+  if (!user) throw apiErrors.userNotFound;
+
   const password = user.password;
   delete user.password;
   return [user, password];
@@ -129,6 +124,9 @@ const getUserByEmail = async (email: string): Promise<EaasUser> => {
     .where({ email: email.toLowerCase() })
     .select(...userFields)
     .then((x) => x[0]);
+
+  if (!user) throw apiErrors.userNotFound;
+
   return user;
 };
 
@@ -139,9 +137,13 @@ const getUserByEmail = async (email: string): Promise<EaasUser> => {
  * @returns a list of users
  */
 const getUsersByIds = async (ids: string[]): Promise<EaasUser[]> => {
-  return await eaasKnex("users")
+  const users = await eaasKnex("users")
     .whereIn("id", ids)
     .select(...userFields);
+  
+    if (!users) throw apiErrors.userNotFound;
+  
+  return users;
 };
 
 /**
@@ -158,7 +160,7 @@ const getUserById = async (id: string): Promise<EaasUser> => {
 /**
  * Searches for users by name or email with a string pattern
  *
- * Searches the users DB by name or email with wildcards at the start and end of
+ * Searches the users DB by email with wildcards at the start and end of
  * the pattern string. If a record exists with the name "Peter McPeterson",
  * searchUsers("ete") will return that record or any other record that contains
  * the string "ete". The wildcards are applied per word, so a search for the
@@ -187,7 +189,7 @@ const getUserById = async (id: string): Promise<EaasUser> => {
  * would be expensive on memory if there are lots of users
  *
  * @param pattern the string to search for
- * @returns a list of users with the fields id, name, and email
+ * @returns a list of users with the fields id and email
  */
 const searchUsers = async (pattern: string): Promise<Partial<EaasUser>[]> => {
   // an empty string should return an empty array
@@ -213,12 +215,11 @@ const searchUsers = async (pattern: string): Promise<Partial<EaasUser>[]> => {
       eaasKnex("users"),
     );
 
-    return await query.select("id", "name", "email");
+    return query.select("id", "email");
   } else {
     // The assumption is that an email should never has spaces, but a name may also have no spaces
     return await eaasKnex("users")
-      .whereRaw("LOWER(name) LIKE ?", `%${pattern.toLowerCase()}%`)
-      .orWhereRaw("LOWER(email) LIKE ?", `%${pattern.toLowerCase()}%`)
+      .whereRaw("LOWER(email) LIKE ?", `%${pattern.toLowerCase()}%`)
       .select("id", "email");
   }
 };
@@ -244,7 +245,7 @@ const updateUserById = async (id: string, updateBody: Partial<EaasUser>): Promis
     .select("*")
     .then((x) => x[0]);
 
-  if (!user) throw new Error("user not found");
+  if (!user) throw apiErrors.userNotFound;
 
   Object.assign(user, updateBody);
 
@@ -271,7 +272,9 @@ const updatePassword = async (params: {
     .where({ id: userId })
     .select("*")
     .then((x) => x[0]);
-  if (!user) throw new Error("could not find user");
+
+  if (!user) throw apiErrors.userNotFound;
+
   Object.assign(user, { password: hashedPassword });
   await eaasKnex("users").where({ id: userId }).update(user);
 };
@@ -287,7 +290,9 @@ const setEmailVerifiedStatus = async (userId: string, isEmailVerified: boolean):
     .where({ id: userId })
     .select("*")
     .then((x) => x[0]);
-  if (!user) throw new Error("could not find user");
+
+  if (!user) throw apiErrors.userNotFound;
+
   Object.assign(user, { is_email_verified: isEmailVerified });
   await eaasKnex("users").where({ id: userId }).update(user);
 };
@@ -311,7 +316,9 @@ export const deleteUser = async (id: string): Promise<void> => {
     .where({ id })
     .select("id")
     .then((x) => x[0]);
-  if (!user) throw new Error("user not found");
+  
+  if (!user) throw apiErrors.userNotFound;
+
   await eaasKnex("users").where({ id }).delete();
 };
 
