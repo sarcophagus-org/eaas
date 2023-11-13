@@ -1,14 +1,12 @@
-import { Identifiable } from "./Identifiable";
-
-export interface Token extends Identifiable {
+export interface TokenDb {
   token: string;
   user_id: string;
   expires: string;
   type: string;
-  blacklisted: boolean;
+  blacklisted?: boolean;
 }
 
-export interface TokenObject {
+export interface UserTokens {
   access: {
     token: string;
     expires: Date;

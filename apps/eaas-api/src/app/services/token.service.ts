@@ -2,7 +2,7 @@ import jwt, { Secret } from "jsonwebtoken";
 import moment, { Moment } from "moment";
 import { eaasKnex } from "../../database";
 import { envConfig } from "../../../src/config/env.config";
-import { AuthTokenTypes, TokenObject, TokenType } from "../../../src/types/Token";
+import { AuthTokenTypes, UserTokens, TokenType, TokenDb } from "../../../src/types/Token";
 import { userService } from "./user.service";
 import { JwtPayload } from "../../../src/types/JwtPayload";
 
@@ -12,16 +12,25 @@ import { JwtPayload } from "../../../src/types/JwtPayload";
  * @param {string} userId
  * @returns {Promise<Object>}
  */
-const generateAuthTokens = async (userId: string): Promise<TokenObject> => {
+const generateAuthTokens = async (userId: string): Promise<UserTokens> => {
   const accessTokenExpires = moment().add(envConfig.jwt.accessExpirationDays, "days");
-
   const refreshTokenExpires = moment().add(envConfig.jwt.refreshExpirationDays, "days");
 
   const accessToken = generateToken(userId, accessTokenExpires, TokenType.access);
   const refreshToken = generateToken(userId, refreshTokenExpires, TokenType.refresh);
 
-  await saveToken(accessToken, userId, accessTokenExpires, TokenType.access);
-  await saveToken(refreshToken, userId, refreshTokenExpires, TokenType.refresh);
+  await saveToken({
+    token: accessToken,
+    user_id: userId,
+    expires: accessTokenExpires.toISOString(),
+    type: TokenType.access.toString(),
+  });
+  await saveToken({
+    token: refreshToken,
+    user_id: userId,
+    expires: refreshTokenExpires.toISOString(),
+    type: TokenType.refresh.toString(),
+  });
 
   return {
     access: {
@@ -90,34 +99,16 @@ const generateToken = (
 };
 
 /**
- * Save token in db
- *
- * @param {string} token
- * @param {ObjectId} userId
- * @param {Moment} expires
- * @param {TokenType} type
- * @param blacklisted
- * @returns {Promise}
+ * Save token to db
  */
-const saveToken = async (
-  token: string,
-  userId: string,
-  expires: Moment,
-  type: TokenType,
-  blacklisted = false,
-): Promise<void> => {
+const saveToken = async (token: TokenDb): Promise<void> => {
+  const { user_id, type } = token;
   // If this is access or refresh token, delete before inserting
-  if (AuthTokenTypes.includes(type)) {
-    await eaasKnex("tokens").where({ user_id: userId, type }).delete();
+  if (AuthTokenTypes.map(toString).includes(type)) {
+    await eaasKnex("tokens").where({ user_id, type }).delete();
   }
 
-  await eaasKnex("tokens").insert({
-    token,
-    user_id: userId,
-    expires: expires.toISOString(),
-    type,
-    blacklisted,
-  });
+  await eaasKnex("tokens").insert(token);
 };
 
 /**

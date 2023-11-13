@@ -1,7 +1,7 @@
 import bcrypt from "bcrypt";
 import { tokenService, userService } from ".";
 import { EaasUser } from "../../../src/types/EaasUser";
-import { TokenObject, TokenType } from "../../../src/types/Token";
+import { UserTokens, TokenType } from "../../../src/types/Token";
 import { eaasKnex } from "../../../src/database";
 import { JwtPayload } from "../../../src/types/JwtPayload";
 import { apiErrors } from "../utils/errors";
@@ -49,7 +49,7 @@ const logout = async (token: string): Promise<void> => {
  * @param refreshToken The user's refresh token
  * @returns A token object
  */
-const refreshAuth = async (refreshToken: string): Promise<TokenObject> => {
+const refreshAuth = async (refreshToken: string): Promise<UserTokens> => {
   const { sub: userId } = (await tokenService.consumeToken(refreshToken)) || ({} as JwtPayload);
 
   if (userId) {
