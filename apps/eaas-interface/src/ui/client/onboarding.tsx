@@ -23,6 +23,7 @@ interface FormFieldValidation {
 export const ClientOnboarding: React.FC = () => {
   const token = useQuery().get("token");
   const [password, setPassword] = useState("");
+  const [passwordConfirm, setPasswordConfirm] = useState("");
   const [formErrors, setFormErrors] = useState<FormFieldValidation>({});
 
   const navigate = useNavigate();
@@ -34,6 +35,16 @@ export const ClientOnboarding: React.FC = () => {
       setFormErrors((prevErrors) => ({
         ...prevErrors,
         password: "Password must be at least 8 characters",
+      }));
+    } else if (!passwordConfirm) {
+      setFormErrors((prevErrors) => ({
+        ...prevErrors,
+        passwordConfirm: "Password confirmation is required",
+      }));
+    } else if (passwordConfirm !== password) {
+      setFormErrors((prevErrors) => ({
+        ...prevErrors,
+        passwordConfirm: "Passwords do not match",
       }));
     }
   };
@@ -79,6 +90,18 @@ export const ClientOnboarding: React.FC = () => {
         />
         <FormErrorMessage>{formErrors.password}</FormErrorMessage>
       </FormControl>
+
+      <FormControl id="password_confirm" isRequired isInvalid={!!formErrors.passwordConfirm}>
+        <FormLabel>Confirm Password</FormLabel>
+        <Input
+          type="password"
+          value={passwordConfirm}
+          onChange={(e) => setPasswordConfirm(e.target.value)}
+          onBlur={validatePassword}
+        />
+        <FormErrorMessage>{formErrors.passwordConfirm}</FormErrorMessage>
+      </FormControl>
+
       <Button mt={4} colorScheme="teal" onClick={handleRegister}>
         Register
       </Button>
