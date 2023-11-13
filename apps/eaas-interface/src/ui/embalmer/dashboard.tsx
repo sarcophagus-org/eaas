@@ -1,24 +1,11 @@
-import React, { useState, useEffect } from "react";
-import { getUserList } from "../../api/user";
+import React, { useState } from "react";
 import { inviteClient } from "../../api/invite";
-import { Box, Button, Heading, Input, List, ListItem, Text, useToast } from "@chakra-ui/react";
+import { Box, Button, Heading, Input, Text, useToast } from "@chakra-ui/react";
 
-import { EaasUser } from "../../types/userTypes";
 import { appUser } from "../../store/tempMemoryStore";
 
 export const EmbalmerDashboard: React.FC = () => {
-  const [userList, setUserList] = useState<EaasUser[]>([]);
   const toast = useToast();
-
-  useEffect(() => {
-    const fetchUserData = async () => {
-      const userListResponse = await getUserList();
-      if (userListResponse) setUserList(userListResponse);
-    };
-
-    fetchUserData();
-  }, []);
-
   const [clientEmail, setClientEmail] = useState<string>("");
 
   const handleInviteClient = async () => {
@@ -41,14 +28,6 @@ export const EmbalmerDashboard: React.FC = () => {
     <Box>
       <Heading>Embalmer Dashboard</Heading>
       <Text>Embalmer email: {appUser?.email}</Text>
-      <Heading size={"sm"}>User List</Heading>
-      <List>
-        {userList.map((user) => (
-          <ListItem key={user.id}>
-            {"->"} {user.email}
-          </ListItem>
-        ))}
-      </List>
       <Box>
         <Input placeholder="Client email" value={clientEmail} onChange={handleEmailChange} />
         <Button onClick={handleInviteClient}>Invite Client</Button>
