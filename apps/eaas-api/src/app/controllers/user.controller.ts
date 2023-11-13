@@ -2,9 +2,9 @@ import { Request, Response } from "express";
 import { userService } from "../../../src/app/services/user.service";
 import { EaasUser, RequestWithUser } from "../../../src/types/EaasUser";
 import { tokenService } from "../services";
+import { tryRunController } from "./tryRunController";
 
-const createUserWithInvite = async (req: Request, res: Response) => {
-  try {
+const createUserWithInvite = tryRunController(async (req: Request, res: Response) => {
     const { user, inviteToken } = req.body;
     const { name, password, phone } = user;
     const { user: dbUser } = await userService.createUserWithInvite({
@@ -14,84 +14,47 @@ const createUserWithInvite = async (req: Request, res: Response) => {
       inviteToken,
     });
 
-    if (!dbUser || !dbUser.id) {
-      res.status(400).json({ error: "could not create user" });
-    } else {
-      const tokens = await tokenService.generateAuthTokens(dbUser.id);
-      res.status(201).json({
-        user: dbUser,
-        tokens,
-      });
-    }
-  } catch (error) {
-    if (error.message.includes("duplicate key value")) {
-      res.status(409).json({ error: "email is already taken" });
-    } else {
-      res.status(400).json({ error: error.message });
-    }
-  }
-};
+    const tokens = await tokenService.generateAuthTokens(dbUser.id);
+    res.status(201).json({
+      user: dbUser,
+      tokens,
+    });
+});
 
-const getUser = async (req: Request, res: Response) => {
+const getUser = tryRunController(async (req: Request, res: Response) => {
   const { id } = req.params;
-  try {
-    const user = await userService.getUsersByIds([id]);
-    res.status(200).json(user);
-  } catch (error) {
-    res.status(400).json({ error: error.message });
-  }
-};
+  const user = await userService.getUsersByIds([id]);
+  res.status(200).json(user);
+});
 
-const getCurrentUser = async (req: RequestWithUser, res: Response) => {
+const getCurrentUser = tryRunController(async (req: RequestWithUser, res: Response) => {
   const { id } = req.user;
-  try {
-    const user = await userService.getUsersByIds([id]);
-    res.status(200).json(user);
-  } catch (error) {
-    res.status(400).json({ error: error.message });
-  }
-};
+  const user = await userService.getUsersByIds([id]);
+  res.status(200).json(user);
+});
 
-const getAllUsers = async (req: RequestWithUser, res: Response) => {
-  try {
+const getAllUsers = tryRunController(async (req: RequestWithUser, res: Response) => {
     const users = await userService.getAllUsers();
     res.status(200).json(users);
-  } catch (error) {
-    res.status(400).json({ error: error.message });
-  }
-};
+});
 
-const getUsersByIds = async (req: Request, res: Response) => {
+const getUsersByIds = tryRunController(async (req: Request, res: Response) => {
   const { ids } = req.body as { ids: string[] };
-  try {
-    const users = await userService.getUsersByIds(ids);
-    res.status(200).json(users);
-  } catch (error) {
-    res.status(400).json({ error: error.message });
-  }
-};
+  const users = await userService.getUsersByIds(ids);
+  res.status(200).json(users);
+});
 
-const updateUser = async (req: RequestWithUser, res: Response) => {
-  try {
-    const updateParams = req.body as Partial<EaasUser>;
-    const updatedUser = await userService.updateUserById(req.user.id, updateParams);
-    res.status(200).json(updatedUser);
-  } catch (error) {
-    console.error(error);
-    res.status(400).json({ error: error.message });
-  }
-};
+const updateUser = tryRunController(async (req: RequestWithUser, res: Response) => {
+  const updateParams = req.body as Partial<EaasUser>;
+  const updatedUser = await userService.updateUserById(req.user.id, updateParams);
+  res.status(200).json(updatedUser);
+});
 
-const deleteUser = async (req: RequestWithUser, res: Response) => {
-  try {
-    const user = req.user as EaasUser;
-    await userService.deleteUser(user.id);
-    res.send(200);
-  } catch (error) {
-    console.error(error);
-    res.status(400).json({ error: error.message });
-  }
-};
+const deleteUser = tryRunController(async (req: RequestWithUser, res: Response) => {
+  const user = req.user as EaasUser;
+  await userService.deleteUser(user.id);
+  res.send(200);
+});
 
 export const userController = {
   createUserWithInvite,

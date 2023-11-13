@@ -83,12 +83,24 @@ const createUserWithInvite = async (params: {
   // if invitation is not found the user should not be created
   const invitation = await invitationService.getInvitationOrThrowError(invitationId);
 
-  const user = await createUser({ name, email: invitation.recipient_email, password, phone });
+  try {
+    const user = await createUser({ name, email: invitation.recipient_email, password, phone });
 
-  await tokenService.findAndDeleteToken(inviteToken);
-  await invitationService.deleteInvitation(invitation.sender_id, invitation.id);
+    await tokenService.findAndDeleteToken(inviteToken);
+    await invitationService.deleteInvitation(invitation.sender_id, invitation.id);
 
-  return { user };
+    if (!user || !user.id) {
+      throw new Error("could not create user");
+    }
+
+    return { user };
+  } catch (error) {
+    if (error.message.includes("duplicate key value")) {
+      throw apiErrors.emailAlreadyTaken;
+    } else {
+      throw error;
+    }
+  }
 };
 
 /**
@@ -235,7 +247,7 @@ const updateUserById = async (id: string, updateBody: Partial<EaasUser>): Promis
   const whitelisted = ["email", "phone", "name"];
   const notAllowed = Object.keys(updateBody).filter((x) => !whitelisted.includes(x));
   if (notAllowed.length > 0) {
-    throw new Error(`tried to update non-whitelisted fields: ${JSON.stringify(notAllowed)}`);
+    throw apiErrors.invalidUpdateFields;
   }
 
   const user = await eaasKnex("users")

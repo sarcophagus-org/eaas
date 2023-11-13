@@ -7,8 +7,10 @@ export interface ApiError {
 
 export interface ApiErrors {
   userNotFound: ApiError;
+  emailAlreadyTaken: ApiError;
   userAlreadyExists: ApiError;
   userAlreadyInvited: ApiError;
+  invalidUpdateFields: ApiError;
   incorrectPassword: ApiError;
   invalidToken: ApiError;
   invalidSignature: ApiError;
@@ -28,12 +30,20 @@ export const apiErrors: ApiErrors = {
     msg: "user not found",
     errorCode: 404,
   },
+  emailAlreadyTaken: {
+    msg: "email already taken",
+    errorCode: 400,
+  },
   userAlreadyExists: {
     msg: "user already exists",
     errorCode: 400,
   },
   userAlreadyInvited: {
     msg: "user already invited",
+    errorCode: 400,
+  },
+  invalidUpdateFields: {
+    msg: "invalid update fields",
     errorCode: 400,
   },
   incorrectPassword: {
