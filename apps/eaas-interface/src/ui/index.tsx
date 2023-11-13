@@ -2,7 +2,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { Login } from "./login";
 import { RouteKey, RoutesPathMap } from "./routerConstants";
 import { NotFoundPage } from "./notFound";
-import { AdminDashboard } from "./admin/dashboard";
+import { EmbalmerDashboard } from "./embalmer/dashboard";
 import { ClientDashboard } from "./client/dashboard";
 import { ClientOnboarding } from "./client/onboarding";
 
@@ -19,9 +19,9 @@ export function AppRoutes() {
       label: "Login",
     },
     {
-      path: RoutesPathMap[RouteKey.ADMIN_DASHBOARD_PAGE],
-      element: <AdminDashboard />,
-      label: "Admin Dashboard",
+      path: RoutesPathMap[RouteKey.EMBALMER_DASHBOARD_PAGE],
+      element: <EmbalmerDashboard />,
+      label: "Embalmer Dashboard",
     },
     {
       path: RoutesPathMap[RouteKey.CLIENT_ONBOARDING_PAGE],

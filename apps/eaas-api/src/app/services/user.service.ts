@@ -11,9 +11,7 @@ const userFields = [
   "created_at",
   "updated_at",
   "email",
-  "is_admin",
-  "phone",
-  "name",
+  "is_embalmer",
   "is_email_verified",
 ];
 
@@ -143,16 +141,7 @@ const getUserByEmail = async (email: string): Promise<EaasUser> => {
 const getUsersByIds = async (ids: string[]): Promise<EaasUser[]> => {
   return await eaasKnex("users")
     .whereIn("id", ids)
-    .select(
-      "id",
-      "created_at",
-      "updated_at",
-      "email",
-      "is_admin",
-      "phone",
-      "name",
-      "is_email_verified",
-    );
+    .select(...userFields);
 };
 
 /**
@@ -230,7 +219,7 @@ const searchUsers = async (pattern: string): Promise<Partial<EaasUser>[]> => {
     return await eaasKnex("users")
       .whereRaw("LOWER(name) LIKE ?", `%${pattern.toLowerCase()}%`)
       .orWhereRaw("LOWER(email) LIKE ?", `%${pattern.toLowerCase()}%`)
-      .select("id", "name", "email", "profile_picture_key");
+      .select("id", "email");
   }
 };
 

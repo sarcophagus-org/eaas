@@ -16,26 +16,16 @@ import { setUser, setTokens } from "../../store/tempMemoryStore";
 import { useNavigate } from "react-router-dom";
 
 interface FormFieldValidation {
-  name?: string;
   password?: string;
-  phone?: string;
+  passwordConfirm?: string;
 }
 
 export const ClientOnboarding: React.FC = () => {
   const token = useQuery().get("token");
-
-  const [name, setName] = useState("");
   const [password, setPassword] = useState("");
-  const [phone, setPhone] = useState("");
   const [formErrors, setFormErrors] = useState<FormFieldValidation>({});
 
   const navigate = useNavigate();
-
-  const validateName = () => {
-    if (!name) {
-      setFormErrors((prevErrors) => ({ ...prevErrors, name: "Name is required" }));
-    }
-  };
 
   const validatePassword = () => {
     if (!password) {
@@ -48,32 +38,19 @@ export const ClientOnboarding: React.FC = () => {
     }
   };
 
-  const validatePhone = () => {
-    if (!phone) {
-      setFormErrors((prevErrors) => ({ ...prevErrors, phone: "Phone is required" }));
-    }
-  };
-
   const handleRegister = async () => {
     // Reset form errors
     setFormErrors({});
 
-    // Validate form fields
-    validateName();
     validatePassword();
-    validatePhone();
 
     // If there are errors, stop registration process
-    if (!!formErrors.name || !!formErrors.password || !!formErrors.phone) {
+    if (!!formErrors.password || !!formErrors.passwordConfirm) {
       return;
     }
 
     const response = await clientRegister({
-      user: {
-        name,
-        password,
-        phone,
-      },
+      user: { password },
       inviteToken: token!,
     });
 
@@ -91,19 +68,7 @@ export const ClientOnboarding: React.FC = () => {
       <Heading as="h1" size="xl">
         Client Onboarding
       </Heading>
-      <Text>Fill out the form to register your account</Text>
-
-      <FormControl id="name" isRequired isInvalid={!!formErrors.name}>
-        <FormLabel>Name</FormLabel>
-        <Input
-          type="text"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          onBlur={validateName}
-        />
-        <FormErrorMessage>Name is required</FormErrorMessage>
-      </FormControl>
-
+      <Text>Set a password to register your account</Text>
       <FormControl id="password" isRequired isInvalid={!!formErrors.password}>
         <FormLabel>Password</FormLabel>
         <Input
@@ -113,17 +78,6 @@ export const ClientOnboarding: React.FC = () => {
           onBlur={validatePassword}
         />
         <FormErrorMessage>{formErrors.password}</FormErrorMessage>
-      </FormControl>
-
-      <FormControl id="phone" isRequired isInvalid={!!formErrors.phone}>
-        <FormLabel>Phone</FormLabel>
-        <Input
-          type="text"
-          value={phone}
-          onChange={(e) => setPhone(e.target.value)}
-          onBlur={validatePhone}
-        />
-        <FormErrorMessage>Phone is required</FormErrorMessage>
       </FormControl>
       <Button mt={4} colorScheme="teal" onClick={handleRegister}>
         Register

@@ -11,7 +11,7 @@ export const authorizeInvitationSender = async (
   const senderId = req.user.id;
   try {
     const user = await userService.getUserById(senderId);
-    if (user.is_admin) {
+    if (user.is_embalmer) {
       next();
     } else {
       res.status(401).send({ error: apiErrors.unauthorized.msg });

@@ -25,7 +25,7 @@ export const Login = () => {
       setTokens(response.tokens);
       setUser(response.user);
 
-      navigate(`/dashboard/${response.user.is_admin ? "admin" : "client"}`, { replace: true });
+      navigate(`/dashboard/${response.user.is_embalmer ? "embalmer" : "client"}`, { replace: true });
     }
   };
 

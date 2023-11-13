@@ -6,7 +6,7 @@ import { Box, Button, Heading, Input, List, ListItem, Text, useToast } from "@ch
 import { EaasUser } from "../../types/userTypes";
 import { appUser } from "../../store/tempMemoryStore";
 
-export const AdminDashboard: React.FC = () => {
+export const EmbalmerDashboard: React.FC = () => {
   const [userList, setUserList] = useState<EaasUser[]>([]);
   const toast = useToast();
 
@@ -33,19 +33,19 @@ export const AdminDashboard: React.FC = () => {
     setClientEmail(event.target.value);
   };
 
-  return !appUser?.is_admin ? (
+  return !appUser?.is_embalmer ? (
     <Box>
       <Text>You are not authorized to view this page.</Text>
     </Box>
   ) : (
     <Box>
-      <Heading>Admin Dashboard</Heading>
-      <Text>Admin email: {appUser?.email}</Text>
+      <Heading>Embalmer Dashboard</Heading>
+      <Text>Embalmer email: {appUser?.email}</Text>
       <Heading size={"sm"}>User List</Heading>
       <List>
         {userList.map((user) => (
           <ListItem key={user.id}>
-            {"->"} {user.name} ({user.email})
+            {"->"} {user.email}
           </ListItem>
         ))}
       </List>

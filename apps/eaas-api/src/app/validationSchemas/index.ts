@@ -31,9 +31,7 @@ export const forgotPasswordSchema = Joi.object({
 });
 
 const userSchema = Joi.object({
-  name: Joi.string().required(),
   password: Joi.string().min(8).required(),
-  phone: Joi.string().required(),
 }).options({ abortEarly: false });
 
 export const createUserWithInviteSchema = Joi.object({

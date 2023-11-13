@@ -5,7 +5,7 @@ import { ClientHome } from "./clientHome";
 import { appUser } from "../../store/tempMemoryStore";
 
 export const ClientDashboard: React.FC = () => {
-  return appUser?.is_admin ? (
+  return appUser?.is_embalmer ? (
     <Box>
       <Text>You are not authorized to view this page.</Text>
     </Box>
@@ -15,7 +15,7 @@ export const ClientDashboard: React.FC = () => {
         Client Dashboard
       </Heading>
       <Text>
-        Your Profile: {appUser?.name} ({appUser?.email})
+        Your Profile: {appUser?.email}
       </Text>
 
       <ClientHome />
