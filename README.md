@@ -30,3 +30,8 @@ From project root:
 Or if in the interface directory:
 
 - `npm run dev`
+
+### Notes:
+
+- Embalmer email from seeded data is: `admin@example.com`
+- Embalmer password from seeded data is: `admin`
