@@ -1,15 +1,13 @@
 import { Response } from "express";
 import { RequestWithUser } from "../../../src/types/EaasUser";
 import { SendEncryptedPayloadParams } from "../../../../common/types";
-import { handleApiError } from "../utils/errors";
 import { embalmService } from "../services";
+import { tryRunController } from "./tryRunController";
 
 /**
- * Delete invitation by given id.
- * Will not take account for any invites on resources.
+ * Embalm the provided payload
  */
-const sendEncryptedPayload = async (req: RequestWithUser, res: Response) => {
-  try {
+const runEmbalm = tryRunController(async (req: RequestWithUser, res: Response) => {
     const { preparedEncryptedPayload, threshold, resurrectionTime, sarcophagusName, chainId } =
       req.body as SendEncryptedPayloadParams;
 
@@ -22,11 +20,8 @@ const sendEncryptedPayload = async (req: RequestWithUser, res: Response) => {
     });
 
     res.status(200).send("Success");
-  } catch (e) {
-    handleApiError(res, e);
-  }
-};
+});
 
 export const embalmController = {
-  sendEncryptedPayload,
+  runEmbalm,
 };

@@ -12,7 +12,7 @@ export const embalmRouter = () => {
     "/send-payload",
     passport.authenticate("jwt", { session: false }),
     validateRequestBody(sendEncryptedPayloadSchema),
-    embalmController.sendEncryptedPayload,
+    embalmController.runEmbalm,
   );
 
   return router;
