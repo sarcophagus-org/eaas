@@ -1,5 +1,3 @@
-import { Response } from "express";
-
 export interface ApiError {
   msg: string;
   errorCode: number;
@@ -95,13 +93,3 @@ export const apiErrors: ApiErrors = {
     errorCode: 404,
   },
 };
-
-export function handleApiError(res: Response, error: any) {
-  console.error("Api error:", error);
-  if (error.errorCode) {
-    const { errorCode, msg } = error as ApiError;
-    res.status(errorCode).json({ error: msg });
-  } else {
-    res.status(500).json({ error: "Something went wrong" });
-  }
-}

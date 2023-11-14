@@ -36,7 +36,7 @@
     "dotenv": "^16.0.3",
     "ecies-geth": "^1.6.14",
     "ethers": "^5.7.2",
-    "express": "^4.18.2",
+    "express": "^5.0.0-beta.1",
     "firebase": "^9.16.0",
     "fs": "^0.0.1-security",
     "joi": "^17.11.0",

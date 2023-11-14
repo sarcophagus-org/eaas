@@ -16,10 +16,7 @@ const getAllUsers = async (): Promise<EaasUser[]> => {
  * Creates a user
  * @returns a new user object
  */
-const createUser = async (params: {
-  email: string;
-  password: string;
-}): Promise<EaasUser> => {
+const createUser = async (params: { email: string; password: string }): Promise<EaasUser> => {
   const { email, password } = params;
 
   const hashedPassword = await bcrypt.hash(password, 10);
