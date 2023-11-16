@@ -1,5 +1,11 @@
 import { Actions } from "..";
-import { clearTokens, setAccessToken, setRefreshToken } from "../../localStorage";
+import {
+  clearTokens,
+  getUser,
+  saveUser,
+  setAccessToken,
+  setRefreshToken,
+} from "../../localStorage";
 import { EaasTokens, EaasUser } from "../../types/userTypes";
 import { ActionType } from "./actions";
 
@@ -8,9 +14,11 @@ export interface UserState {
   user: EaasUser | null;
 }
 
+const localStorageUser = getUser();
+
 export const userInitialState: UserState = {
   tokens: null,
-  user: null,
+  user: localStorageUser,
 };
 
 export function userReducer(state: UserState, action: Actions): UserState {
@@ -27,6 +35,7 @@ export function userReducer(state: UserState, action: Actions): UserState {
       return { ...state, tokens: null };
 
     case ActionType.SetUser:
+      saveUser(action.payload.user);
       return { ...state, user: action.payload.user };
 
     default:

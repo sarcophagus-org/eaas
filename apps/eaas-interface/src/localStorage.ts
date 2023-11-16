@@ -1,6 +1,16 @@
-import { EaasToken } from "./types/userTypes";
+import { EaasToken, EaasUser } from "./types/userTypes";
 
 type TokenType = "access" | "refresh";
+
+export const saveUser = (user: EaasUser | null) =>
+  user ? localStorage.setItem("user", JSON.stringify(user)) : localStorage.removeItem("user");
+export const getUser = (): EaasUser | null => {
+  const user = localStorage.getItem("user");
+  if (user) {
+    return JSON.parse(user) as EaasUser;
+  }
+  return null;
+};
 
 const setToken = (type: TokenType, token: EaasToken) =>
   localStorage.setItem(`${type}_token`, JSON.stringify(token));
