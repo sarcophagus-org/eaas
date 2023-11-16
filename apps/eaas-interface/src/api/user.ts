@@ -1,6 +1,6 @@
-import axios from "axios";
 import { handleApiError } from "./utils";
 import { EaasUser, EaasLoginResponse, RegisterUser } from "../types/userTypes";
+import { axiosInstance as axios } from ".";
 
 export async function login(params: {
   email: string;
@@ -41,12 +41,7 @@ export async function clientRegister(params: {
 
 export async function getUserList(): Promise<EaasUser[] | undefined> {
   try {
-    const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/user/all`, {
-      headers: {
-        Authorization: `Bearer ${userTokens?.access.token}`,
-        "Content-Type": "application/json",
-      },
-    });
+    const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/user/all`);
     return res.data as EaasUser[];
   } catch (error) {
     handleApiError(error);

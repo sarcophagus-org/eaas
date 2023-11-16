@@ -8,7 +8,7 @@ const maxFileSize = 400_000_000;
 
 export function useSelectFile() {
   const dispatch = useDispatch();
-  const file = useSelector(x => x.embalmState.file);
+  const file = useSelector((x) => x.embalmState.file);
   const fileInputRef = createRef<HTMLInputElement>();
   const [error, setError] = useState<string | null>("");
   const toast = useToast();

@@ -7,7 +7,7 @@ import { SetResurrection } from "./setResurrection";
 import { useSelector } from "../../store";
 
 export const ClientDashboard: React.FC = () => {
-  const appUser = useSelector(x => x.userState.user);
+  const appUser = useSelector((x) => x.userState.user);
   return appUser?.type === UserType.embalmer ? (
     <Box>
       <Text>You are not authorized to view this page.</Text>

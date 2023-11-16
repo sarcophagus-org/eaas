@@ -7,7 +7,7 @@ import { useSelector } from "../../store";
 export const EmbalmerDashboard: React.FC = () => {
   const toast = useToast();
   const [clientEmail, setClientEmail] = useState<string>("");
-  const appUser = useSelector(x => x.userState.user);
+  const appUser = useSelector((x) => x.userState.user);
 
   const handleInviteClient = async () => {
     await inviteClient(clientEmail);
