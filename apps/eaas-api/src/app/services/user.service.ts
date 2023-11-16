@@ -1,6 +1,6 @@
 import bcrypt from "bcrypt";
 import { tokenService } from "./token.service";
-import { eaasKnex } from "../../database";
+import { knex } from "../../database";
 import { JwtPayload } from "../../../src/types/JwtPayload";
 import { EaasUser } from "../../../src/types/EaasUser";
 import { invitationService } from "./invitation.service";
@@ -9,7 +9,7 @@ import { apiErrors } from "../utils/errors";
 const userFields = ["id", "created_at", "updated_at", "email", "is_embalmer", "is_email_verified"];
 
 const getAllUsers = async (): Promise<EaasUser[]> => {
-  return await eaasKnex("users").select(...userFields);
+  return await knex("users").select(...userFields);
 };
 
 /**
@@ -21,7 +21,7 @@ const createUser = async (params: { email: string; password: string }): Promise<
 
   const hashedPassword = await bcrypt.hash(password, 10);
 
-  const user = await eaasKnex("users")
+  const user = await knex("users")
     .insert({
       email: email.toLowerCase(),
       password: hashedPassword,
@@ -66,7 +66,7 @@ const createUserWithInvite = async (params: {
     }
 
     // Link the user to the embalmer
-    await eaasKnex("embalmer_has_clients").insert({
+    await knex("embalmer_has_clients").insert({
       embalmer_id: sub,
       client_id: user.id,
     });
@@ -88,7 +88,7 @@ const createUserWithInvite = async (params: {
  * @returns The user
  */
 const getUserAndPasswordByEmail = async (email: string): Promise<[EaasUser, string]> => {
-  const user = await eaasKnex("users")
+  const user = await knex("users")
     .where({ email: email.toLowerCase() })
     .select(...userFields, "password")
     .then((x) => x[0]);
@@ -107,7 +107,7 @@ const getUserAndPasswordByEmail = async (email: string): Promise<[EaasUser, stri
  * @returns The user
  */
 const getUserByEmail = async (email: string): Promise<EaasUser> => {
-  const user = await eaasKnex("users")
+  const user = await knex("users")
     .where({ email: email.toLowerCase() })
     .select(...userFields)
     .then((x) => x[0]);
@@ -124,7 +124,7 @@ const getUserByEmail = async (email: string): Promise<EaasUser> => {
  * @returns a list of users
  */
 const getUsersByIds = async (ids: string[]): Promise<EaasUser[]> => {
-  const users = await eaasKnex("users")
+  const users = await knex("users")
     .whereIn("id", ids)
     .select(...userFields);
 
@@ -199,13 +199,13 @@ const searchUsers = async (pattern: string): Promise<Partial<EaasUser>[]> => {
     // The query is not case sensitive.
     const query = words.reduce(
       (prev, word) => prev.whereRaw("LOWER(name) LIKE ?", `%${word.toLowerCase()}%`),
-      eaasKnex("users"),
+      knex("users"),
     );
 
     return query.select("id", "email");
   } else {
     // The assumption is that an email should never has spaces, but a name may also have no spaces
-    return await eaasKnex("users")
+    return await knex("users")
       .whereRaw("LOWER(email) LIKE ?", `%${pattern.toLowerCase()}%`)
       .select("id", "email");
   }
@@ -227,7 +227,7 @@ const updateUserById = async (id: string, updateBody: Partial<EaasUser>): Promis
     throw apiErrors.invalidUpdateFields;
   }
 
-  const user = await eaasKnex("users")
+  const user = await knex("users")
     .where({ id })
     .select("*")
     .then((x) => x[0]);
@@ -236,7 +236,7 @@ const updateUserById = async (id: string, updateBody: Partial<EaasUser>): Promis
 
   Object.assign(user, updateBody);
 
-  const updatedUser = await eaasKnex("users")
+  const updatedUser = await knex("users")
     .where({ id })
     .update(user)
     .returning(userFields)
@@ -255,7 +255,7 @@ const updatePassword = async (params: {
   hashedPassword: string;
 }): Promise<void> => {
   const { userId, hashedPassword } = params;
-  const user = await eaasKnex("users")
+  const user = await knex("users")
     .where({ id: userId })
     .select("*")
     .then((x) => x[0]);
@@ -263,7 +263,7 @@ const updatePassword = async (params: {
   if (!user) throw apiErrors.userNotFound;
 
   Object.assign(user, { password: hashedPassword });
-  await eaasKnex("users").where({ id: userId }).update(user);
+  await knex("users").where({ id: userId }).update(user);
 };
 
 /**
@@ -273,7 +273,7 @@ const updatePassword = async (params: {
  * @param isEmailVerified
  */
 const setEmailVerifiedStatus = async (userId: string, isEmailVerified: boolean): Promise<void> => {
-  const user = await eaasKnex("users")
+  const user = await knex("users")
     .where({ id: userId })
     .select("*")
     .then((x) => x[0]);
@@ -281,7 +281,7 @@ const setEmailVerifiedStatus = async (userId: string, isEmailVerified: boolean):
   if (!user) throw apiErrors.userNotFound;
 
   Object.assign(user, { is_email_verified: isEmailVerified });
-  await eaasKnex("users").where({ id: userId }).update(user);
+  await knex("users").where({ id: userId }).update(user);
 };
 
 /**
@@ -290,7 +290,7 @@ const setEmailVerifiedStatus = async (userId: string, isEmailVerified: boolean):
  * @param userId the user id
  */
 const deleteTokensFromUser = async (userId: string): Promise<void> => {
-  await eaasKnex("tokens").where({ user_id: userId }).delete();
+  await knex("tokens").where({ user_id: userId }).delete();
 };
 
 /**
@@ -299,14 +299,14 @@ const deleteTokensFromUser = async (userId: string): Promise<void> => {
  * @param id
  */
 export const deleteUser = async (id: string): Promise<void> => {
-  const user = await eaasKnex("users")
+  const user = await knex("users")
     .where({ id })
     .select("id")
     .then((x) => x[0]);
 
   if (!user) throw apiErrors.userNotFound;
 
-  await eaasKnex("users").where({ id }).delete();
+  await knex("users").where({ id }).delete();
 };
 
 export const userService = {

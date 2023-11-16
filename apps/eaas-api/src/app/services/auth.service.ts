@@ -2,7 +2,7 @@ import bcrypt from "bcrypt";
 import { tokenService, userService } from ".";
 import { EaasUser } from "../../../src/types/EaasUser";
 import { UserTokens, TokenType } from "../../../src/types/Token";
-import { eaasKnex } from "../../../src/database";
+import { knex } from "../../../src/database";
 import { JwtPayload } from "../../../src/types/JwtPayload";
 import { apiErrors } from "../utils/errors";
 
@@ -33,7 +33,7 @@ const loginWithEmailAndPassword = async (email: string, password: string): Promi
  * @param token The user's token
  */
 const logout = async (token: string): Promise<void> => {
-  const deletedToken = await eaasKnex("tokens")
+  const deletedToken = await knex("tokens")
     .where({ token, type: TokenType.refresh, blacklisted: false })
     .delete()
     .returning("*")

@@ -1,5 +1,5 @@
 import { EaasUser } from "../../../src/types/EaasUser";
-import { eaasKnex } from "../../../src/database";
+import { knex } from "../../../src/database";
 import { Invitation } from "../../../src/types/Invitation";
 import { tokenService } from "./token.service";
 import { userService } from "./user.service";
@@ -31,14 +31,14 @@ const createInvitation = async (params: {
     }
   }
 
-  const invitations = await eaasKnex("invitations").where({
+  const invitations = await knex("invitations").where({
     recipient_email: recipientEmail.toLowerCase(),
   });
   if (invitations.length > 0) {
     throw apiErrors.userAlreadyInvited;
   }
 
-  const invitation = await eaasKnex("invitations")
+  const invitation = await knex("invitations")
     .insert({
       recipient_email: recipientEmail.toLowerCase(),
       sender_id: sender.id,
@@ -86,7 +86,7 @@ const validateInviteToken = async (inviteToken: string): Promise<EaasUser | unde
  * @returns
  */
 const getSenderInvitations = async (userId: string) => {
-  const users = await eaasKnex("invitations").select("invitations.*").where({ sender_id: userId });
+  const users = await knex("invitations").select("invitations.*").where({ sender_id: userId });
   return users;
 };
 
@@ -97,7 +97,7 @@ const getSenderInvitations = async (userId: string) => {
  * @returns the invitation record
  */
 const getInvitationOrThrowError = async (id: string): Promise<Invitation> => {
-  const invitation = await eaasKnex("invitations")
+  const invitation = await knex("invitations")
     .where({ id })
     .select("*")
     .then((x) => x[0]);
@@ -115,7 +115,7 @@ const getInvitationOrThrowError = async (id: string): Promise<Invitation> => {
  * @param id the invitatoin id
  */
 const deleteInvitation = async (userId: string, id: string): Promise<void> => {
-  await eaasKnex("invitations").where({ id, sender_id: userId }).delete();
+  await knex("invitations").where({ id, sender_id: userId }).delete();
 };
 
 export const invitationService = {

@@ -1,6 +1,6 @@
 import jwt, { Secret } from "jsonwebtoken";
 import moment, { Moment } from "moment";
-import { eaasKnex } from "../../database";
+import { knex } from "../../database";
 import { envConfig } from "../../../src/config/env.config";
 import { AuthTokenTypes, UserTokens, TokenType, TokenDb } from "../../../src/types/Token";
 import { userService } from "./user.service";
@@ -147,10 +147,10 @@ const saveToken = async (token: TokenDb): Promise<void> => {
 
   // If this is access or refresh token, delete before inserting
   if (AuthTokenTypes.map(toString).includes(type)) {
-    await eaasKnex("tokens").where({ user_id, type }).delete();
+    await knex("tokens").where({ user_id, type }).delete();
   }
 
-  await eaasKnex("tokens").insert(token);
+  await knex("tokens").insert(token);
 };
 
 /**
@@ -169,7 +169,7 @@ const generateResetPasswordToken = async (email: string): Promise<string> => {
 
   const resetPasswordToken = generateToken(user.id, expires, TokenType.resetPassword);
 
-  await eaasKnex("tokens").insert({
+  await knex("tokens").insert({
     token: resetPasswordToken,
     user_id: user.id,
     expires: expires.toISOString(),
@@ -183,7 +183,7 @@ const generateVerifyEmailToken = async (userId: string): Promise<string> => {
   const expires = moment().add(envConfig.jwt.verifyEmailExpirationMinutes, "minutes");
   const verifyEmailToken = generateToken(userId, expires, TokenType.verifyEmail);
 
-  await eaasKnex("tokens").insert({
+  await knex("tokens").insert({
     token: verifyEmailToken,
     user_id: userId,
     expires: expires.toISOString(),
@@ -218,7 +218,7 @@ const generateInviteToken = async (senderId: string, invitationId: string): Prom
 
   const inviteToken = jwt.sign(payload, jwtSecret);
 
-  await eaasKnex("tokens").insert({
+  await knex("tokens").insert({
     token: inviteToken,
     user_id: senderId,
     expires: expires.toISOString(),
@@ -229,7 +229,7 @@ const generateInviteToken = async (senderId: string, invitationId: string): Prom
 };
 
 export const findAndDeleteToken = async (token: string): Promise<void> => {
-  const dbToken = await eaasKnex("tokens")
+  const dbToken = await knex("tokens")
     .where({
       token,
       blacklisted: false,
@@ -245,7 +245,7 @@ export const findAndDeleteToken = async (token: string): Promise<void> => {
 };
 
 export const findToken = async (token: string): Promise<void> => {
-  const dbToken = await eaasKnex("tokens")
+  const dbToken = await knex("tokens")
     .where({
       token,
       blacklisted: false,
