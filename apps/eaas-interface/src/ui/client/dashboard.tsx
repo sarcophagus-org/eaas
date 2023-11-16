@@ -8,6 +8,7 @@ import { useSelector } from "../../store";
 
 import { HStack } from "@chakra-ui/react";
 import { LogoutButton } from "../login";
+import { GenerateRecipientPDF } from "./GenerateRecipientPDF";
 
 export const ClientDashboard: React.FC = () => {
   const appUser = useSelector((x) => x.userState.user);
@@ -30,6 +31,7 @@ export const ClientDashboard: React.FC = () => {
 
       <UploadFile />
       <SetResurrection />
+      <GenerateRecipientPDF />
     </Box>
   );
 };

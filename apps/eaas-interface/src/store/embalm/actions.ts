@@ -6,6 +6,7 @@ export enum ActionType {
   SetRecipientState = "EMBALM_SET_RECIPIENT_STATE",
   SetResurrection = "EMBALM_SET_RESURRECTION",
   SetResurrectionRadioValue = "EMBALM_SET_RESURRECTION_RADIO_VALUE",
+  SetOuterLayerKeys = "EMBALM_SET_OUTER_LAYER_KEYS",
 }
 
 export enum GeneratePDFState {
@@ -33,6 +34,7 @@ type EmbalmPayload = {
   [ActionType.SetRecipientState]: RecipientState;
   [ActionType.SetResurrection]: { resurrection: number };
   [ActionType.SetResurrectionRadioValue]: { value: string };
+  [ActionType.SetOuterLayerKeys]: { privateKey: string; publicKey: string };
 };
 
 export function setFile(file: File): EmbalmActions {
@@ -67,6 +69,23 @@ export function setCustomResurrectionDate(date: Date | null): EmbalmActions {
     type: ActionType.SetCustomResurrectionDate,
     payload: {
       date,
+    },
+  };
+}
+
+export function setRecipientState(recipientState: RecipientState): EmbalmActions {
+  return {
+    type: ActionType.SetRecipientState,
+    payload: recipientState,
+  };
+}
+
+export function setOuterLayerKeys(privateKey: string, publicKey: string): EmbalmActions {
+  return {
+    type: ActionType.SetOuterLayerKeys,
+    payload: {
+      privateKey,
+      publicKey,
     },
   };
 }

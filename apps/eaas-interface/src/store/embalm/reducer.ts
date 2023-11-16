@@ -7,6 +7,8 @@ export interface EmbalmState {
   recipientState: RecipientState;
   resurrection: number;
   resurrectionRadioValue: string;
+  outerPrivateKey: string | null;
+  outerPublicKey: string | null;
 }
 
 export const embalmInitialState: EmbalmState = {
@@ -18,6 +20,8 @@ export const embalmInitialState: EmbalmState = {
   },
   resurrection: 0,
   resurrectionRadioValue: "",
+  outerPrivateKey: null,
+  outerPublicKey: null,
 };
 
 export function embalmReducer(state: EmbalmState, action: Actions): EmbalmState {
@@ -44,6 +48,13 @@ export function embalmReducer(state: EmbalmState, action: Actions): EmbalmState 
 
     case ActionType.SetCustomResurrectionDate:
       return { ...state, customResurrectionDate: action.payload.date };
+
+    case ActionType.SetOuterLayerKeys:
+      return {
+        ...state,
+        outerPrivateKey: action.payload.privateKey,
+        outerPublicKey: action.payload.publicKey,
+      };
 
     default:
       return state;
