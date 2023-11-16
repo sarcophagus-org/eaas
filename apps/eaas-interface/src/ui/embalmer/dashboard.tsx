@@ -3,6 +3,7 @@ import { inviteClient } from "../../api/invite";
 import { Box, Button, Heading, Input, Text, useToast } from "@chakra-ui/react";
 
 import { appUser } from "../../store/tempMemoryStore";
+import { UserType } from "../../types/userTypes";
 
 export const EmbalmerDashboard: React.FC = () => {
   const toast = useToast();
@@ -20,7 +21,7 @@ export const EmbalmerDashboard: React.FC = () => {
     setClientEmail(event.target.value);
   };
 
-  return !appUser?.is_embalmer ? (
+  return appUser?.type === UserType.client ? (
     <Box>
       <Text>You are not authorized to view this page.</Text>
     </Box>

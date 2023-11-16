@@ -2,11 +2,11 @@ import bcrypt from "bcrypt";
 import { tokenService } from "./token.service";
 import { knex } from "../../database";
 import { JwtPayload } from "../../../src/types/JwtPayload";
-import { EaasUser } from "../../../src/types/EaasUser";
+import { EaasUser, UserType } from "../../../src/types/EaasUser";
 import { invitationService } from "./invitation.service";
 import { apiErrors } from "../utils/errors";
 
-const userFields = ["id", "created_at", "updated_at", "email", "is_embalmer", "is_email_verified"];
+const userFields = ["id", "created_at", "updated_at", "email", "type", "is_email_verified"];
 
 const getAllUsers = async (): Promise<EaasUser[]> => {
   return await knex("users").select(...userFields);
@@ -16,15 +16,16 @@ const getAllUsers = async (): Promise<EaasUser[]> => {
  * Creates a user
  * @returns a new user object
  */
-const createUser = async (params: { email: string; password: string }): Promise<EaasUser> => {
-  const { email, password } = params;
+const createUser = async (params: Partial<EaasUser>): Promise<EaasUser> => {
+  const { email, password, type } = params;
 
   const hashedPassword = await bcrypt.hash(password, 10);
 
   const user = await knex("users")
     .insert({
-      email: email.toLowerCase(),
+      email: email!.toLowerCase(),
       password: hashedPassword,
+      type: type!.toString(),
     })
     .returning([...userFields])
     .then((x) => x[0]);
@@ -56,7 +57,11 @@ const createUserWithInvite = async (params: {
   const invitation = await invitationService.getInvitationOrThrowError(invitationId);
 
   try {
-    const user = await createUser({ email: invitation.recipient_email, password });
+    const user = await createUser({
+      email: invitation.recipient_email,
+      password,
+      type: UserType.client,
+    });
 
     await tokenService.findAndDeleteToken(inviteToken);
     await invitationService.deleteInvitation(invitation.sender_id, invitation.id);
@@ -253,5 +258,5 @@ export const userService = {
   updatePassword,
   setEmailVerifiedStatus,
   deleteTokensFromUser,
-  deleteUser
+  deleteUser,
 };

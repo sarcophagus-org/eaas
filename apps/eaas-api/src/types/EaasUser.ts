@@ -1,12 +1,16 @@
 import { Identifiable } from "./Identifiable";
 import { Request } from "express";
 
+export enum UserType {
+  embalmer = "embalmer",
+  client = "client",
+}
+
 export interface EaasUser extends Identifiable {
   email: string;
   password: string;
-  name: string;
+  type: UserType;
   is_email_verified: boolean;
-  is_embalmer: true;
 }
 
 export type RequestWithUser = Request & { user: EaasUser };

@@ -6,7 +6,7 @@ export async function up(knex: Knex): Promise<void> {
     table.timestamps(true, true);
     table.string("email").unique().notNullable();
     table.string("password").notNullable();
-    table.boolean("is_embalmer").notNullable().defaultTo("false");
+    table.enum("type", ["embalmer", "client"]).notNullable();
     table.boolean("is_email_verified").defaultTo("false");
   });
 }

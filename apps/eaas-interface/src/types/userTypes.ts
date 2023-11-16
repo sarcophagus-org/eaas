@@ -1,3 +1,8 @@
+export enum UserType {
+  embalmer = "embalmer",
+  client = "client",
+}
+
 export interface RegisterUser {
   password: string;
 }
@@ -5,7 +10,7 @@ export interface RegisterUser {
 export interface EaasUser {
   id: string;
   email: string;
-  is_embalmer: true;
+  type: UserType;
 }
 
 export interface EaasToken {

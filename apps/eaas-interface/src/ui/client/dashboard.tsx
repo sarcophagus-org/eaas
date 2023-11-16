@@ -3,9 +3,10 @@ import React from "react";
 import { ClientHome } from "./clientHome";
 
 import { appUser } from "../../store/tempMemoryStore";
+import { UserType } from "../../types/userTypes";
 
 export const ClientDashboard: React.FC = () => {
-  return appUser?.is_embalmer ? (
+  return appUser?.type === UserType.embalmer ? (
     <Box>
       <Text>You are not authorized to view this page.</Text>
     </Box>
