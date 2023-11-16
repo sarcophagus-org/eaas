@@ -49,12 +49,8 @@ const refreshTokens = async (req: Request, res: Response) => {
 
 const resetPassword = async (req: Request, res: Response) => {
   const { password, token } = req.body;
-  if (token) {
-    await authService.resetPassword(token.toString(), password);
-    res.status(204).send();
-  } else {
-    res.status(400).json({ error: "must include token" });
-  }
+  await authService.resetPassword(token.toString(), password);
+  res.status(204).send();
 };
 
 const forgotPassword = async (req: Request, res: Response) => {
