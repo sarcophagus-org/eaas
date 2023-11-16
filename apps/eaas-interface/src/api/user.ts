@@ -5,7 +5,7 @@ import { axiosInstance as axios } from ".";
 export async function login(params: {
   email: string;
   password: string;
-}): Promise<EaasLoginResponse | undefined> {
+}): Promise<EaasLoginResponse> {
   try {
     const { email, password } = params;
 
@@ -16,15 +16,14 @@ export async function login(params: {
 
     return res.data as EaasLoginResponse;
   } catch (error) {
-    // TODO: sort out a way to cleanly bubble up this error to the UI
-    handleApiError(error);
+    throw handleApiError(error);
   }
 }
 
 export async function clientRegister(params: {
   user: RegisterUser;
   inviteToken: string;
-}): Promise<EaasLoginResponse | undefined> {
+}): Promise<EaasLoginResponse> {
   try {
     const { user, inviteToken } = params;
 
@@ -35,15 +34,15 @@ export async function clientRegister(params: {
 
     return res.data as EaasLoginResponse;
   } catch (error) {
-    handleApiError(error);
+    throw handleApiError(error);
   }
 }
 
-export async function getUserList(): Promise<EaasUser[] | undefined> {
+export async function getUserList(): Promise<EaasUser[]> {
   try {
     const res = await axios.get(`user/all`);
     return res.data as EaasUser[];
   } catch (error) {
-    handleApiError(error);
+    throw handleApiError(error);
   }
 }

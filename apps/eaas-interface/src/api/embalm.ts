@@ -4,13 +4,8 @@ import { SendEncryptedPayloadParams } from "../types/embalmPayload";
 
 export async function sendPayload(params: SendEncryptedPayloadParams) {
   try {
-    const res = await axios.post(
-      `embalm/send-payload`,
-      params,
-    );
-    return res.status === 200;
+    await axios.post(`embalm/send-payload`, params);
   } catch (error) {
-    handleApiError(error);
-    return false;
+    throw handleApiError(error);
   }
 }

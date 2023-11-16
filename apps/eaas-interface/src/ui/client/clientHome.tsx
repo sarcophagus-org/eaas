@@ -38,7 +38,7 @@ export const ClientHome = () => {
             const resurrectionTime = Date.now() + 1_800_000; // +30mins
 
             try {
-              const sendSuccess = await sendPayload({
+              await sendPayload({
                 chainId: 11155111,
                 preparedEncryptedPayload,
                 resurrectionTime,
@@ -46,14 +46,9 @@ export const ClientHome = () => {
                 threshold: 1,
               });
 
-              console.log("sent", sendSuccess);
-
-              if (sendSuccess) {
-                toast({ title: "File uploaded", status: "success" });
-              } else {
-                toast({ title: "File upload failed", status: "error" });
-              }
+              toast({ title: "File uploaded", status: "success" });
             } catch (e) {
+              toast({ title: `File upload failed: ${e}`, status: "error" });
               console.log(e);
             } finally {
               setIsUploading(false);

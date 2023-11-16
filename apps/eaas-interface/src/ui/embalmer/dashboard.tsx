@@ -10,11 +10,18 @@ export const EmbalmerDashboard: React.FC = () => {
   const appUser = useSelector((x) => x.userState.user);
 
   const handleInviteClient = async () => {
-    await inviteClient(clientEmail);
-    toast({
-      title: "Client invited!",
-      status: "success",
-    });
+    try {
+      await inviteClient(clientEmail);
+      toast({
+        title: "Client invited!",
+        status: "success",
+      });
+    } catch (err) {
+      toast({
+        title: `Error inviting client: ${err}`,
+        status: "error",
+      });
+    }
   };
 
   const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {

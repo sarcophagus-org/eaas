@@ -7,7 +7,7 @@ export async function testApi() {
     const res = await axios.get(`/`);
     return res.data;
   } catch (error) {
-    handleApiError(error);
+    throw handleApiError(error);
   }
 }
 

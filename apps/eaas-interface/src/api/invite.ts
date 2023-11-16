@@ -8,6 +8,6 @@ export async function inviteClient(email: string) {
     });
     return res.status === 200;
   } catch (error) {
-    handleApiError(error);
+    throw handleApiError(error);
   }
 }

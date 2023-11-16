@@ -7,6 +7,7 @@ import {
   Heading,
   Input,
   Text,
+  useToast,
 } from "@chakra-ui/react";
 import React from "react";
 import { useQuery } from "../../hooks/useQuery";
@@ -27,8 +28,8 @@ export const ClientOnboarding: React.FC = () => {
   const [passwordConfirm, setPasswordConfirm] = useState("");
   const [formErrors, setFormErrors] = useState<FormFieldValidation>({});
 
+  const toast = useToast();
   const navigate = useNavigate();
-
   const dispatch = useDispatch();
 
   const validatePassword = () => {
@@ -63,17 +64,22 @@ export const ClientOnboarding: React.FC = () => {
       return;
     }
 
-    const response = await clientRegister({
-      user: { password },
-      inviteToken: token!,
-    });
+    try {
+      const response = await clientRegister({
+        user: { password },
+        inviteToken: token!,
+      });
 
-    if (response?.user) {
       // TOOO: extract response into global store
       dispatch(setTokens(response.tokens));
       dispatch(setUser(response.user));
 
       navigate("/dashboard/client", { replace: true });
+    } catch (err) {
+      toast({
+        title: `Error creating account: ${err}`,
+        status: "error",
+      });
     }
   };
 
