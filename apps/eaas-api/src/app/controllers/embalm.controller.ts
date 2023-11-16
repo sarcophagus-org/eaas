@@ -1,7 +1,7 @@
 import { Response } from "express";
 import { RequestWithUser } from "../../../src/types/EaasUser";
-import { SendEncryptedPayloadParams } from "../../../../common/types";
 import { embalmService } from "../services";
+import { SendEncryptedPayloadParams } from "../../../src/types/embalmPayload";
 
 /**
  * Embalm the provided payload
