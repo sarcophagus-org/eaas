@@ -1,10 +1,10 @@
 import { createContext, useContext } from "react";
 import { EmbalmActions } from "./embalm/actions";
 import { EmbalmState, embalmInitialState, embalmReducer } from "./embalm/reducer";
+import { UserActions } from "./user/actions";
+import { UserState, userInitialState, userReducer } from "./user/reducer";
 
-export type Actions =
-  // | AppActions
-  EmbalmActions;
+export type Actions = UserActions | EmbalmActions;
 
 interface Context {
   state: RootState;
@@ -24,18 +24,18 @@ export function useDispatch(): React.Dispatch<Actions> {
 }
 
 export interface RootState {
-  // appState: AppState;
+  userState: UserState;
   embalmState: EmbalmState;
 }
 
 export const initialState: RootState = {
-  // appState: appInitialState,
+  userState: userInitialState,
   embalmState: embalmInitialState,
 };
 
 export function storeReducer(state: RootState, action: Actions): RootState {
   return {
-    // appState: appReducer(state.appState, action),
+    userState: userReducer(state.userState, action),
     embalmState: embalmReducer(state.embalmState, action),
   };
 }

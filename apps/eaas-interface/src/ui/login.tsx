@@ -2,12 +2,14 @@ import React, { useState } from "react";
 import { login } from "../api/user";
 import { useNavigate } from "react-router-dom";
 import { FormControl, FormLabel, Input, Button, VStack } from "@chakra-ui/react";
-import { setUser, setTokens } from "../store/tempMemoryStore";
+import { useDispatch } from "../store";
+import { setTokens, setUser } from "../store/user/actions";
 
 export const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleUsernameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(event.target.value);
@@ -21,9 +23,8 @@ export const Login = () => {
     event.preventDefault();
     const response = await login({ email, password });
     if (response?.user) {
-      // TOOO: extract response into global store
-      setTokens(response.tokens);
-      setUser(response.user);
+      dispatch(setTokens(response.tokens));
+      dispatch(setUser(response.user));
 
       navigate(`/dashboard/${response.user.type.toString()}`, {
         replace: true,
