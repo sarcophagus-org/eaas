@@ -4,7 +4,7 @@ import { getAccessToken } from "../localStorage";
 
 export async function testApi() {
   try {
-    const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}`);
+    const res = await axios.get(`/`);
     return res.data;
   } catch (error) {
     handleApiError(error);
@@ -12,7 +12,7 @@ export async function testApi() {
 }
 
 const instance = axios.create({
-  baseURL: process.env.REACT_APP_BASE_URL,
+  baseURL: import.meta.env.VITE_API_BASE_URL,
   timeout: 15000,
 });
 

@@ -9,7 +9,7 @@ export async function login(params: {
   try {
     const { email, password } = params;
 
-    const res = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/auth/login`, {
+    const res = await axios.post(`auth/login`, {
       email,
       password,
     });
@@ -28,7 +28,7 @@ export async function clientRegister(params: {
   try {
     const { user, inviteToken } = params;
 
-    const res = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/user/register`, {
+    const res = await axios.post(`user/register`, {
       user,
       inviteToken,
     });
@@ -41,7 +41,7 @@ export async function clientRegister(params: {
 
 export async function getUserList(): Promise<EaasUser[] | undefined> {
   try {
-    const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/user/all`);
+    const res = await axios.get(`user/all`);
     return res.data as EaasUser[];
   } catch (error) {
     handleApiError(error);
