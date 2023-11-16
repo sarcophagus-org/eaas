@@ -1,4 +1,5 @@
 import { Actions } from "..";
+import { clearTokens, setAccessToken, setRefreshToken } from "../../localStorage";
 import { EaasTokens, EaasUser } from "../../types/userTypes";
 import { ActionType } from "./actions";
 
@@ -15,7 +16,15 @@ export const userInitialState: UserState = {
 export function userReducer(state: UserState, action: Actions): UserState {
   switch (action.type) {
     case ActionType.SetTokens:
+      if (action.payload.tokens) {
+        setAccessToken(action.payload.tokens!.access);
+        setRefreshToken(action.payload.tokens!.refresh);
+      }
       return { ...state, tokens: action.payload.tokens };
+
+    case ActionType.ClearTokens:
+      clearTokens();
+      return { ...state, tokens: null };
 
     case ActionType.SetUser:
       return { ...state, user: action.payload.user };

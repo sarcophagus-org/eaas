@@ -12,8 +12,9 @@ import React from "react";
 import { useQuery } from "../../hooks/useQuery";
 import { useState } from "react";
 import { clientRegister } from "../../api/user";
-import { setUser, setTokens } from "../../store/tempMemoryStore";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "../../store";
+import { setTokens, setUser } from "../../store/user/actions";
 
 interface FormFieldValidation {
   password?: string;
@@ -27,6 +28,8 @@ export const ClientOnboarding: React.FC = () => {
   const [formErrors, setFormErrors] = useState<FormFieldValidation>({});
 
   const navigate = useNavigate();
+
+  const dispatch = useDispatch();
 
   const validatePassword = () => {
     if (!password) {
@@ -67,8 +70,8 @@ export const ClientOnboarding: React.FC = () => {
 
     if (response?.user) {
       // TOOO: extract response into global store
-      setTokens(response.tokens);
-      setUser(response.user);
+      dispatch(setTokens(response.tokens));
+      dispatch(setUser(response.user));
 
       navigate("/dashboard/client", { replace: true });
     }

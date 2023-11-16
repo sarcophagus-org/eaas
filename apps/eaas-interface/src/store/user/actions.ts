@@ -4,11 +4,13 @@ import { ActionMap } from "../ActionMap";
 export enum ActionType {
   SetUser = "USER_SET_USER",
   SetTokens = "USER_SET_TOKENS",
+  ClearTokens = "USER_CLEAR_TOKENS",
 }
 
 type UserPayload = {
   [ActionType.SetUser]: { user: EaasUser | null };
   [ActionType.SetTokens]: { tokens: EaasTokens | null };
+  [ActionType.ClearTokens]: object;
 };
 
 export function setTokens(tokens: EaasTokens): UserActions {
@@ -17,6 +19,13 @@ export function setTokens(tokens: EaasTokens): UserActions {
     payload: {
       tokens,
     },
+  };
+}
+
+export function clearTokens(): UserActions {
+  return {
+    type: ActionType.ClearTokens,
+    payload: {},
   };
 }
 
