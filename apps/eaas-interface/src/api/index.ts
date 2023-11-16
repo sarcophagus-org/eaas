@@ -24,7 +24,7 @@ instance.interceptors.request.use(
 
     config.headers = {
       ...config.headers,
-      Authorization: `Bearer ${accessToken}`,
+      Authorization: `Bearer ${accessToken.token}`,
       Accept: "application/json",
       "Content-Type": "application/json",
     } as AxiosRequestHeaders;
