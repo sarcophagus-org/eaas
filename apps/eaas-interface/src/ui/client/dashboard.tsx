@@ -6,6 +6,9 @@ import { UploadFile } from "./uploadFile";
 import { SetResurrection } from "./setResurrection";
 import { useSelector } from "../../store";
 
+import { HStack } from "@chakra-ui/react";
+import { LogoutButton } from "../login";
+
 export const ClientDashboard: React.FC = () => {
   const appUser = useSelector((x) => x.userState.user);
   return appUser?.type === UserType.embalmer ? (
@@ -14,10 +17,16 @@ export const ClientDashboard: React.FC = () => {
     </Box>
   ) : (
     <Box>
-      <Heading as="h1" size="xl">
-        Client Dashboard
-      </Heading>
-      <Text>Your Profile: {appUser?.email}</Text>
+      <HStack>
+        <Heading as="h1" size="xl">
+          Client Dashboard
+        </Heading>
+        <LogoutButton />
+      </HStack>
+      <HStack>
+        <Text>Your Profile:</Text>
+        <Text>{appUser?.email}</Text>
+      </HStack>
 
       <UploadFile />
       <SetResurrection />

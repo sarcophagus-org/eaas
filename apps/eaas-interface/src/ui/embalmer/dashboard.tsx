@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import { inviteClient } from "../../api/invite";
-import { Box, Button, Heading, Input, Text, useToast } from "@chakra-ui/react";
+import { Box, Button, HStack, Heading, Input, Text, useToast } from "@chakra-ui/react";
 import { UserType } from "../../types/userTypes";
 import { useSelector } from "../../store";
+import { LogoutButton } from "../login";
 
 export const EmbalmerDashboard: React.FC = () => {
   const toast = useToast();
@@ -34,7 +35,10 @@ export const EmbalmerDashboard: React.FC = () => {
     </Box>
   ) : (
     <Box>
-      <Heading>Embalmer Dashboard</Heading>
+      <HStack>
+        <Heading>Embalmer Dashboard</Heading>
+        <LogoutButton />
+      </HStack>
       <Text>Embalmer email: {appUser?.email}</Text>
       <Box>
         <Input placeholder="Client email" value={clientEmail} onChange={handleEmailChange} />

@@ -29,7 +29,7 @@ export function clearTokens(): UserActions {
   };
 }
 
-export function setUser(user: EaasUser): UserActions {
+export function setUser(user: EaasUser | null): UserActions {
   return {
     type: ActionType.SetUser,
     payload: {
