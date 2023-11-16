@@ -7,16 +7,14 @@ import { clearTokens, setTokens, setUser } from "../store/user/actions";
 
 export const LogoutButton: React.FC = () => {
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   const handleLogout = () => {
     dispatch(clearTokens());
     dispatch(setUser(null));
-    navigate("/login", { replace: true });
   };
 
   return <Button onClick={handleLogout}>Logout</Button>;
-}
+};
 
 export const Login = () => {
   const [email, setEmail] = useState("");
