@@ -4,6 +4,7 @@ import React from "react";
 import { appUser } from "../../store/tempMemoryStore";
 import { UserType } from "../../types/userTypes";
 import { UploadFile } from "./uploadFile";
+import { SetResurrection } from "./setResurrection";
 
 export const ClientDashboard: React.FC = () => {
   return appUser?.type === UserType.embalmer ? (
@@ -18,6 +19,7 @@ export const ClientDashboard: React.FC = () => {
       <Text>Your Profile: {appUser?.email}</Text>
 
       <UploadFile />
+      <SetResurrection />
     </Box>
   );
 };
