@@ -22,12 +22,14 @@ const createInvitation = async (params: {
   // Make sure the recipient doesn't already exist
   try {
     const user = await userService.getUserByEmail(recipientEmail);
+
     if (user) {
       throw apiErrors.userAlreadyExists;
     }
   } catch (e) {
-    if (e === apiErrors.userNotFound) {
-      // continue
+    // User not found is actually what we want when inviting a user.
+    if (e !== apiErrors.userNotFound) {
+      throw e;
     }
   }
 
