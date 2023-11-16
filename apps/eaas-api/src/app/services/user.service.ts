@@ -143,74 +143,6 @@ const getUserById = async (id: string): Promise<EaasUser> => {
   return (await getUsersByIds([id]))[0];
 };
 
-// TODO: Implement fuzzy search
-/**
- * Searches for users by name or email with a string pattern
- *
- * Searches the users DB by email with wildcards at the start and end of
- * the pattern string. If a record exists with the name "Peter McPeterson",
- * searchUsers("ete") will return that record or any other record that contains
- * the string "ete". The wildcards are applied per word, so a search for the
- * pattern "Pet Mc" will also return the result for "Peter McPeterson". If the
- * pattern contains a space(s) the method will assume that the pattern is a
- * name.
- *
- * The search is not case sensitive.
- *
- * This is not a fuzzy search. In other words, if a record exists with the name
- * "Peter McPeterson", a search for the pattern "Pter" will not return the
- * record.
- *
- * There are postgres extensions that allow for fuzzy search but postgres
- * extensions are pain to get installed, to get working properly, and to
- * maintain for both dev and test environments. But if we decide to implement
- * fuzzy search it should be done at the DB level.
- *
- * An alternative would be to pull every user from the db and use a javascript
- * fuzzy search library like fuse.js on the list. This is very expensive
- * especially if there a lots of users in the system.
- *
- * An other alternative would be to pull the list of users and store it in
- * memory, then update it only when a user is added or removed from the db. Then
- * a javascript fuzzy search library could be used on that list. Again, this
- * would be expensive on memory if there are lots of users
- *
- * @param pattern the string to search for
- * @returns a list of users with the fields id and email
- */
-const searchUsers = async (pattern: string): Promise<Partial<EaasUser>[]> => {
-  // an empty string should return an empty array
-  if (pattern.trim().length === 0) {
-    return [];
-  }
-
-  // if pattern contains a space, search only for names and use the "and" operator
-  if (pattern.trim().indexOf(" ") >= 0) {
-    const words = pattern.trim().split(" ");
-
-    // Build a query with an whereRaw method for each word.
-    // The result would look something like this:
-    // knex("users")
-    //  .whereRaw("LOWER(name) LIKE ?", `%${words[0].toLowerCase()}%`))
-    //  .whereRaw("LOWER(name) LIKE ?", `%${words[1].toLowerCase()}%`))
-    //  ...
-    //
-    // Supports unlimited words. Because why not?
-    // The query is not case sensitive.
-    const query = words.reduce(
-      (prev, word) => prev.whereRaw("LOWER(name) LIKE ?", `%${word.toLowerCase()}%`),
-      knex("users"),
-    );
-
-    return query.select("id", "email");
-  } else {
-    // The assumption is that an email should never has spaces, but a name may also have no spaces
-    return await knex("users")
-      .whereRaw("LOWER(email) LIKE ?", `%${pattern.toLowerCase()}%`)
-      .select("id", "email");
-  }
-};
-
 /**
  * Updates a user given an id and an update body
  *
@@ -321,6 +253,5 @@ export const userService = {
   updatePassword,
   setEmailVerifiedStatus,
   deleteTokensFromUser,
-  deleteUser,
-  searchUsers,
+  deleteUser
 };
