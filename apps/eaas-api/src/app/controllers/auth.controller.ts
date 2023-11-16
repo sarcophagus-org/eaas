@@ -19,15 +19,11 @@ const register = async (req: Request, res: Response) => {
     inviteToken,
   });
 
-  if (!dbUser || !dbUser.id) {
-    res.status(400).json({ error: "could not create user" });
-  } else {
-    const tokens = await tokenService.generateAuthTokens(dbUser.id);
-    res.status(201).json({
-      user: dbUser,
-      tokens,
-    });
-  }
+  const tokens = await tokenService.generateAuthTokens(dbUser.id);
+  res.status(201).json({
+    user: dbUser,
+    tokens,
+  });
 };
 
 const login = async (req: Request, res: Response) => {
