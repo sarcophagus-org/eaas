@@ -9,7 +9,6 @@ interface ArweaveUploadArgs {
 
 interface EmbalmOptions {
   chainId: number;
-  sarcophagusName: string;
   resurrectionTime: number;
   requiredArchaeologists: number;
   preparedEncryptedPayload: PreparedEncryptedPayload;
@@ -53,13 +52,7 @@ const uploadEncryptedPayloadToArweave = async (args: ArweaveUploadArgs) => {
 };
 
 async function runEmbalm(options: EmbalmOptions) {
-  const {
-    chainId,
-    sarcophagusName,
-    resurrectionTime,
-    preparedEncryptedPayload,
-    requiredArchaeologists,
-  } = options;
+  const { chainId, resurrectionTime, preparedEncryptedPayload, requiredArchaeologists } = options;
 
   const sarco = new NodeSarcoClient({
     chainId,
@@ -132,7 +125,7 @@ async function runEmbalm(options: EmbalmOptions) {
     });
 
     const { submitSarcophagusArgs } = sarco.utils.formatSubmitSarcophagusArgs({
-      name: sarcophagusName,
+      name: `${preparedEncryptedPayload.encryptedPayloadMetadata.fileName}-${Date.now()}}`,
       recipientPublicKey: preparedEncryptedPayload.recipientPublicKey,
       resurrection: resurrectionTime,
       selectedArchaeologists,

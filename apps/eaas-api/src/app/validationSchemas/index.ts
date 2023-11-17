@@ -1,6 +1,6 @@
 import Joi from "joi";
 
-const preparedEncryptedPayloadSchema = Joi.object({
+export const preparedEncryptedPayloadSchema = Joi.object({
   encryptedPayloadMetadata: Joi.object({
     fileName: Joi.string().required(),
     type: Joi.string().required(),
@@ -15,7 +15,6 @@ export const sendEncryptedPayloadSchema = Joi.object({
   chainId: Joi.number().required(),
   threshold: Joi.number().required(),
   resurrectionTime: Joi.number().required(),
-  sarcophagusName: Joi.string().required(),
 });
 
 export const createInvitationSchema = Joi.object({

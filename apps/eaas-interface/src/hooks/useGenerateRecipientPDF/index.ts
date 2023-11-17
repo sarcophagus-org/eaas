@@ -24,8 +24,8 @@ export function useGenerateRecipientPDF() {
 
       const recipient: RecipientState = {
         address: ethers.utils.computeAddress(publicKey),
-        publicKey: publicKey,
-        privateKey: privateKey,
+        publicKey,
+        privateKey,
         generatePDFState: GeneratePDFState.GENERATED,
       };
 

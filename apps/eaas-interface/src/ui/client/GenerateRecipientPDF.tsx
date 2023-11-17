@@ -12,7 +12,7 @@ export function GenerateRecipientPDF() {
     useGenerateRecipientPDF();
 
   const user = useSelector((x) => x.userState.user);
-  const { resurrection, file, outerPublicKey } = useSelector((x) => x.embalmState);
+  const { resurrection, file, recipientState } = useSelector((x) => x.embalmState);
 
   const toast = useToast();
   useEffect(() => {
@@ -25,7 +25,18 @@ export function GenerateRecipientPDF() {
     }
   }, [generateError, toast]);
 
-  const { recipientState } = useSelector((x) => x.embalmState);
+  function handleGeneratePDFClick(): void {
+    if (!resurrection || !file) {
+      toast({
+        title: "Almost there!",
+        description: "Select a file and set a resurrection time for your upload",
+        status: "warning",
+      });
+      return;
+    }
+
+    generatePublicKey();
+  }
 
   useEffect(() => {
     if (recipientState.generatePDFState === GeneratePDFState.GENERATED) {
@@ -42,7 +53,7 @@ export function GenerateRecipientPDF() {
   const generateStateMap = {
     [GeneratePDFState.UNSET]: (
       <VStack align="left" spacing={4}>
-        <Button width="fit-content" onClick={generatePublicKey} isLoading={isLoading}>
+        <Button width="fit-content" onClick={handleGeneratePDFClick} isLoading={isLoading}>
           Generate a new public key
         </Button>
         <Text>
@@ -56,25 +67,28 @@ export function GenerateRecipientPDF() {
         )} */}
       </VStack>
     ),
-    [GeneratePDFState.GENERATED]: (
-      <VStack border="1px solid" p={6} spacing={6} w="400px">
+    [GeneratePDFState.DOWNLOADED]: (
+      <VStack spacing={6} w="100%">
         <Text fontSize="xl">Download PDF</Text>
         <Text align="center">
           Your recipient file has been downloaded. You will need to send this securely to your
-          recipient. Do not store this online or let anyone see it.
+          recipient. Do not store this online or let anyone else see it!
         </Text>
         <Button
           w="100%"
           onClick={async () => {
+            console.log("try preparedEncryptedPayload", recipientState.publicKey);
             try {
               const preparedEncryptedPayload = await preparePayload({
                 file: file!,
                 nArchs: 1,
-                recipientPublicKey: outerPublicKey!,
+                recipientPublicKey: recipientState.publicKey,
               });
 
+              console.log("preparedEncryptedPayload", preparedEncryptedPayload);
+
               sendPayload({
-                chainId: 1,
+                chainId: 11155111,
                 resurrectionTime: resurrection,
                 preparedEncryptedPayload,
                 sarcophagusName: "",
@@ -92,10 +106,7 @@ export function GenerateRecipientPDF() {
         >
           Upload File
         </Button>
-      </VStack>
-    ),
-    [GeneratePDFState.DOWNLOADED]: (
-      <VStack spacing={6} w="100%">
+
         <Textarea disabled value={recipientState.publicKey} resize="none" />
       </VStack>
     ),
