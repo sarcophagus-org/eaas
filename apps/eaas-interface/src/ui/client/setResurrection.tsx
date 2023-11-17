@@ -18,11 +18,17 @@ export function SetResurrection({ ...rest }: FlexProps) {
     getRadioProps,
     radioValue,
     customResurrectionDate,
+    // resurrection,
     handleCustomDateChange,
     handleCustomDateClick,
   } = useSetResurrection();
 
   const timestampMs = Date.now();
+
+  const resDateStringParts = customResurrectionDate?.toISOString().split("T") ?? [];
+  const resurrectionDate = resDateStringParts.at(0) ?? "";
+  const resurrectionTime =
+    resDateStringParts.at(1)?.slice(0, resDateStringParts.at(1)?.lastIndexOf(":")) ?? "";
 
   return (
     <Flex direction="column" {...rest}>
@@ -59,6 +65,10 @@ export function SetResurrection({ ...rest }: FlexProps) {
             />
           </Radio>
         </HStack>
+
+        <Text>{`Resurrection: ${resurrectionDate} ${
+          resurrectionTime && "at "
+        }${resurrectionTime}`}</Text>
       </VStack>
       {error && (
         <Text mt={3} textAlign="center" color="error">

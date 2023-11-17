@@ -82,6 +82,7 @@ export function useSetResurrection() {
     getRadioProps,
     radioValue,
     customResurrectionDate,
+    resurrection,
     handleCustomDateChange,
     handleCustomDateClick,
   };
