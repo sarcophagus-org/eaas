@@ -1,5 +1,5 @@
 import React from "react";
-import { VStack, Button, Text, Textarea, useToast } from "@chakra-ui/react";
+import { VStack, Button, Text, Textarea, useToast, Spinner } from "@chakra-ui/react";
 import { useGenerateRecipientPDF } from "../../hooks/useGenerateRecipientPDF";
 import { GeneratePDFState } from "../../store/embalm/actions";
 import { useSelector } from "../../store";
@@ -15,6 +15,9 @@ export function GenerateRecipientPDF() {
   const { resurrection, file, recipientState } = useSelector((x) => x.embalmState);
 
   const toast = useToast();
+
+  const [isUploading, setIsUploading] = React.useState(false);
+
   useEffect(() => {
     if (generateError) {
       toast({
@@ -74,37 +77,41 @@ export function GenerateRecipientPDF() {
           Your recipient file has been downloaded. You will need to send this securely to your
           recipient. Do not store this online or let anyone else see it!
         </Text>
-        <Button
-          w="100%"
-          onClick={async () => {
-            console.log("try preparedEncryptedPayload", recipientState.publicKey);
-            try {
-              const preparedEncryptedPayload = await preparePayload({
-                file: file!,
-                nArchs: 1,
-                recipientPublicKey: recipientState.publicKey,
-              });
+        {isUploading ? (
+          <Spinner />
+        ) : (
+          <Button
+            w="100%"
+            onClick={async () => {
+              try {
+                const preparedEncryptedPayload = await preparePayload({
+                  file: file!,
+                  nArchs: 1,
+                  recipientPublicKey: recipientState.publicKey,
+                });
 
-              console.log("preparedEncryptedPayload", preparedEncryptedPayload);
-
-              await sendPayload({
-                chainId: 11155111,
-                resurrectionTime: resurrection,
-                preparedEncryptedPayload,
-                threshold: 1,
-              });
-              // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            } catch (e: any) {
-              toast({
-                title: "Error while uploading",
-                description: e,
-                status: "error",
-              });
-            }
-          }}
-        >
-          Upload File
-        </Button>
+                setIsUploading(true);
+                await sendPayload({
+                  chainId: 11155111,
+                  resurrectionTime: resurrection,
+                  preparedEncryptedPayload,
+                  threshold: 1,
+                });
+                // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              } catch (e: any) {
+                toast({
+                  title: "Error while uploading",
+                  description: e,
+                  status: "error",
+                });
+              } finally {
+                setIsUploading(false);
+              }
+            }}
+          >
+            Upload File
+          </Button>
+        )}
 
         <Textarea disabled value={recipientState.publicKey} resize="none" />
       </VStack>
