@@ -3,43 +3,30 @@ import { invitationService } from "../services";
 import { RequestWithUser } from "../../../src/types/EaasUser";
 
 const createInvitation = async (req: RequestWithUser, res: Response) => {
-  try {
-    const sender = req.user;
-    await invitationService.authorizeSender(sender.id);
+  const sender = req.user;
 
-    const { recipients } = req.body;
-    const recipientEmail = recipients[0];
+  const { recipients } = req.body;
+  const recipientEmail = recipients[0];
 
-    await invitationService.createInvitation({
-      recipientEmail,
-      sender,
-    });
+  await invitationService.createInvitation({
+    recipientEmail,
+    sender,
+  });
 
-    res.status(201).send();
-  } catch (error) {
-    res.status(400).json({ error: error.message });
-  }
+  res.status(201).send();
 };
 
 const validateInviteToken = async (req: Request, res: Response) => {
-  try {
-    const { token } = req.body;
-    const user = await invitationService.validateInviteToken(token);
+  const { token } = req.body;
+  const user = await invitationService.validateInviteToken(token);
 
-    res.status(200).json(user);
-  } catch (error) {
-    res.status(400).json({ error: error.message });
-  }
+  res.status(200).json(user);
 };
 
 const getSenderInvitations = async (req: RequestWithUser, res: Response) => {
   const user = req.user;
-  try {
-    const invitations = await invitationService.getSenderInvitations(user.id);
-    res.send(invitations);
-  } catch (error) {
-    res.status(400).json({ error: error.message });
-  }
+  const invitations = await invitationService.getSenderInvitations(user.id);
+  res.send(invitations);
 };
 
 /**
@@ -49,12 +36,8 @@ const getSenderInvitations = async (req: RequestWithUser, res: Response) => {
 const deleteInvitation = async (req: RequestWithUser, res: Response) => {
   const user = req.user;
   const { invitationId } = req.body;
-  try {
-    const invitations = await invitationService.deleteInvitation(user.id, invitationId as string);
-    res.send(invitations);
-  } catch (error) {
-    res.status(400).json({ error: error.message });
-  }
+  const invitations = await invitationService.deleteInvitation(user.id, invitationId as string);
+  res.send(invitations);
 };
 
 export const invitationController = {

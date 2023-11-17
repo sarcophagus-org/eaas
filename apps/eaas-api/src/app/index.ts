@@ -15,6 +15,7 @@ import {
   invitationRoute,
 } from "./routers";
 import { jwtStrategy } from "../../src/config/jwtConfig";
+import { apiErrorHandler } from "./middleware/errorHandler";
 
 export function initialiseApp() {
   const app = express();
@@ -30,6 +31,9 @@ export function initialiseApp() {
   app.use(passport.initialize());
   passport.use("jwt", jwtStrategy);
 
+  setupRoutes(app);
+
+  app.use(apiErrorHandler);
   return app;
 }
 
@@ -52,7 +56,7 @@ export function startApp(params: { app: express.Express; port?: number }) {
   });
 }
 
-export function setupRoutes(app: Express) {
+function setupRoutes(app: Express) {
   const rootRouter = Router();
   rootRouter.get("/", (_, res: Response) => res.send("Embalmer-X online!"));
   app.use(rootRouter);

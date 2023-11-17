@@ -1,10 +1,10 @@
 import { EaasUser } from "../../../src/types/EaasUser";
-import { eaasKnex } from "../../../src/database";
+import { knex } from "../../../src/database";
 import { Invitation } from "../../../src/types/Invitation";
 import { tokenService } from "./token.service";
 import { userService } from "./user.service";
-import { authService } from "./auth.service";
 import { emailService } from "./email.service";
+import { apiErrors } from "../utils/errors";
 
 /**
  * Creates an invitation record
@@ -19,19 +19,26 @@ const createInvitation = async (params: {
 }): Promise<string> => {
   const { recipientEmail, sender } = params;
 
-  const user = await userService.getUserByEmail(recipientEmail);
-  if (user) {
-    throw new Error("User already exists");
+  // Make sure the recipient doesn't already exist
+  try {
+    const user = await userService.getUserByEmail(recipientEmail);
+    if (user) {
+      throw apiErrors.userAlreadyExists;
+    }
+  } catch (e) {
+    if (e === apiErrors.userNotFound) {
+      // continue
+    }
   }
 
-  const invitations = await eaasKnex("invitations").where({
+  const invitations = await knex("invitations").where({
     recipient_email: recipientEmail.toLowerCase(),
   });
   if (invitations.length > 0) {
-    throw new Error("User already invited");
+    throw apiErrors.userAlreadyInvited;
   }
 
-  const invitation = await eaasKnex("invitations")
+  const invitation = await knex("invitations")
     .insert({
       recipient_email: recipientEmail.toLowerCase(),
       sender_id: sender.id,
@@ -65,7 +72,7 @@ const validateInviteToken = async (inviteToken: string): Promise<EaasUser | unde
   const payload = await tokenService.consumeToken(inviteToken, true);
   const { invitationId } = payload;
   if (!invitationId) {
-    throw new Error("there is no invitation linked to this inviteToken");
+    throw apiErrors.invalidInvitationToken;
   }
   const invitation = await getInvitationOrThrowError(invitationId);
 
@@ -79,24 +86,8 @@ const validateInviteToken = async (inviteToken: string): Promise<EaasUser | unde
  * @returns
  */
 const getSenderInvitations = async (userId: string) => {
-  const users = await eaasKnex("invitations").select("invitations.*").where({ sender_id: userId });
+  const users = await knex("invitations").select("invitations.*").where({ sender_id: userId });
   return users;
-};
-
-/**
- * Determines if the a user inviting someone is authorized to do so
- *
- * Simply throws an error if sender is not authorized.
- *
- * @param senderId the user id of the sender
- */
-const authorizeSender = async (senderId: string): Promise<void> => {
-  try {
-    const user = await userService.getUserById(senderId);
-    if (user.is_admin) return;
-  } catch (error) {
-    throw new Error("User is not authorized to create invitations");
-  }
 };
 
 /**
@@ -106,13 +97,13 @@ const authorizeSender = async (senderId: string): Promise<void> => {
  * @returns the invitation record
  */
 const getInvitationOrThrowError = async (id: string): Promise<Invitation> => {
-  const invitation = await eaasKnex("invitations")
+  const invitation = await knex("invitations")
     .where({ id })
     .select("*")
     .then((x) => x[0]);
 
   if (!invitation) {
-    throw new Error(`No invitation found with ID: ${id}`);
+    throw apiErrors.invitationNotFound;
   }
 
   return invitation;
@@ -124,14 +115,13 @@ const getInvitationOrThrowError = async (id: string): Promise<Invitation> => {
  * @param id the invitatoin id
  */
 const deleteInvitation = async (userId: string, id: string): Promise<void> => {
-  await eaasKnex("invitations").where({ id, sender_id: userId }).delete();
+  await knex("invitations").where({ id, sender_id: userId }).delete();
 };
 
 export const invitationService = {
   createInvitation,
   validateInviteToken,
   getSenderInvitations,
-  authorizeSender,
   getInvitationOrThrowError,
   deleteInvitation,
 };

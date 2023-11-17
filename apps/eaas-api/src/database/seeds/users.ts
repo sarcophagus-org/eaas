@@ -1,5 +1,6 @@
 import { Knex } from "knex";
 import bcrypt from "bcrypt";
+import { UserType } from "src/types/EaasUser";
 
 export async function seed(knex: Knex): Promise<void> {
   const hashPassword = async (password: string) => {
@@ -11,11 +12,9 @@ export async function seed(knex: Knex): Promise<void> {
   await knex("users")
     .insert([
       {
-        name: "Mr. Admin",
         email: "admin@example.com",
         password: await hashPassword("admin"),
-        phone: "8888888888",
-        is_admin: true,
+        type: UserType.embalmer,
       },
     ])
     .returning("id");

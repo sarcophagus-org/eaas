@@ -1,5 +1,5 @@
 import { ArchaeologistExceptionCode, NodeSarcoClient } from "@sarcophagus-org/sarcophagus-v2-sdk";
-import { PreparedEncryptedPayload } from "../../../../common/types";
+import { PreparedEncryptedPayload } from "../../../src/types/embalmPayload";
 
 interface ArweaveUploadArgs {
   sarco: NodeSarcoClient;
@@ -47,7 +47,7 @@ const uploadEncryptedPayloadToArweave = async (args: ArweaveUploadArgs) => {
       await uploadPromise;
     } catch (error: any) {
       console.log(error);
-      throw new Error(error.message || "Error uploading payload to Bundlr");
+      reject(error.message || "Error uploading payload to Bundlr");
     }
   });
 };
@@ -149,6 +149,7 @@ async function runEmbalm(options: EmbalmOptions) {
   } catch (e) {
     //   const errorMsg = handleRpcError(e);
     //   Sentry.captureException(errorMsg, { fingerprint: ['CREATE_SARCOPHAGUS_FAILURE'] });
+    // TODO: handle errors here more gracefully, perhaps in a more granular fashion
     throw new Error(e);
   }
 }

@@ -1,4 +1,4 @@
-import { initialiseApp, setupRoutes, startApp } from "./app";
+import { initialiseApp, startApp } from "./app";
 import nodeFetch, {
   Headers,
   Request as nodeFetchRequest,
@@ -15,6 +15,5 @@ globalThis.Request = nodeFetchRequest;
 globalThis.Response = nodeFetchResponnse;
 
 const app = initialiseApp();
-setupRoutes(app);
 
 startApp({ app });

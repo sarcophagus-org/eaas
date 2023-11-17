@@ -3,9 +3,9 @@ import { EaasUser } from "../../../../src/types/EaasUser";
 
 export const inviteEmailTemplate = (params: { url: string; sender: EaasUser }) => {
   const { url, sender } = params;
-  const { email: senderEmail, name: senderName } = sender;
+  const { email: senderEmail } = sender;
 
-  const invitationCopy = `${senderName} (${senderEmail}) has invited you to create an account on the Embalmer As A Service network.`;
+  const invitationCopy = `${senderEmail} has invited you to create an account on the Embalmer As A Service network.`;
   const clickLinkCopy = "Use the link below to create an account.";
 
   return `

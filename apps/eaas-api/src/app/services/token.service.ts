@@ -1,10 +1,11 @@
 import jwt, { Secret } from "jsonwebtoken";
 import moment, { Moment } from "moment";
-import { eaasKnex } from "../../database";
+import { knex } from "../../database";
 import { envConfig } from "../../../src/config/env.config";
-import { AuthTokenTypes, TokenObject, TokenType } from "../../../src/types/Token";
+import { AuthTokenTypes, UserTokens, TokenType, TokenDb } from "../../../src/types/Token";
 import { userService } from "./user.service";
 import { JwtPayload } from "../../../src/types/JwtPayload";
+import { apiErrors } from "../utils/errors";
 
 /**
  * Generate auth tokens
@@ -12,16 +13,25 @@ import { JwtPayload } from "../../../src/types/JwtPayload";
  * @param {string} userId
  * @returns {Promise<Object>}
  */
-const generateAuthTokens = async (userId: string): Promise<TokenObject> => {
+const generateAuthTokens = async (userId: string): Promise<UserTokens> => {
   const accessTokenExpires = moment().add(envConfig.jwt.accessExpirationDays, "days");
-
   const refreshTokenExpires = moment().add(envConfig.jwt.refreshExpirationDays, "days");
 
   const accessToken = generateToken(userId, accessTokenExpires, TokenType.access);
   const refreshToken = generateToken(userId, refreshTokenExpires, TokenType.refresh);
 
-  await saveToken(accessToken, userId, accessTokenExpires, TokenType.access);
-  await saveToken(refreshToken, userId, refreshTokenExpires, TokenType.refresh);
+  await saveToken({
+    token: accessToken,
+    user_id: userId,
+    expires: accessTokenExpires.toISOString(),
+    type: TokenType.access.toString(),
+  });
+  await saveToken({
+    token: refreshToken,
+    user_id: userId,
+    expires: refreshTokenExpires.toISOString(),
+    type: TokenType.refresh.toString(),
+  });
 
   return {
     access: {
@@ -42,6 +52,45 @@ const generateAuthTokens = async (userId: string): Promise<TokenObject> => {
  * @param skipDelete
  * @returns The token from the db if verified, else returns null
  */
+const verifyToken = async (token: string, secret: Secret): Promise<JwtPayload> => {
+  try {
+    return await new Promise<JwtPayload>((resolve, reject) => {
+      jwt.verify(token, secret, (error, payload) => {
+        if (error) {
+          if (error.message.includes("invalid signature")) {
+            reject(apiErrors.invalidSignature);
+          } else if (error.message.includes("token not found")) {
+            reject(apiErrors.tokenNotFound);
+          } else if (error.message.includes("jwt expired")) {
+            reject(apiErrors.tokenExpired);
+          } else {
+            reject(error);
+          }
+        }
+
+        if (payload) {
+          resolve(payload as JwtPayload);
+        } else {
+          reject(apiErrors.invalidToken);
+        }
+      });
+    });
+  } catch (error) {
+    if (error.errorCode) {
+      throw error;
+    }
+
+    throw apiErrors.invalidToken;
+  }
+};
+
+/**
+ * Verifies a token, confirms its existence, and optionally deletes it from the db
+ *
+ * @param token The token to be verified
+ * @param skipDelete Whether or not to delete the token from the db
+ * @returns The token from the db if verified, else returns null
+ */
 const consumeToken = async (token: string, skipDelete?: boolean): Promise<any> => {
   const secret = envConfig.jwt.secret;
 
@@ -49,8 +98,9 @@ const consumeToken = async (token: string, skipDelete?: boolean): Promise<any> =
 
   const userId = payload.sub;
   if (!userId || typeof userId !== "string") {
-    throw new Error("invalid token");
+    throw apiErrors.invalidToken;
   }
+
   skipDelete ? await findToken(token) : await findAndDeleteToken(token);
 
   return payload;
@@ -83,41 +133,24 @@ const generateToken = (
 
   const jwtSecret = secret || process.env.JWT_SECRET;
   if (!jwtSecret) {
-    throw Error("Missing env var JWT_SECRET");
+    throw apiErrors.missingJWTSecret;
   }
 
   return jwt.sign(payload, jwtSecret);
 };
 
 /**
- * Save token in db
- *
- * @param {string} token
- * @param {ObjectId} userId
- * @param {Moment} expires
- * @param {TokenType} type
- * @param blacklisted
- * @returns {Promise}
+ * Save token to db
  */
-const saveToken = async (
-  token: string,
-  userId: string,
-  expires: Moment,
-  type: TokenType,
-  blacklisted = false,
-): Promise<void> => {
+const saveToken = async (token: TokenDb): Promise<void> => {
+  const { user_id, type } = token;
+
   // If this is access or refresh token, delete before inserting
-  if (AuthTokenTypes.includes(type)) {
-    await eaasKnex("tokens").where({ user_id: userId, type }).delete();
+  if (AuthTokenTypes.map(toString).includes(type)) {
+    await knex("tokens").where({ user_id, type }).delete();
   }
 
-  await eaasKnex("tokens").insert({
-    token,
-    user_id: userId,
-    expires: expires.toISOString(),
-    type,
-    blacklisted,
-  });
+  await knex("tokens").insert(token);
 };
 
 /**
@@ -130,30 +163,33 @@ const generateResetPasswordToken = async (email: string): Promise<string> => {
   const resetPasswordExpirationMinutes = process.env.JWT_RESET_PASSWORD_EXPIRATION_MINUTES || 30;
 
   const user = await userService.getUserByEmail(email);
-  if (!user) throw new Error("no users found with this email");
+  if (!user) throw apiErrors.userNotFound;
 
   const expires = moment().add(resetPasswordExpirationMinutes, "minutes");
 
   const resetPasswordToken = generateToken(user.id, expires, TokenType.resetPassword);
 
-  await eaasKnex("tokens").insert({
+  await knex("tokens").insert({
     token: resetPasswordToken,
     user_id: user.id,
     expires: expires.toISOString(),
     type: TokenType.resetPassword,
   });
+
   return resetPasswordToken;
 };
 
 const generateVerifyEmailToken = async (userId: string): Promise<string> => {
   const expires = moment().add(envConfig.jwt.verifyEmailExpirationMinutes, "minutes");
   const verifyEmailToken = generateToken(userId, expires, TokenType.verifyEmail);
-  await eaasKnex("tokens").insert({
+
+  await knex("tokens").insert({
     token: verifyEmailToken,
     user_id: userId,
     expires: expires.toISOString(),
     type: TokenType.verifyEmail,
   });
+
   return verifyEmailToken;
 };
 
@@ -177,37 +213,23 @@ const generateInviteToken = async (senderId: string, invitationId: string): Prom
 
   const jwtSecret = envConfig.jwt.secret;
   if (!jwtSecret) {
-    throw Error("Missing env var JWT_SECRET");
+    throw apiErrors.missingJWTSecret;
   }
 
   const inviteToken = jwt.sign(payload, jwtSecret);
 
-  await eaasKnex("tokens").insert({
+  await knex("tokens").insert({
     token: inviteToken,
     user_id: senderId,
     expires: expires.toISOString(),
     type: TokenType.invite,
   });
+
   return inviteToken;
 };
 
-const verifyToken = (token: string, secret: Secret): Promise<JwtPayload> => {
-  return new Promise((resolve, reject) => {
-    jwt.verify(token, secret, (error, payload) => {
-      if (error) {
-        reject(error);
-      }
-      if (payload) {
-        resolve(payload as JwtPayload);
-      } else {
-        reject(new Error("Jwt has no payload"));
-      }
-    });
-  });
-};
-
 export const findAndDeleteToken = async (token: string): Promise<void> => {
-  const dbToken = await eaasKnex("tokens")
+  const dbToken = await knex("tokens")
     .where({
       token,
       blacklisted: false,
@@ -218,12 +240,12 @@ export const findAndDeleteToken = async (token: string): Promise<void> => {
     .then((x) => x[0]);
 
   if (!dbToken) {
-    throw new Error("token not found");
+    throw apiErrors.tokenNotFound;
   }
 };
 
 export const findToken = async (token: string): Promise<void> => {
-  const dbToken = await eaasKnex("tokens")
+  const dbToken = await knex("tokens")
     .where({
       token,
       blacklisted: false,
@@ -232,7 +254,7 @@ export const findToken = async (token: string): Promise<void> => {
     .then((x) => x[0]);
 
   if (!dbToken) {
-    throw new Error("token not found");
+    throw apiErrors.tokenNotFound;
   }
 };
 
