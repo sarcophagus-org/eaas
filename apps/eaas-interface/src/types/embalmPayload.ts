@@ -14,5 +14,4 @@ export interface SendEncryptedPayloadParams {
   chainId: number;
   threshold: number;
   resurrectionTime: number;
-  sarcophagusName: string;
 }

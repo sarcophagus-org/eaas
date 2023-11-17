@@ -91,7 +91,6 @@ export function GenerateRecipientPDF() {
                 chainId: 11155111,
                 resurrectionTime: resurrection,
                 preparedEncryptedPayload,
-                sarcophagusName: "",
                 threshold: 1,
               });
               // eslint-disable-next-line @typescript-eslint/no-explicit-any
