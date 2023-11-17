@@ -5,7 +5,7 @@ import { NotFoundPage } from "./notFound";
 import { EmbalmerDashboard } from "./embalmer/dashboard";
 import { ClientDashboard } from "./client/dashboard";
 import { ClientOnboarding } from "./client/onboarding";
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import { useSelector } from "../store";
 
 export function AppRoutes() {
