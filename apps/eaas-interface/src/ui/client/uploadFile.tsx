@@ -4,8 +4,6 @@ import { useSelectFile } from "../../hooks/useSelectFile";
 import { FileDragAndDrop } from "./fileDragAndDrop";
 import prettyBytes from "pretty-bytes";
 
-const maxSarcophagusNameLength = 60;
-
 export const UploadFile = () => {
   const { error, file, fileInputRef, handleSetFile } = useSelectFile();
 
@@ -17,14 +15,8 @@ export const UploadFile = () => {
     handleSetFile(newFile);
   }
 
-  const formattedFilename = !file
-    ? ""
-    : file.name.length > maxSarcophagusNameLength * 2
-      ? `${file.name.slice(0, maxSarcophagusNameLength * 2 - 4)}...`
-      : file.name;
-
-  const filenameTooltip =
-    !!file && file.name.length > maxSarcophagusNameLength * 2 ? file.name : "";
+  const formattedFilename = !file ? "" : file.name;
+  const filenameTooltip = formattedFilename;
 
   return (
     <VStack w="100%" align="left">

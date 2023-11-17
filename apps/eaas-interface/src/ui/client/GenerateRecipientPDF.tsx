@@ -87,7 +87,7 @@ export function GenerateRecipientPDF() {
 
               console.log("preparedEncryptedPayload", preparedEncryptedPayload);
 
-              sendPayload({
+              await sendPayload({
                 chainId: 11155111,
                 resurrectionTime: resurrection,
                 preparedEncryptedPayload,
