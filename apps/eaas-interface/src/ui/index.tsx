@@ -7,9 +7,15 @@ import { ClientDashboard } from "./client/dashboard";
 import { ClientOnboarding } from "./client/onboarding";
 import React, { useEffect } from "react";
 import { useSelector } from "../store";
+import { TestUpload } from "./client/testUpload";
 
 export function AppRoutes() {
   const routes = [
+    {
+      path: RoutesPathMap[RouteKey.TEST_PAGE],
+      element: <TestUpload />,
+      label: "Test",
+    },
     {
       path: RoutesPathMap[RouteKey.HOME_PAGE],
       element: <Login />,

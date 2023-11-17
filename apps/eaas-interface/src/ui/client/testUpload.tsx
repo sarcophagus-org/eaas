@@ -5,7 +5,7 @@ import { preparePayload } from "../../utils/prepare-payload";
 import { useState } from "react";
 import { sendPayload } from "../../api/embalm";
 
-export const ClientHome = () => {
+export const TestUpload = () => {
   const toast = useToast();
   const [isUploading, setIsUploading] = useState(false);
 
@@ -43,7 +43,6 @@ export const ClientHome = () => {
                 chainId: 11155111,
                 preparedEncryptedPayload,
                 resurrectionTime,
-                sarcophagusName: "test sarco",
                 threshold: 1,
               });
 
@@ -56,7 +55,7 @@ export const ClientHome = () => {
             }
           }}
         >
-          <Text>Prepare payload</Text>
+          <Text>Upload dummy payload</Text>
         </Button>
       ) : (
         <Spinner />
