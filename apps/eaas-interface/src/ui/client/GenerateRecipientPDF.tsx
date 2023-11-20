@@ -92,7 +92,6 @@ export function GenerateRecipientPDF() {
 
                 setIsUploading(true);
                 await sendPayload({
-                  chainId: 11155111,
                   resurrectionTime: resurrection,
                   preparedEncryptedPayload,
                   threshold: 1,

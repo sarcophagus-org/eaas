@@ -3,11 +3,12 @@ import dotenv from "dotenv";
 import { Strategy as JwtStrategy, ExtractJwt } from "passport-jwt";
 import { userService } from "../../src/app/services";
 import { EaasUser } from "../../src/types/EaasUser";
+import { envConfig } from "./env.config";
 
 dotenv.config();
 
 const jwtOptions = {
-  secretOrKey: process.env.JWT_SECRET,
+  secretOrKey: envConfig.jwt.secret,
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
 };
 

@@ -11,7 +11,6 @@ export interface PreparedEncryptedPayload {
 
 export interface SendEncryptedPayloadParams {
   preparedEncryptedPayload: PreparedEncryptedPayload;
-  chainId: number;
   threshold: number;
   resurrectionTime: number;
 }

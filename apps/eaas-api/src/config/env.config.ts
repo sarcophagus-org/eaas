@@ -14,6 +14,7 @@ if (process.env.NODE_ENV === "development") {
 
 const envVarsSchema = Joi.object()
   .keys({
+    CHAIN_ID: Joi.number().required().description("Network Chain ID"),
     PRIVATE_KEY: Joi.string().required().description("Embalmer private key"),
     PROVIDER_URL: Joi.string().required().description("Ethereum provider url"),
     ZERO_EX_API_KEY: Joi.string().required().description("0x API key"),
@@ -79,6 +80,7 @@ export const envConfig = {
     apiKey: envVars.SENDGRID_API_KEY,
     eaasLogoUrl: "",
   },
+  chainId: envVars.CHAIN_ID,
   privateKey: envVars.PRIVATE_KEY,
   providerUrl: envVars.PROVIDER_URL,
   zeroExApiKey: envVars.ZERO_EX_API_KEY,

@@ -40,7 +40,6 @@ export const TestUpload = () => {
 
             try {
               await sendPayload({
-                chainId: 11155111,
                 preparedEncryptedPayload,
                 resurrectionTime,
                 threshold: 1,

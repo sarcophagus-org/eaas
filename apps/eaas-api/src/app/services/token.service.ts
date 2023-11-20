@@ -131,7 +131,7 @@ const generateToken = (
     blacklisted,
   };
 
-  const jwtSecret = secret || process.env.JWT_SECRET;
+  const jwtSecret = secret || envConfig.jwt.secret;
   if (!jwtSecret) {
     throw apiErrors.missingJWTSecret;
   }
@@ -160,7 +160,7 @@ const saveToken = async (token: TokenDb): Promise<void> => {
  * @returns The reset password token as a string
  */
 const generateResetPasswordToken = async (email: string): Promise<string> => {
-  const resetPasswordExpirationMinutes = process.env.JWT_RESET_PASSWORD_EXPIRATION_MINUTES || 30;
+  const resetPasswordExpirationMinutes = envConfig.jwt.resetPasswordExpirationMinutes || 30;
 
   const user = await userService.getUserByEmail(email);
   if (!user) throw apiErrors.userNotFound;
