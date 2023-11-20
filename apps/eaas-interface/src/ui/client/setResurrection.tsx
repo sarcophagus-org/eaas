@@ -18,14 +18,17 @@ export function SetResurrection({ ...rest }: FlexProps) {
     getRadioProps,
     radioValue,
     customResurrectionDate,
-    // resurrection,
+    resurrection,
     handleCustomDateChange,
     handleCustomDateClick,
   } = useSetResurrection();
 
   const timestampMs = Date.now();
 
-  const resDateStringParts = customResurrectionDate?.toISOString().split("T") ?? [];
+  const selectedResurrectionTime =
+    customResurrectionDate ?? !!resurrection ? new Date(resurrection) : undefined;
+
+  const resDateStringParts = selectedResurrectionTime?.toISOString().split("T") ?? [];
   const resurrectionDate = resDateStringParts.at(0) ?? "";
   const resurrectionTime =
     resDateStringParts.at(1)?.slice(0, resDateStringParts.at(1)?.lastIndexOf(":")) ?? "";
