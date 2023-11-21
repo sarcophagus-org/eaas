@@ -1,6 +1,6 @@
 import { ArchaeologistExceptionCode, NodeSarcoClient } from "@sarcophagus-org/sarcophagus-v2-sdk";
 import { PreparedEncryptedPayload } from "../../../src/types/embalmPayload";
-import { envConfig } from "src/config/env.config";
+import { envConfig } from "../../../src/config/env.config";
 
 interface ArweaveUploadArgs {
   sarco: NodeSarcoClient;
