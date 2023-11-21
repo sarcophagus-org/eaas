@@ -1,3 +1,4 @@
+import React, { useEffect, useState } from "react";
 import {
   Center,
   Flex,
@@ -11,38 +12,41 @@ import {
   Text,
   Tooltip,
 } from "@chakra-ui/react";
-import { useAccount } from "wagmi";
+// // import { useAccount } from "wagmi";
 import { NoSarcpohagi } from "./components/NoSarcophagi";
-import { SarcoTab } from "./components/SarcoTab";
-import { SarcoTable } from "./components/SarcoTable";
-import { InfoOutlineIcon } from "@chakra-ui/icons";
+// import { SarcoTab } from "./components/SarcoTab";
+// import { SarcoTable } from "./components/SarcoTable";
+// import { InfoOutlineIcon } from "@chakra-ui/icons";
 import { SarcophagusData, sarco } from "@sarcophagus-org/sarcophagus-v2-sdk-client";
-import { useEffect, useState } from "react";
-import React from "react";
+// import { useEffect, useState } from "react";
 // import { useSupportedNetwork } from 'lib/config/useSupportedNetwork';
 
 /**
  * A component that manages the app's sarcophagi. Should be styled to fit any container.
  */
 export function Sarcophagi() {
-  const { address } = useAccount();
+  // const { address } = useAccount();
 
   const [isLoadingEmbalmerSarcophagi, setIsLoadingEmbalmerSarcophagi] = useState(false);
   const [embalmerSarcophagi, setEmbalmerSarcophagi] = useState<SarcophagusData[]>([]);
 
   // const { isSarcoInitialized } = useSupportedNetwork();
 
-  useEffect(() => {
-    // if (isSarcoInitialized) {
-    // EMBALMER SARCO
-    setIsLoadingEmbalmerSarcophagi(true);
-    if (!address) return;
-    sarco.api.getEmbalmerSarcophagi(address).then((res) => {
-      setEmbalmerSarcophagi(res);
-      setIsLoadingEmbalmerSarcophagi(false);
-    });
-    // }
-  }, [address]);
+  console.log("sarco.isInitialised", sarco);
+  // console.log("sarco.isInitialised", sarco.isInitialised);
+  // useEffect(() => {
+  //   console.log("sarco.isInitialised", sarco.isInitialised);
+
+  //   if (sarco.isInitialised) {
+  //   // EMBALMER SARCO
+  //   setIsLoadingEmbalmerSarcophagi(true);
+  //   // if (!address) return;
+  //   sarco.api.getEmbalmerSarcophagi("address").then((res) => {
+  //     setEmbalmerSarcophagi(res);
+  //     setIsLoadingEmbalmerSarcophagi(false);
+  //   });
+  //   }
+  // }, [sarco.isInitialised]);
 
   function embalmerPanel() {
     if (isLoadingEmbalmerSarcophagi) {
@@ -56,7 +60,7 @@ export function Sarcophagi() {
       return <NoSarcpohagi />;
     }
 
-    return <SarcoTable sarcophagi={embalmerSarcophagi} />;
+    // return <SarcoTable sarcophagi={embalmerSarcophagi} />;
   }
 
   return (
@@ -74,14 +78,14 @@ export function Sarcophagi() {
         borderColor="whiteAlpha.300"
       >
         <TabList border="none">
-          <SarcoTab>
+          {/* <SarcoTab>
             <HStack>
               <Text>My Sarcophagi</Text>
               <Tooltip label="Sarcophagi you have created." placement="top">
                 <Icon as={InfoOutlineIcon} />
               </Tooltip>
             </HStack>
-          </SarcoTab>
+          </SarcoTab> */}
         </TabList>
         <TabPanels
           overflow="hidden"
