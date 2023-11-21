@@ -10,10 +10,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@chakra-ui/icons": "^2.1.1",
     "@chakra-ui/react": "^2.8.1",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@react-pdf/renderer": "^3.1.14",
+    "@sarcophagus-org/sarcophagus-v2-sdk-client": "^0.2.39",
     "axios": "^1.6.0",
     "dotenv": "^16.3.1",
     "file-saver": "^2.0.5",
@@ -24,7 +26,8 @@
     "react-datepicker": "^4.21.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.18.0",
-    "sanitize-filename": "^1.6.3"
+    "sanitize-filename": "^1.6.3",
+    "wagmi": "^1.4.7"
   },
   "devDependencies": {
     "@esbuild-plugins/node-globals-polyfill": "^0.2.3",

@@ -1,0 +1,50 @@
+import { ChevronDownIcon, ChevronUpIcon } from "@chakra-ui/icons";
+import { Collapse, Flex, IconButton, Text, useDisclosure, VStack } from "@chakra-ui/react";
+import { ethers } from "ethers";
+import { SarcophagusDetails } from "@sarcophagus-org/sarcophagus-v2-sdk-client";
+import React from "react";
+
+interface DetailsCollapseProps {
+  id?: string;
+  sarcophagus: SarcophagusDetails;
+}
+
+export function DetailsCollapse({
+  id = ethers.constants.HashZero,
+  sarcophagus,
+}: DetailsCollapseProps) {
+  const { isOpen, onToggle } = useDisclosure();
+
+  return (
+    <>
+      <Flex align="center">
+        <Text cursor="pointer" onClick={onToggle}>
+          Details
+        </Text>
+        <IconButton
+          aria-label="Expand details"
+          bg="none"
+          color="brand.950"
+          size="sm"
+          _hover={{
+            bg: "none",
+          }}
+          _active={{
+            bg: "none",
+          }}
+          icon={isOpen ? <ChevronUpIcon /> : <ChevronDownIcon />}
+          onClick={onToggle}
+        />
+      </Flex>
+      <Collapse in={isOpen}>
+        <VStack mt={6} mb={6} p={6} bg="brand.100" align="left" spacing={2}>
+          <Text>ID: {id}</Text>
+          <Text>Arweave File ID: {sarcophagus?.arweaveTxId}</Text>
+          <Text>Embalmer Address: {sarcophagus?.embalmerAddress}</Text>
+          <Text>Recipient Address: {sarcophagus?.recipientAddress}</Text>
+          <Text>Minimum Archaeologists: {sarcophagus?.threshold}</Text>
+        </VStack>
+      </Collapse>
+    </>
+  );
+}
