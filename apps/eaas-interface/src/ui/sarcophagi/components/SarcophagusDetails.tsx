@@ -6,9 +6,7 @@ import React from "react";
 import { useGetSarcophagusDetails } from "../../../hooks/useGetSarcophagusDetails";
 import { buildResurrectionDateString } from "../../../utils/buildResurrectionDateString";
 
-export const resurrectTooltip = "Extend the resurrection date of the Sarcophagus";
-
-export function Details() {
+export function SarcophagusDetails() {
   const { id } = useParams();
   const timestampMs = Date.now();
 

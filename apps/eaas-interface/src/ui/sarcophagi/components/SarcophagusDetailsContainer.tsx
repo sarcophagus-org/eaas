@@ -11,7 +11,7 @@ interface SarcophagusDetailsProps {
   children?: React.ReactNode;
 }
 
-export function DetailsContainer({ children }: SarcophagusDetailsProps) {
+export function SarcophagusDetailsContainer({ children }: SarcophagusDetailsProps) {
   const { id } = useParams();
 
   const { sarcophagus } = useGetSarcophagusDetails(id);

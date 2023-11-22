@@ -1,4 +1,4 @@
-import { Button, Center, CenterProps } from "@chakra-ui/react";
+import { Button, Center, CenterProps, Text, VStack } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import React from "react";
 import { RouteKey, RoutesPathMap } from "../../routerConstants";
@@ -12,9 +12,14 @@ export function NoSarcpohagi(props: CenterProps) {
   }
   return (
     <Center border="1px solid" borderColor="whiteAlpha.300" py={8} {...props}>
-      <Button variant="link" onClick={handleClickCreate}>
-        Create a Sarcophagus
-      </Button>
+      <VStack>
+        <Text fontSize="xl" fontWeight="bold">
+          You have no sarcophagi
+        </Text>
+        <Button variant="link" onClick={handleClickCreate}>
+          Create a Sarcophagus
+        </Button>
+      </VStack>
     </Center>
   );
 }

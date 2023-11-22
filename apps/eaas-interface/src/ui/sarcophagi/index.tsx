@@ -3,23 +3,19 @@ import {
   Center,
   Flex,
   HStack,
-  Icon,
   Spinner,
   TabList,
   TabPanel,
   TabPanels,
   Tabs,
   Text,
-  Tooltip,
 } from "@chakra-ui/react";
-// // import { useAccount } from "wagmi";
+// import { useAccount } from "wagmi";
 import { NoSarcpohagi } from "./components/NoSarcophagi";
-// import { SarcoTab } from "./components/SarcoTab";
-// import { SarcoTable } from "./components/SarcoTable";
-// import { InfoOutlineIcon } from "@chakra-ui/icons";
+import { SarcoTab } from "./components/SarcoTab";
+import { SarcoTable } from "./components/SarcoTable";
 import { SarcophagusData, sarco } from "@sarcophagus-org/sarcophagus-v2-sdk-client";
-// import { useEffect, useState } from "react";
-// import { useSupportedNetwork } from 'lib/config/useSupportedNetwork';
+import { useSupportedNetwork } from "lib/config/useSupportedNetwork";
 
 /**
  * A component that manages the app's sarcophagi. Should be styled to fit any container.
@@ -32,7 +28,7 @@ export function Sarcophagi() {
 
   // const { isSarcoInitialized } = useSupportedNetwork();
 
-  console.log("sarco.isInitialised", sarco);
+  // console.log("sarco.isInitialised", sarco);
   // console.log("sarco.isInitialised", sarco.isInitialised);
   // useEffect(() => {
   //   console.log("sarco.isInitialised", sarco.isInitialised);
@@ -56,11 +52,12 @@ export function Sarcophagi() {
         </Center>
       );
     }
+
     if (!isLoadingEmbalmerSarcophagi && embalmerSarcophagi?.length === 0) {
       return <NoSarcpohagi />;
     }
 
-    // return <SarcoTable sarcophagi={embalmerSarcophagi} />;
+    return <SarcoTable sarcophagi={embalmerSarcophagi} />;
   }
 
   return (
@@ -78,14 +75,11 @@ export function Sarcophagi() {
         borderColor="whiteAlpha.300"
       >
         <TabList border="none">
-          {/* <SarcoTab>
+          <SarcoTab>
             <HStack>
               <Text>My Sarcophagi</Text>
-              <Tooltip label="Sarcophagi you have created." placement="top">
-                <Icon as={InfoOutlineIcon} />
-              </Tooltip>
             </HStack>
-          </SarcoTab> */}
+          </SarcoTab>
         </TabList>
         <TabPanels
           overflow="hidden"

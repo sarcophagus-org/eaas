@@ -2,9 +2,7 @@ import { EditIcon, InfoOutlineIcon } from "@chakra-ui/icons";
 import { Button, HStack, IconButton, TableRowProps, Td, Text, Tooltip, Tr } from "@chakra-ui/react";
 import { BigNumber } from "ethers";
 import { useEffect, useState } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
-import { useAccount } from "wagmi";
-import { resurrectTooltip } from "./Details";
+import { NavLink } from "react-router-dom";
 import { SarcoStateIndicator } from "./SarcoStateIndicator";
 import { SarcophagusData, SarcophagusState } from "@sarcophagus-org/sarcophagus-v2-sdk-client";
 import { useGetEmbalmerCanClean } from "../../../hooks/useGetEmbalmerCanClean";
@@ -16,7 +14,6 @@ import { SarcoAction } from ".";
 
 export interface SarcophagusTableRowProps extends TableRowProps {
   sarco: SarcophagusData;
-  isClaimTab?: boolean;
   dateCalculationInterval?: number;
 }
 
@@ -25,11 +22,9 @@ export interface SarcophagusTableRowProps extends TableRowProps {
  */
 export function SarcoTableRow({
   sarco,
-  isClaimTab,
   dateCalculationInterval = 60_000,
 }: SarcophagusTableRowProps) {
-  const { address } = useAccount();
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   // const { timestampMs } = useSelector(x => x.appState);
   const timestampMs = Date.now();
 
@@ -39,40 +34,19 @@ export function SarcoTableRow({
   const canEmbalmerClean = useGetEmbalmerCanClean(sarco);
   const { clean, isCleaning } = useCleanSarcophagus(sarco.id, canEmbalmerClean);
 
-  // If we ever decide to add a dashboard for archaeologists that case will need to be considered
-  // here.
-  // This logic shows the actions a user can make on a sarcophagus regardless of which tab they are
-  // on. If a user is both the embalmer and the recipient on a sarcohpagus, they will see both the
-  // rewrap and resurrect actions on the "My Sarcophagi" tab and the "Claim Sarcophagi" tab.
-  const isEmbalmer = sarco.embalmerAddress === address;
-
-  const isRecipientClaimable = sarco.recipientAddress === address && isClaimTab;
-
-  const claimTooltip = "Decrypt and download the Sarcophagus payload";
-
   const stateToActionMap: {
     [key: string]: {
       action?: SarcoAction;
       tooltip?: string;
     };
   } = {
-    [SarcophagusState.Active]: {
-      action: isEmbalmer && !isClaimTab ? SarcoAction.Rewrap : undefined,
-      tooltip: isEmbalmer && !isClaimTab ? resurrectTooltip : "",
-    },
     [SarcophagusState.Resurrected]: {
       // The embalmer isn't concerned with claiming a sarco. BUT, if they can clean a resurrected sarco,
       // that's something they care about. Otherwise we show the Claim action to the recipient.
-      action: isRecipientClaimable
-        ? SarcoAction.Claim
-        : canEmbalmerClean
+      action: canEmbalmerClean
           ? SarcoAction.Clean
           : undefined,
-      tooltip: isRecipientClaimable ? claimTooltip : canEmbalmerClean ? "cleanTooltip" : "",
-    },
-    [SarcophagusState.CleanedResurrected]: {
-      action: isRecipientClaimable ? SarcoAction.Claim : undefined,
-      tooltip: isRecipientClaimable ? claimTooltip : "",
+      tooltip: canEmbalmerClean ? "cleanTooltip" : "",
     },
     [SarcophagusState.Failed]: {
       action: canEmbalmerClean ? SarcoAction.Clean : undefined,
@@ -85,12 +59,6 @@ export function SarcoTableRow({
 
   function handleClickAction() {
     switch (action) {
-      case SarcoAction.Rewrap:
-        navigate(`${sarco.id}?action=rewrap`);
-        break;
-      case SarcoAction.Claim:
-        navigate(`${sarco.id}?action=claim`);
-        break;
       case SarcoAction.Clean:
         clean?.();
         break;

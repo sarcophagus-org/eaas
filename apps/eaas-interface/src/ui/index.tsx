@@ -11,6 +11,7 @@ import { TestUpload } from "./client/testUpload";
 import { Box, Flex, Link } from "@chakra-ui/react";
 import { Navbar } from "./navbar";
 import { Sarcophagi } from "./sarcophagi";
+import { SarcophagusDetailsPage } from "./sarcophagi/SarcophagusDetailsPage";
 
 export function AppRoutes() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -19,6 +20,7 @@ export function AppRoutes() {
       path: RoutesPathMap[RouteKey.TEST_PAGE],
       element: <TestUpload />,
       label: "Test",
+      hidden: true,
     },
     {
       path: RoutesPathMap[RouteKey.HOME_PAGE],
@@ -51,6 +53,12 @@ export function AppRoutes() {
       path: RoutesPathMap[RouteKey.SARCOPHAGI_PAGE],
       element: <Sarcophagi />,
       label: "Your Sarcophagi",
+    },
+    {
+      path: RoutesPathMap[RouteKey.SARCOPHAGUS_DETAIL],
+      element: <SarcophagusDetailsPage />,
+      label: "Sarcophagus Details",
+      hidden: true,
     },
   ];
 
