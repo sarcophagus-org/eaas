@@ -12,6 +12,7 @@ import { Box, Flex, HStack, Link } from "@chakra-ui/react";
 import { Navbar } from "./components/navbar";
 import { SarcophagusDetailsPage } from "./sarcophagi/SarcophagusDetailsPage";
 import { UserType } from "types/userTypes";
+import { ClientSarcophagi } from "./sarcophagi";
 
 export function AppRoutes() {
   const navigate = useNavigate();
@@ -59,6 +60,12 @@ export function AppRoutes() {
       path: RoutesPathMap[RouteKey.CLIENT_DASHBOARD_PAGE],
       element: <ClientDashboard />,
       label: "Dashboard",
+      hidden: appUser?.type !== UserType.client,
+    },
+    {
+      path: RoutesPathMap[RouteKey.SARCOPHAGI_PAGE],
+      element: <ClientSarcophagi />,
+      label: "Sarcophagi",
       hidden: appUser?.type !== UserType.client,
     },
     {

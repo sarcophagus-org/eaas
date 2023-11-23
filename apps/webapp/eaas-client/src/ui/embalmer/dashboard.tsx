@@ -4,7 +4,7 @@ import { Box, Button, Divider, HStack, Input, Text, useToast } from "@chakra-ui/
 import { UserType } from "../../types/userTypes";
 import { useSelector } from "../../store";
 import { clientInviteFailed, clientInvited } from "utils/toast";
-import { Sarcophagi } from "ui/sarcophagi";
+import { EmbalmerSarcophagi } from "ui/sarcophagi";
 
 export const EmbalmerDashboard: React.FC = () => {
   const toast = useToast();
@@ -43,7 +43,7 @@ export const EmbalmerDashboard: React.FC = () => {
         <Input placeholder="Client email" value={clientEmail} onChange={handleEmailChange} />
         <Button onClick={handleInviteClient}>Invite Client</Button>
       </Box>
-      <Sarcophagi />
+      <EmbalmerSarcophagi />
     </Box>
   );
 };

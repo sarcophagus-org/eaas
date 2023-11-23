@@ -62,7 +62,8 @@ function readFileDataAsBase64(file: File): Promise<{ type: string; data: Buffer 
 export const preparePayload = async (args: PreparePayloadArgs): Promise<PreparePayloadResult> => {
   const { nArchs, file, recipientPublicKey } = args;
 
-  const randomWallet = ethers.Wallet.createRandom();
+  const { privateKey: payloadPrivateKey, publicKey: payloadPublicKey } =
+    ethers.Wallet.createRandom();
 
   const { data, type } = await readFileDataAsBase64(file!);
 
@@ -72,11 +73,11 @@ export const preparePayload = async (args: PreparePayloadArgs): Promise<PrepareP
   };
 
   const encryptedPayload = await encrypt(
-    Buffer.from(ethers.utils.arrayify(randomWallet.publicKey)),
+    Buffer.from(ethers.utils.arrayify(payloadPublicKey)),
     data,
   );
 
-  const keyShares: Uint8Array[] = split(randomWallet.privateKey, {
+  const keyShares: Uint8Array[] = split(payloadPrivateKey, {
     shares: nArchs,
     threshold: nArchs,
   });
