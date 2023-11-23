@@ -13,8 +13,12 @@ import { Navbar } from "./components/navbar";
 import { Sarcophagi } from "./sarcophagi";
 import { ConnectWalletButton } from "./sarcophagi/components/ConnectWalletButton";
 import { SarcophagusDetailsPage } from "./sarcophagi/SarcophagusDetailsPage";
+import { UserType } from "types/userTypes";
 
 export function AppRoutes() {
+    const navigate = useNavigate();
+  const appUser = useSelector((x) => x.userState.user);
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const routes: any[] = [
     {
@@ -25,8 +29,9 @@ export function AppRoutes() {
     },
     {
       path: RoutesPathMap[RouteKey.HOME_PAGE],
-      element: <Login />,
-      label: "Home",
+      element: !appUser ? <Login /> : appUser.type === UserType.embalmer ? <EmbalmerDashboard /> : <EmbalmerDashboard />,
+      label: "Dashboard",
+      hidden: true,
     },
     {
       path: RoutesPathMap[RouteKey.LOGIN_PAGE],
@@ -37,7 +42,9 @@ export function AppRoutes() {
     {
       path: RoutesPathMap[RouteKey.EMBALMER_DASHBOARD_PAGE],
       element: <EmbalmerDashboard />,
-      label: "Embalmer Dashboard",
+      label: "Dashboard",
+      hidden: appUser?.type !== UserType.embalmer,
+
     },
     {
       path: RoutesPathMap[RouteKey.CLIENT_ONBOARDING_PAGE],
@@ -48,7 +55,8 @@ export function AppRoutes() {
     {
       path: RoutesPathMap[RouteKey.CLIENT_DASHBOARD_PAGE],
       element: <ClientDashboard />,
-      label: "Client Dashboard",
+      label: "Dashboard",
+      hidden: appUser?.type !== UserType.client,
     },
     {
       path: RoutesPathMap[RouteKey.SARCOPHAGI_PAGE],
@@ -62,9 +70,6 @@ export function AppRoutes() {
       hidden: true,
     },
   ];
-
-  const navigate = useNavigate();
-  const appUser = useSelector((x) => x.userState.user);
 
   useEffect(() => {
     if (!appUser) navigate("/login", { replace: true });
