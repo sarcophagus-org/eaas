@@ -3,7 +3,8 @@ import { RecipientState } from "../../store/embalm/actions";
 import { Page, Text, Image, View, Document, StyleSheet, Font } from "@react-pdf/renderer";
 
 import QRCode from "qrcode";
-// import BgStripes from "../assets/images/bg-stripes.png";
+
+const BgStripes = require("../../assets/images/bg-stripes.png");
 
 export const createRecipientKeyDocument = async (sender: string, recipient: RecipientState) => {
   const styles = StyleSheet.create({
@@ -132,7 +133,7 @@ export const createRecipientKeyDocument = async (sender: string, recipient: Reci
 
   const bgStripes = (
     <View style={styles.privateKeyBorderBorder}>
-      {/* <Image style={styles.stripeBackground} src={BgStripes} /> */}
+      <Image style={styles.stripeBackground} src={BgStripes} />
     </View>
   );
 

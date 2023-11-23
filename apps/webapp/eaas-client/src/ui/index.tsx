@@ -12,6 +12,7 @@ import { Box, Flex, Link } from "@chakra-ui/react";
 import { Navbar } from "./components/navbar";
 import { Sarcophagi } from "./sarcophagi";
 import { ConnectWalletButton } from "./sarcophagi/components/ConnectWalletButton";
+import { SarcophagusDetailsPage } from "./sarcophagi/SarcophagusDetailsPage";
 
 export function AppRoutes() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -54,12 +55,12 @@ export function AppRoutes() {
       element: <Sarcophagi />,
       label: "Your Sarcophagi",
     },
-    // {
-    //   path: RoutesPathMap[RouteKey.SARCOPHAGUS_DETAIL],
-    //   element: <SarcophagusDetailsPage />,
-    //   label: "Sarcophagus Details",
-    //   hidden: true,
-    // },
+    {
+      path: RoutesPathMap[RouteKey.SARCOPHAGUS_DETAIL],
+      element: <SarcophagusDetailsPage />,
+      label: "Sarcophagus Details",
+      hidden: true,
+    },
   ];
 
   const navigate = useNavigate();
