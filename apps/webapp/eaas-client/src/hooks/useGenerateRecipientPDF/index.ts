@@ -6,7 +6,18 @@ import { ethers } from "ethers";
 import { useDispatch, useSelector } from "../../store";
 import { GeneratePDFState, RecipientState, setRecipientState } from "../../store/embalm/actions";
 import { createRecipientKeyDocument } from "../useGenerateRecipientPDF/recipientKeyDocument";
-import { createEncryptionKeypairAsync } from "../useCreateEncryptionKeypair";
+
+async function createEncryptionKeypair(): Promise<{
+  privateKey: string;
+  publicKey: string;
+}> {
+  return new Promise((resolve) => {
+    const wallet = ethers.Wallet.createRandom();
+    const publicKey = wallet.publicKey;
+    const privateKey = wallet.privateKey;
+    resolve({ privateKey, publicKey });
+  });
+}
 
 export function useGenerateRecipientPDF() {
   const dispatch = useDispatch();
@@ -20,7 +31,7 @@ export function useGenerateRecipientPDF() {
       setIsLoading(true);
       setGenerateError(null);
 
-      const { privateKey, publicKey } = await createEncryptionKeypairAsync();
+      const { privateKey, publicKey } = await createEncryptionKeypair();
 
       const recipient: RecipientState = {
         address: ethers.utils.computeAddress(publicKey),
@@ -36,6 +47,8 @@ export function useGenerateRecipientPDF() {
         setRecipientState({
           address: "",
           publicKey: "",
+          privateKey: "",
+          generatePDFState: GeneratePDFState.UNSET,
         }),
       );
       const error = _error as Error;
