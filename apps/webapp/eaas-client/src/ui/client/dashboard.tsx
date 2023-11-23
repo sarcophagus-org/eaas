@@ -23,7 +23,7 @@ export const ClientDashboard: React.FC = () => {
       </HStack>
 
       <UploadFile />
-      <SetResurrection />
+      <SetResurrection mb={10} />
       <GenerateRecipientPDF />
     </Box>
   );
