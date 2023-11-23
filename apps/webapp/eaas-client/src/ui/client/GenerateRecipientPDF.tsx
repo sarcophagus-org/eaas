@@ -6,7 +6,8 @@ import { useSelector } from "../../store";
 import { useEffect } from "react";
 import { sendPayload } from "../../api/embalm";
 import { preparePayload } from "../../utils/preparePayload";
-import { fileUploadFailure, generatePDFFailure } from "utils/toast";
+import { fileUploadFailure, fileUploadSuccess, generatePDFFailure } from "utils/toast";
+import { useNavigate } from "react-router-dom";
 
 export function GenerateRecipientPDF() {
   const { generatePublicKey, downloadRecipientPDF, isLoading, generateError } =
@@ -49,6 +50,8 @@ export function GenerateRecipientPDF() {
       downloadRecipientPDF(user!.email);
     }
   }, [downloadRecipientPDF, recipientState.generatePDFState, toast, user]);
+
+  const navigate = useNavigate();
 
   const generateStateMap: Record<GeneratePDFState, any> = {
     [GeneratePDFState.UNSET]: (
@@ -93,6 +96,9 @@ export function GenerateRecipientPDF() {
                   preparedEncryptedPayload,
                   threshold: 1,
                 });
+                toast(fileUploadSuccess());
+                navigate("/");
+
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
               } catch (e: any) {
                 toast(fileUploadFailure(e));

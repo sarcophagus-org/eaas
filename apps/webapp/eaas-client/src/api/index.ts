@@ -4,7 +4,7 @@ import { getAccessToken } from "../localStorage";
 
 const instance = axios.create({
   baseURL: process.env.REACT_APP_API_BASE_URL,
-  timeout: 15000,
+  timeout: 120000,
 });
 
 instance.interceptors.request.use(

@@ -135,8 +135,7 @@ async function runEmbalm(options: EmbalmOptions) {
       arweaveTxId: sarcophagusPayloadTxId,
     });
 
-    const tx = await sarco.api.createSarcophagus(...submitSarcophagusArgs);
-    await tx.wait();
+    await sarco.api.createSarcophagus(...submitSarcophagusArgs);
 
     const { embalmer_id } = await knex("embalmer_has_clients")
       .where({ client_id: clientId })
