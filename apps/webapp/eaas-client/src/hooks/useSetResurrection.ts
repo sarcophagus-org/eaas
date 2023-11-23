@@ -25,7 +25,7 @@ export function useSetResurrection() {
   // easier to display the value in the DatePicker. Resurrection and CustomResurrectionDate will often be
   // managed in parallel.
 
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<string>();
 
   function handleRadioChange(nextValue: string) {
     dispatch(setResurrectionRadioValue(nextValue));
@@ -73,7 +73,7 @@ export function useSetResurrection() {
           .humanize()} or more in the future.`,
       );
     } else {
-      setError(null);
+      setError(undefined);
     }
   }, [resurrection]);
 

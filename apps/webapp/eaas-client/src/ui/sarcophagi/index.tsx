@@ -1,21 +1,11 @@
 import React, { useEffect, useState } from "react";
-import {
-  Center,
-  Flex,
-  HStack,
-  Spinner,
-  TabList,
-  TabPanel,
-  TabPanels,
-  Tabs,
-  Text,
-} from "@chakra-ui/react";
+import { Center, Flex, Spinner, TabPanel, TabPanels, Tabs, Text } from "@chakra-ui/react";
 import { NoSarcpohagi } from "./components/NoSarcophagi";
-import { SarcoTab } from "./components/SarcoTab";
 import { SarcoTable } from "./components/SarcoTable";
 import { SarcophagusData, sarco } from "@sarcophagus-org/sarcophagus-v2-sdk-client";
 
 import { useAccount } from "wagmi";
+import { ConnectWalletButton } from "./components/ConnectWalletButton";
 
 /**
  * A component that manages the app's sarcophagi. Should be styled to fit any container.
@@ -23,6 +13,7 @@ import { useAccount } from "wagmi";
 export function Sarcophagi() {
   const { address, isConnected: isWalletConnected } = useAccount();
 
+  const [showSarcophagi, setShowSarcophagi] = useState(false);
   const [isLoadingEmbalmerSarcophagi, setIsLoadingEmbalmerSarcophagi] = useState(false);
   const [loadedEmbalmerSarcophagi, setLoadedEmbalmerSarcophagi] = useState(false);
   const [isSarcoInitialized, setIsSarcoInitialized] = useState(false);
@@ -37,7 +28,7 @@ export function Sarcophagi() {
       .then((res) => setIsSarcoInitialized(true));
 
   useEffect(() => {
-    if (isWalletConnected && isSarcoInitialized && !loadedEmbalmerSarcophagi) {
+    if (showSarcophagi && isWalletConnected && isSarcoInitialized && !loadedEmbalmerSarcophagi) {
       // EMBALMER SARCO
       setIsLoadingEmbalmerSarcophagi(true);
 
@@ -47,7 +38,7 @@ export function Sarcophagi() {
         setLoadedEmbalmerSarcophagi(true);
       });
     }
-  }, [address, isSarcoInitialized, isWalletConnected, loadedEmbalmerSarcophagi]);
+  }, [address, isSarcoInitialized, isWalletConnected, loadedEmbalmerSarcophagi, showSarcophagi]);
 
   function embalmerPanel() {
     if (isLoadingEmbalmerSarcophagi) {
@@ -58,45 +49,47 @@ export function Sarcophagi() {
       );
     }
 
-    if (!isLoadingEmbalmerSarcophagi && embalmerSarcophagi?.length === 0) {
+    if (isWalletConnected && !isLoadingEmbalmerSarcophagi && embalmerSarcophagi?.length === 0) {
       return <NoSarcpohagi />;
     }
 
-    return <SarcoTable sarcophagi={embalmerSarcophagi} />;
+    return !isWalletConnected ? (
+      <ConnectWalletButton />
+    ) : (
+      <SarcoTable sarcophagi={embalmerSarcophagi} />
+    );
   }
 
   return (
     <Flex direction="column" w="100%" h="100%">
-      <Flex justify="center" w="100%" bg="whiteAlpha.400" py={3}>
-        <Text>SARCOPHAGI</Text>
+      <Flex
+        onClick={() => (!showSarcophagi ? setShowSarcophagi(true) : null)}
+        cursor={"pointer"}
+        justify="center"
+        w="100%"
+        bg="whiteAlpha.400"
+        py={3}
+      >
+        <Text>{`${showSarcophagi ? "MY" : "VIEW"} SARCOPHAGI`}</Text>
       </Flex>
-      {!isWalletConnected ? (
-        <Text>Connect Wallet</Text>
-      ) : (
-        <Tabs
-          variant="enclosed"
-          overflow="hidden"
-          isFitted
-          display="flex"
-          flexDirection="column"
-          border="1px solid"
-          borderColor="whiteAlpha.300"
-        >
-          <TabList border="none">
-            <SarcoTab>
-              <HStack>
-                <Text>My Sarcophagi</Text>
-              </HStack>
-            </SarcoTab>
-          </TabList>
+      <Tabs
+        variant="enclosed"
+        overflow="hidden"
+        isFitted
+        display="flex"
+        flexDirection="column"
+        border="1px solid"
+        borderColor="whiteAlpha.300"
+      >
+        {showSarcophagi ? (
           <TabPanels
             overflow="hidden"
             bg="linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.09) 100%);"
           >
             <TabPanel h="100%">{embalmerPanel()}</TabPanel>
           </TabPanels>
-        </Tabs>
-      )}
+        ) : null}
+      </Tabs>
     </Flex>
   );
 }

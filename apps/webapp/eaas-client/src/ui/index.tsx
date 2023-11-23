@@ -5,12 +5,11 @@ import { NotFoundPage } from "./notFound";
 import { EmbalmerDashboard } from "./embalmer/dashboard";
 import { ClientDashboard } from "./client/dashboard";
 import { ClientOnboarding } from "./client/onboarding";
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { useSelector } from "../store";
 import { TestUpload } from "./client/testUpload";
 import { Box, Flex, HStack, Link } from "@chakra-ui/react";
 import { Navbar } from "./components/navbar";
-import { ConnectWalletButton } from "./sarcophagi/components/ConnectWalletButton";
 import { SarcophagusDetailsPage } from "./sarcophagi/SarcophagusDetailsPage";
 import { UserType } from "types/userTypes";
 
@@ -102,7 +101,6 @@ export function AppRoutes() {
               ))}
             </Flex>
             <HStack>
-              <ConnectWalletButton />
               <LogoutButton />
             </HStack>
           </Flex>
