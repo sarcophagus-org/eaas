@@ -1,7 +1,9 @@
 import { Button, Flex, Text } from "@chakra-ui/react";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
+import { useSarcoBalance } from "hooks/sarcoToken/useSarcoBalance";
 
 export function ConnectWalletButton() {
+  const { formattedBalance } = useSarcoBalance();
   return (
     <ConnectButton.Custom>
       {({ account, chain, mounted, openConnectModal, openAccountModal }) => {
@@ -15,6 +17,18 @@ export function ConnectWalletButton() {
               </Button>
             ) : (
               <Flex>
+                <Button
+                  variant="ghost"
+                  _hover={{ bgColor: "grayBlue.700" }}
+                  _focus={{ bgColor: "grayBlue.700" }}
+                  cursor="auto"
+                  bg="grayBlue.1000"
+                  mx={2}
+                  // leftIcon={<SarcoTokenIcon />}
+                >
+                  <Text>{formattedBalance}</Text>
+                </Button>
+
                 <Button
                   variant="ghost"
                   onClick={openAccountModal}

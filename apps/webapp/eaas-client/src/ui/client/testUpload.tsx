@@ -1,7 +1,7 @@
 import React from "react";
 import { Button, Container, Spinner, Text, useToast } from "@chakra-ui/react";
 import { testApi } from "../../api";
-import { preparePayload } from "../../utils/prepare-payload";
+import { preparePayload } from "../../utils/preparePayload";
 import { useState } from "react";
 import { sendPayload } from "../../api/embalm";
 

@@ -2,7 +2,6 @@ import { getDefaultWallets, RainbowKitProvider } from "@rainbow-me/rainbowkit";
 import { configureChains, createClient, WagmiConfig } from "wagmi";
 import { publicProvider } from "wagmi/providers/public";
 import { infuraProvider } from "wagmi/providers/infura";
-// import { walletConnectionTheme } from '../../theme/walletConnectionTheme';
 import {
   sepolia,
   mainnet,
@@ -50,7 +49,7 @@ export function WalletProvider({ children }: { children: React.ReactNode }) {
           theme={walletConnectionTheme}
           showRecentTransactions={true}
           appInfo={{
-            appName: "Sarcophagus V2",
+            appName: "Sarcophagus V2 EAAS",
           }}
         >
           {children}

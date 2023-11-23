@@ -1,7 +1,7 @@
 import { Flex, Image } from "@chakra-ui/react";
 import React from "react";
 import { useNavigate } from "react-router-dom";
-const SarcoLogo = require('../../assets/images/sarco-logo.png');
+const SarcoLogo = require("../../assets/images/sarco-logo.png");
 
 export function Navbar({ children }: { children: React.ReactNode }) {
   const navigate = useNavigate();
@@ -12,13 +12,7 @@ export function Navbar({ children }: { children: React.ReactNode }) {
 
   return (
     <Flex minHeight="70px" backgroundColor="brand.50" alignItems="center" px={6}>
-      <Image
-        onClick={handleClickLogo}
-        src={SarcoLogo}
-        cursor="pointer"
-        mr={6}
-        height="44px"
-      />
+      <Image onClick={handleClickLogo} src={SarcoLogo} cursor="pointer" mr={6} height="44px" />
       {children}
     </Flex>
   );

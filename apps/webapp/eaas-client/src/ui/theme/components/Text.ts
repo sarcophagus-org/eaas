@@ -1,4 +1,4 @@
-import { ComponentStyleConfig } from '@chakra-ui/react';
+import { ComponentStyleConfig } from "@chakra-ui/react";
 
 export const Text: ComponentStyleConfig = {
   baseStyle: {
@@ -7,17 +7,17 @@ export const Text: ComponentStyleConfig = {
   },
   variants: {
     primary: {
-      color: 'brand.950',
+      color: "brand.950",
     },
     secondary: {
-      color: 'brand.600',
+      color: "brand.600",
     },
     bold: {
       fontWeight: 900,
-      color: 'brand.950',
+      color: "brand.950",
     },
   },
   defaultProps: {
-    variant: 'primary',
+    variant: "primary",
   },
 };

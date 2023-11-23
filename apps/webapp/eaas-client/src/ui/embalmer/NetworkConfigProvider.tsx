@@ -1,8 +1,5 @@
 import { useNetwork } from "wagmi";
-import { 
-  useEffect, useState,
-  createContext, useContext 
-} from "react";
+import { useEffect, useState, createContext, useContext } from "react";
 import {
   sarco,
   SARCO_SUPPORTED_NETWORKS,

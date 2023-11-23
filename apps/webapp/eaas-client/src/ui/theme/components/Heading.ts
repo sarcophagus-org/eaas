@@ -1,8 +1,8 @@
-import { ComponentStyleConfig } from '@chakra-ui/react';
+import { ComponentStyleConfig } from "@chakra-ui/react";
 
 export const Heading: ComponentStyleConfig = {
   baseStyle: {
-    color: 'brand.950',
+    color: "brand.950",
   },
   sizes: {
     lg: {
@@ -11,6 +11,6 @@ export const Heading: ComponentStyleConfig = {
     },
   },
   defaultProps: {
-    size: 'lg',
+    size: "lg",
   },
 };

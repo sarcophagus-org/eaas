@@ -5,7 +5,7 @@ import { GeneratePDFState } from "../../store/embalm/actions";
 import { useSelector } from "../../store";
 import { useEffect } from "react";
 import { sendPayload } from "../../api/embalm";
-import { preparePayload } from "../../utils/prepare-payload";
+import { preparePayload } from "../../utils/preparePayload";
 
 export function GenerateRecipientPDF() {
   const { generatePublicKey, downloadRecipientPDF, isLoading, generateError } =

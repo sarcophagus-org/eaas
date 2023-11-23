@@ -3,8 +3,7 @@ import prettyBytes from "pretty-bytes";
 import { createRef, useState } from "react";
 import { setFile } from "../store/embalm/actions";
 import { useDispatch, useSelector } from "../store";
-
-const maxFileSize = 400_000_000;
+import { maxFileSize } from "utils/constants";
 
 export function useSelectFile() {
   const dispatch = useDispatch();

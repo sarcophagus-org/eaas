@@ -1,7 +1,7 @@
 import { useToast } from "@chakra-ui/react";
 import { useState, useCallback } from "react";
 import { useDispatch } from "../../store";
-import { formatToastMessage } from "../../utils/toastUtils";
+import { formatToastMessage } from "../../utils/toast";
 import { setOuterLayerKeys } from "../../store/embalm/actions";
 
 import { ethers } from "ethers";
