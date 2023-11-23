@@ -124,7 +124,7 @@ async function runEmbalm(options: EmbalmOptions) {
     });
 
     const { submitSarcophagusArgs } = sarco.utils.formatSubmitSarcophagusArgs({
-      name: `${preparedEncryptedPayload.encryptedPayloadMetadata.fileName}-${Date.now()}}`,
+      name: `${preparedEncryptedPayload.encryptedPayloadMetadata.fileName}-${Date.now()}`,
       recipientPublicKey: preparedEncryptedPayload.recipientPublicKey,
       resurrection: resurrectionTime,
       selectedArchaeologists,

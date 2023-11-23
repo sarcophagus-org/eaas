@@ -33,7 +33,7 @@ export function AppRoutes() {
       ) : appUser.type === UserType.embalmer ? (
         <EmbalmerDashboard />
       ) : (
-        <EmbalmerDashboard />
+        <ClientDashboard />
       ),
       label: "Dashboard",
       hidden: true,

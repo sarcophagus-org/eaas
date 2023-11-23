@@ -42,7 +42,7 @@ export function GenerateRecipientPDF() {
   useEffect(() => {
     if (recipientState.generatePDFState === GeneratePDFState.GENERATED) {
       toast({
-        title: "Generated PDF. Downloading...",
+        title: "Generated PDF",
         description: recipientState.generatePDFState,
         status: "success",
       });
