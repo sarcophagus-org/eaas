@@ -10,7 +10,7 @@ interface PreparePayloadArgs {
 
 interface PreparePayloadResult {
   encryptedPayload: Buffer;
-  innerEncryptedkeyShares: Buffer[] | Uint8Array[];
+  innerEncryptedkeyShares: Buffer[];
   encryptedPayloadMetadata: {
     fileName: string;
     type: string;
@@ -34,10 +34,12 @@ export const preparePayload = async (args: PreparePayloadArgs): Promise<PrepareP
     threshold: nArchs,
     payloadPrivateKey,
     payloadPublicKey,
+    onStep: (step: string) => {},
   });
 
   return {
     ...innerEncryptionData,
+    innerEncryptedkeyShares: innerEncryptionData.innerEncryptedkeyShares.map((share) => Buffer.from(share)),
     recipientPublicKey,
   };
 };
