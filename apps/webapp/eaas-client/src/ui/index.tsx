@@ -1,5 +1,5 @@
 import { NavLink, Route, Routes, useNavigate } from "react-router-dom";
-import { Login } from "./login";
+import { Login, LogoutButton } from "./login";
 import { RouteKey, RoutesPathMap } from "./routerConstants";
 import { NotFoundPage } from "./notFound";
 import { EmbalmerDashboard } from "./embalmer/dashboard";
@@ -8,15 +8,14 @@ import { ClientOnboarding } from "./client/onboarding";
 import React, { useEffect } from "react";
 import { useSelector } from "../store";
 import { TestUpload } from "./client/testUpload";
-import { Box, Flex, Link } from "@chakra-ui/react";
+import { Box, Flex, HStack, Link } from "@chakra-ui/react";
 import { Navbar } from "./components/navbar";
-import { Sarcophagi } from "./sarcophagi";
 import { ConnectWalletButton } from "./sarcophagi/components/ConnectWalletButton";
 import { SarcophagusDetailsPage } from "./sarcophagi/SarcophagusDetailsPage";
 import { UserType } from "types/userTypes";
 
 export function AppRoutes() {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
   const appUser = useSelector((x) => x.userState.user);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -29,7 +28,13 @@ export function AppRoutes() {
     },
     {
       path: RoutesPathMap[RouteKey.HOME_PAGE],
-      element: !appUser ? <Login /> : appUser.type === UserType.embalmer ? <EmbalmerDashboard /> : <EmbalmerDashboard />,
+      element: !appUser ? (
+        <Login />
+      ) : appUser.type === UserType.embalmer ? (
+        <EmbalmerDashboard />
+      ) : (
+        <EmbalmerDashboard />
+      ),
       label: "Dashboard",
       hidden: true,
     },
@@ -44,7 +49,6 @@ export function AppRoutes() {
       element: <EmbalmerDashboard />,
       label: "Dashboard",
       hidden: appUser?.type !== UserType.embalmer,
-
     },
     {
       path: RoutesPathMap[RouteKey.CLIENT_ONBOARDING_PAGE],
@@ -57,11 +61,6 @@ export function AppRoutes() {
       element: <ClientDashboard />,
       label: "Dashboard",
       hidden: appUser?.type !== UserType.client,
-    },
-    {
-      path: RoutesPathMap[RouteKey.SARCOPHAGI_PAGE],
-      element: <Sarcophagi />,
-      label: "Your Sarcophagi",
     },
     {
       path: RoutesPathMap[RouteKey.SARCOPHAGUS_DETAIL],
@@ -102,7 +101,10 @@ export function AppRoutes() {
                 </Link>
               ))}
             </Flex>
-            <ConnectWalletButton />
+            <HStack>
+              <ConnectWalletButton />
+              <LogoutButton />
+            </HStack>
           </Flex>
         </Navbar>
       )}

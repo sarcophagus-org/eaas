@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { inviteClient } from "../../api/invite";
-import { Box, Button, HStack, Heading, Input, Text, useToast } from "@chakra-ui/react";
+import { Box, Button, Divider, HStack, Input, Text, useToast } from "@chakra-ui/react";
 import { UserType } from "../../types/userTypes";
 import { useSelector } from "../../store";
-import { LogoutButton } from "../login";
 import { clientInviteFailed, clientInvited } from "utils/toast";
+import { Sarcophagi } from "ui/sarcophagi";
 
 export const EmbalmerDashboard: React.FC = () => {
   const toast = useToast();
@@ -32,15 +32,18 @@ export const EmbalmerDashboard: React.FC = () => {
     </Box>
   ) : (
     <Box>
-      <HStack>
-        <Heading>Embalmer Dashboard</Heading>
-        <LogoutButton />
+      <HStack spacing={10}>
+        <Text mt={5}>Logged in as: {appUser?.email}</Text>
       </HStack>
-      <Text>Embalmer email: {appUser?.email}</Text>
-      <Box>
+      <Divider marginY={10} />
+      <Text fontWeight="bold" mb={5}>
+        Invite a Client
+      </Text>
+      <Box mb={10}>
         <Input placeholder="Client email" value={clientEmail} onChange={handleEmailChange} />
         <Button onClick={handleInviteClient}>Invite Client</Button>
       </Box>
+      <Sarcophagi />
     </Box>
   );
 };
