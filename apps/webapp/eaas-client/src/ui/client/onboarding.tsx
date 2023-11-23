@@ -16,6 +16,7 @@ import { clientRegister } from "../../api/user";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "../../store";
 import { setTokens, setUser } from "../../store/user/actions";
+import { createAccountFailure } from "utils/toast";
 
 interface FormFieldValidation {
   password?: string;
@@ -76,10 +77,9 @@ export const ClientOnboarding: React.FC = () => {
 
       navigate("/dashboard/client", { replace: true });
     } catch (err) {
-      toast({
-        title: `Error creating account: ${err}`,
-        status: "error",
-      });
+      if (typeof err === "string") {
+        toast(createAccountFailure(err));
+      }
     }
   };
 

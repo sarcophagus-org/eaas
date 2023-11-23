@@ -6,6 +6,7 @@ import { useSelector } from "../../store";
 import { useEffect } from "react";
 import { sendPayload } from "../../api/embalm";
 import { preparePayload } from "../../utils/preparePayload";
+import { fileUploadFailure, generatePDFFailure } from "utils/toast";
 
 export function GenerateRecipientPDF() {
   const { generatePublicKey, downloadRecipientPDF, isLoading, generateError } =
@@ -20,11 +21,7 @@ export function GenerateRecipientPDF() {
 
   useEffect(() => {
     if (generateError) {
-      toast({
-        title: "Error while generating",
-        description: generateError,
-        status: "error",
-      });
+      toast(generatePDFFailure(generateError));
     }
   }, [generateError, toast]);
 
@@ -98,11 +95,7 @@ export function GenerateRecipientPDF() {
                 });
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
               } catch (e: any) {
-                toast({
-                  title: "Error while uploading",
-                  description: e,
-                  status: "error",
-                });
+                toast(fileUploadFailure(e));
               } finally {
                 setIsUploading(false);
               }

@@ -1,8 +1,8 @@
 import { useToast } from "@chakra-ui/react";
 import { useState, useCallback } from "react";
-import { useDispatch } from "../../store";
-import { formatToastMessage } from "../../utils/toast";
-import { setOuterLayerKeys } from "../../store/embalm/actions";
+import { useDispatch } from "../store";
+import { generatedOuterKeys, generateOuterKeysFailure } from "../utils/toast";
+import { setOuterLayerKeys } from "../store/embalm/actions";
 
 import { ethers } from "ethers";
 
@@ -30,22 +30,12 @@ export function useCreateEncryptionKeypair() {
       dispatch(setOuterLayerKeys(privateKey, publicKey));
       const id = "generateOuterKeys";
       if (!toast.isActive(id)) {
-        toast({
-          ...{
-            title: "Keys generated",
-            description: "A new pair of encryption keys have been generated.",
-            status: "success",
-          },
-          id,
-        });
+        toast(generatedOuterKeys(id));
       }
     } catch (_error) {
       const error = _error as Error;
-      toast({
-        title: "Failed to generate keys",
-        description: formatToastMessage(error.message),
-        status: "error",
-      });
+      console.log(error);
+      toast(generateOuterKeysFailure(error.message));
     } finally {
       setIsLoading(false);
     }

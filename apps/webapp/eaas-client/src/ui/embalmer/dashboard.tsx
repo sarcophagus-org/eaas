@@ -4,6 +4,7 @@ import { Box, Button, HStack, Heading, Input, Text, useToast } from "@chakra-ui/
 import { UserType } from "../../types/userTypes";
 import { useSelector } from "../../store";
 import { LogoutButton } from "../login";
+import { clientInviteFailed, clientInvited } from "utils/toast";
 
 export const EmbalmerDashboard: React.FC = () => {
   const toast = useToast();
@@ -13,15 +14,11 @@ export const EmbalmerDashboard: React.FC = () => {
   const handleInviteClient = async () => {
     try {
       await inviteClient(clientEmail);
-      toast({
-        title: "Client invited!",
-        status: "success",
-      });
+      toast(clientInvited());
     } catch (err) {
-      toast({
-        title: `Error inviting client: ${err}`,
-        status: "error",
-      });
+      if (typeof err === "string") {
+        toast(clientInviteFailed(err));
+      }
     }
   };
 

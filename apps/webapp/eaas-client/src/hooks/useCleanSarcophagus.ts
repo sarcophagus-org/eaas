@@ -1,14 +1,15 @@
 import { useToast } from "@chakra-ui/react";
 import { ThirdPartyFacet__factory } from "@sarcophagus-org/sarcophagus-v2-contracts";
-// import { useNetworkConfig } from 'lib/config';
+import { useNetworkConfig } from "ui/embalmer/NetworkConfigProvider";
+import { cleanFailure, cleanSuccess } from "utils/toast";
 import { useContractWrite, usePrepareContractWrite, useWaitForTransaction } from "wagmi";
 
 export function useCleanSarcophagus(sarcoId: string, canEmbalmerClean: boolean) {
-  // const networkConfig = useNetworkConfig();
+  const networkConfig = useNetworkConfig();
   const toast = useToast();
 
   const { config, isError: mayFail } = usePrepareContractWrite({
-    // address: networkConfig.diamondDeployAddress as `0x${string}`,
+    address: networkConfig.diamondDeployAddress as `0x${string}`,
     abi: ThirdPartyFacet__factory.abi,
     enabled: canEmbalmerClean,
     functionName: "clean",
@@ -16,33 +17,16 @@ export function useCleanSarcophagus(sarcoId: string, canEmbalmerClean: boolean) 
   });
 
   const { write, isError, data } = useContractWrite({
-    onError: () =>
-      toast({
-        title: "Error cleaning sarcophagus",
-        description: "The sarcophagus could not be cleaned. Please try again.",
-        status: "error",
-        isClosable: true,
-      }),
+    onError: () => toast(cleanFailure()),
     ...config,
   });
 
   const { isSuccess, isLoading } = useWaitForTransaction({
     hash: data?.hash,
-    onSuccess: () =>
-      toast({
-        title: "Sarcophagus cleaned",
-        description: "The sarcophagus has been cleaned.",
-        status: "success",
-        isClosable: true,
-      }),
+    onSuccess: () => toast(cleanSuccess()),
     onError(e) {
       console.error(e);
-      toast({
-        title: "Error cleaning sarcophagus",
-        description: "The sarcophagus could not be cleaned. Please try again.",
-        status: "error",
-        isClosable: true,
-      });
+      toast(cleanFailure());
     },
   });
 
