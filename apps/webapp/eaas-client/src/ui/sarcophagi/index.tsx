@@ -8,6 +8,7 @@ import { useAccount } from "wagmi";
 import { ConnectWalletButton } from "./components/ConnectWalletButton";
 import { getClientSarcophagi } from "api/sarcophagi";
 import { getClientSarcophagiFailed } from "utils/toast";
+import { useSupportedNetwork } from "ui/embalmer/NetworkConfigProvider";
 
 /**
  * A component that manages the app's sarcophagi. Should be styled to fit any container.
@@ -18,16 +19,9 @@ export function EmbalmerSarcophagi() {
   const [showSarcophagi, setShowSarcophagi] = useState(false);
   const [isLoadingEmbalmerSarcophagi, setIsLoadingEmbalmerSarcophagi] = useState(false);
   const [loadedEmbalmerSarcophagi, setLoadedEmbalmerSarcophagi] = useState(false);
-  const [isSarcoInitialized, setIsSarcoInitialized] = useState(false);
   const [embalmerSarcophagi, setEmbalmerSarcophagi] = useState<SarcophagusData[]>([]);
 
-  if (!isSarcoInitialized)
-    sarco
-      .init({
-        chainId: 11155111,
-        skipLibp2pNode: true,
-      })
-      .then((res) => setIsSarcoInitialized(true));
+  const { isSarcoInitialized } = useSupportedNetwork();
 
   useEffect(() => {
     if (showSarcophagi && isWalletConnected && isSarcoInitialized && !loadedEmbalmerSarcophagi) {

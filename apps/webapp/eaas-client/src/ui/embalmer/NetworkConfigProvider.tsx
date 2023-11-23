@@ -76,6 +76,7 @@ export function NetworkConfigProvider({ children }: { children: React.ReactNode 
         .init({
           chainId: chainId,
           zeroExApiKey: process.env.REACT_APP_ZERO_EX_API_KEY,
+          skipLibp2pNode: true,
         })
         .then((config) => {
           setCurrentChainId(chain?.id);
