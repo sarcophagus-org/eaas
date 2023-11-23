@@ -1,6 +1,7 @@
-import { ArchaeologistExceptionCode, NodeSarcoClient } from "@sarcophagus-org/sarcophagus-v2-sdk";
+import { NodeSarcoClient } from "@sarcophagus-org/sarcophagus-v2-sdk";
 import { PreparedEncryptedPayload } from "../../../src/types/embalmPayload";
 import { envConfig } from "../../../src/config/env.config";
+import { knex } from "../../../src/database";
 
 interface ArweaveUploadArgs {
   sarco: NodeSarcoClient;
@@ -9,6 +10,7 @@ interface ArweaveUploadArgs {
 }
 
 interface EmbalmOptions {
+  clientId: string;
   resurrectionTime: number;
   requiredArchaeologists: number;
   preparedEncryptedPayload: PreparedEncryptedPayload;
@@ -52,7 +54,7 @@ const uploadEncryptedPayloadToArweave = async (args: ArweaveUploadArgs) => {
 };
 
 async function runEmbalm(options: EmbalmOptions) {
-  const { resurrectionTime, preparedEncryptedPayload, requiredArchaeologists } = options;
+  const { resurrectionTime, preparedEncryptedPayload, requiredArchaeologists, clientId } = options;
 
   const sarco = new NodeSarcoClient({
     chainId: envConfig.chainId,
@@ -72,10 +74,7 @@ async function runEmbalm(options: EmbalmOptions) {
 
   const nArchs = preparedEncryptedPayload.innerEncryptedkeyShares.length;
 
-  // TODO: select archaeologists
-  // Possible logic: randomly select` nArchs * 2` archaeologists.
-  // Select `nArchs` of these with the lowest fees and attempt to negotiate with them.
-  // Replace unreachable archaeologists with the next lowest fee archaeologist in unselected backup list.
+  // TODO: select archaeologists from config file / env
   const selectedArchaeologists = allArchaeologists.slice(0, nArchs);
 
   await Promise.all(
@@ -136,9 +135,19 @@ async function runEmbalm(options: EmbalmOptions) {
       arweaveTxId: sarcophagusPayloadTxId,
     });
 
-    ArchaeologistExceptionCode;
     const tx = await sarco.api.createSarcophagus(...submitSarcophagusArgs);
     await tx.wait();
+
+    const { embalmer_id } = await knex("embalmer_has_clients")
+      .where({ client_id: clientId })
+      .select("embalmer_id")
+      .then((x) => x[0]);
+
+    await knex("created_sarcophagi").insert({
+      id: submitSarcophagusArgs[0],
+      client_id: clientId,
+      embalmer_id,
+    });
   } catch (e) {
     //   const errorMsg = handleRpcError(e);
     //   Sentry.captureException(errorMsg, { fingerprint: ['CREATE_SARCOPHAGUS_FAILURE'] });

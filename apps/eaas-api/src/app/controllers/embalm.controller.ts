@@ -14,6 +14,7 @@ const runEmbalm = async (req: RequestWithUser, res: Response) => {
     preparedEncryptedPayload,
     requiredArchaeologists: threshold,
     resurrectionTime,
+    clientId: req.user.id,
   });
 
   res.status(200).send("Success");

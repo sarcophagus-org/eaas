@@ -21,6 +21,7 @@ export interface ApiErrors {
   invalidInvitationToken: ApiError;
   noInvitationLinked: ApiError;
   invitationNotFound: ApiError;
+  fetchSarcophagiFailure: ApiError;
 }
 
 export const apiErrors: ApiErrors = {
@@ -91,5 +92,9 @@ export const apiErrors: ApiErrors = {
   invitationNotFound: {
     msg: "invitation not found",
     errorCode: 404,
+  },
+  fetchSarcophagiFailure: {
+    msg: "failed to fetch sarcophagi",
+    errorCode: 500,
   },
 };
