@@ -37,11 +37,8 @@ export function Sarcophagi() {
       .then((res) => setIsSarcoInitialized(true));
 
   useEffect(() => {
-    console.log("sarco.isInitialised", sarco.isInitialised);
-
     if (isWalletConnected && isSarcoInitialized && !loadedEmbalmerSarcophagi) {
       // EMBALMER SARCO
-      console.log("address", address);
       setIsLoadingEmbalmerSarcophagi(true);
 
       sarco.api.getEmbalmerSarcophagi(address!.toString()).then((res) => {
