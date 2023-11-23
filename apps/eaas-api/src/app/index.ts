@@ -13,7 +13,8 @@ import {
   embalmRoute,
   invitationRouter,
   invitationRoute,
-  sarcophagiRouter,
+  sarcophagiRoute,
+  sarcophagiRouter
 } from "./routers";
 import { jwtStrategy } from "../../src/config/jwtConfig";
 import { apiErrorHandler } from "./middleware/errorHandler";
@@ -74,5 +75,5 @@ function setupRoutes(app: Express) {
   app.use(authRoute, authRouter());
   app.use(invitationRoute, invitationRouter());
   app.use(embalmRoute, embalmRouter());
-  app.use(sarcophagiRouter, sarcophagiRouter());
+  app.use(sarcophagiRoute, sarcophagiRouter());
 }

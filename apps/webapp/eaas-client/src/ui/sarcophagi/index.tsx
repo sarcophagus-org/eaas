@@ -105,18 +105,20 @@ export function ClientSarcophagi() {
     if (!loadedSarcophagi) {
       setIsLoadingSarcophagi(true);
 
-      getClientSarcophagi().then((res) => {
-        setClientSarcophagi(res);
-        setIsLoadingSarcophagi(false);
-        setLoadedSarcophagi(true);
-      }).catch((err) => {
-        toast(getClientSarcophagiFailed(err))
-        setIsLoadingSarcophagi(false);
-      });
+      getClientSarcophagi()
+        .then((res) => {
+          setClientSarcophagi(res);
+          setIsLoadingSarcophagi(false);
+          setLoadedSarcophagi(true);
+        })
+        .catch((err) => {
+          toast(getClientSarcophagiFailed(err));
+          setIsLoadingSarcophagi(false);
+        });
     }
   }, [loadedSarcophagi, toast]);
 
-   function sarcophagiPanel() {
+  function sarcophagiPanel() {
     if (isLoadingSarcophagi) {
       return (
         <Center my={16}>
@@ -129,17 +131,12 @@ export function ClientSarcophagi() {
       return <NoSarcpohagi />;
     }
 
-    return <SarcoTable sarcophagi={clientSarcophagi} />
+    return <SarcoTable sarcophagi={clientSarcophagi} />;
   }
 
   return (
     <Flex direction="column" w="100%" h="100%">
-      <Flex
-        justify="center"
-        w="100%"
-        bg="whiteAlpha.400"
-        py={3}
-      >
+      <Flex justify="center" w="100%" bg="whiteAlpha.400" py={3}>
         <Text>{"MY SARCOPHAGI"}</Text>
       </Flex>
       <Tabs
@@ -152,11 +149,11 @@ export function ClientSarcophagi() {
         borderColor="whiteAlpha.300"
       >
         <TabPanels
-            overflow="hidden"
-            bg="linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.09) 100%);"
-          >
-            <TabPanel h="100%">{sarcophagiPanel()}</TabPanel>
-          </TabPanels>
+          overflow="hidden"
+          bg="linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.09) 100%);"
+        >
+          <TabPanel h="100%">{sarcophagiPanel()}</TabPanel>
+        </TabPanels>
       </Tabs>
     </Flex>
   );
