@@ -50,7 +50,6 @@ interface SupportedNetwork {
 
 export const SupportedNetworkContext = createContext<SupportedNetwork>({} as SupportedNetwork);
 
-// TODO: Rename to something more appropriate. `useNetworkInfo`?
 export function useSupportedNetwork(): SupportedNetwork {
   return useContext(SupportedNetworkContext);
 }

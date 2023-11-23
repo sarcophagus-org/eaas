@@ -34,10 +34,8 @@
     "chalk": "^5.0.1",
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
-    "ecies-geth": "^1.6.14",
     "ethers": "^5.7.2",
     "express": "^5.0.0-beta.1",
-    "firebase": "^9.16.0",
     "fs": "^0.0.1-security",
     "joi": "^17.11.0",
     "jsonwebtoken": "^9.0.2",
@@ -49,8 +47,7 @@
     "passport": "^0.6.0",
     "passport-jwt": "^4.0.1",
     "pg": "^8.11.3",
-    "pg-escape": "^0.2.0",
-    "shamirs-secret-sharing-ts": "^1.0.2"
+    "pg-escape": "^0.2.0"
   },
   "devDependencies": {
     "@multiformats/multiaddr": "^12.1.7",

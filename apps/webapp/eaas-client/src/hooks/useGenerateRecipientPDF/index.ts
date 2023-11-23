@@ -68,7 +68,6 @@ export function useGenerateRecipientPDF() {
         const pdfBlob = await pdf(recipientKeyDocument).toBlob();
         saveAs(pdfBlob, sanitize(sender + "-" + recipientState.address.slice(0, 6) + ".pdf"));
 
-        // TODO: need to refactor RecipientState so that we can just set GenerateState without setting the whole recipient
         const newRecipientState: RecipientState = {
           address: recipientState.address,
           publicKey: recipientState.publicKey,
