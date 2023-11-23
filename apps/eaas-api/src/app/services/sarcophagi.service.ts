@@ -15,7 +15,7 @@ async function getClientSarcophagi(userId: string): Promise<SarcophagusData[]> {
     const sarcoIds = await knex("created_sarcophagi")
       .where({ client_id: userId })
       .select("id")
-      .then((x) => x);
+      .then((rows) => rows.map((x) => x["id"]));
 
     const sarcophagi = sarco.api.getSarcophagiByIds(sarcoIds);
     return sarcophagi;

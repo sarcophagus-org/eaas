@@ -8,7 +8,6 @@ import { SarcophagusData, SarcophagusState } from "@sarcophagus-org/sarcophagus-
 import { useGetEmbalmerCanClean } from "../../../hooks/useGetEmbalmerCanClean";
 import { useCleanSarcophagus } from "../../../hooks/useCleanSarcophagus";
 import { buildResurrectionDateString } from "../../../utils/buildResurrectionDateString";
-import React from "react";
 import { TableText } from "./TableText";
 import { SarcoAction } from ".";
 
@@ -68,19 +67,25 @@ export function SarcoTableRow({
   // Updates the resurrection date string on an interval
   useEffect(() => {
     setResurrectionString(
-      buildResurrectionDateString(sarco.resurrectionTime || BigNumber.from(0), timestampMs),
+      buildResurrectionDateString(
+        BigNumber.from(sarco.resurrectionTime) || BigNumber.from(0),
+        timestampMs,
+      ),
     );
 
     const intervalId = setInterval(() => {
       setResurrectionString(
-        buildResurrectionDateString(sarco.resurrectionTime || BigNumber.from(0), timestampMs),
+        buildResurrectionDateString(
+          BigNumber.from(sarco.resurrectionTime) || BigNumber.from(0),
+          timestampMs,
+        ),
       );
     }, dateCalculationInterval);
 
     return () => {
       clearInterval(intervalId);
     };
-  }, [dateCalculationInterval, sarco.resurrectionTime, timestampMs]);
+  }, [dateCalculationInterval, sarco, sarco.resurrectionTime, timestampMs]);
 
   return (
     <Tr>

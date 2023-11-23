@@ -13,7 +13,7 @@ export function SarcophagusDetails() {
   const { sarcophagus } = useGetSarcophagusDetails(id);
 
   const resurrectionString = buildResurrectionDateString(
-    sarcophagus?.resurrectionTime || BigNumber.from(0),
+    BigNumber.from(sarcophagus?.resurrectionTime || 0),
     timestampMs,
   );
 

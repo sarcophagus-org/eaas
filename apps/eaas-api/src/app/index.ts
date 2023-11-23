@@ -14,7 +14,7 @@ import {
   invitationRouter,
   invitationRoute,
   sarcophagiRoute,
-  sarcophagiRouter
+  sarcophagiRouter,
 } from "./routers";
 import { jwtStrategy } from "../../src/config/jwtConfig";
 import { apiErrorHandler } from "./middleware/errorHandler";
