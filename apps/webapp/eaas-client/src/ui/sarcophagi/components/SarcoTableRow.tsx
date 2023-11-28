@@ -160,7 +160,7 @@ export function SarcoTableRow({
       <Td textAlign="center">
         <IconButton
           as={NavLink}
-          to={sarco.id || ""}
+          to={`sarcophagi/${sarco.id}`}
           aria-label="Details"
           variant="unstyled"
           icon={<EditIcon />}

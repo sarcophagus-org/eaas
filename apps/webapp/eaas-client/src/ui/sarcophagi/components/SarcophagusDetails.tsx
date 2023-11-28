@@ -2,7 +2,6 @@ import { Flex, Text } from "@chakra-ui/react";
 import { BigNumber } from "ethers";
 import { useParams } from "react-router-dom";
 import { DetailsCollapse } from "./DetailsCollapse";
-import React from "react";
 import { useGetSarcophagusDetails } from "../../../hooks/useGetSarcophagusDetails";
 import { buildResurrectionDateString } from "../../../utils/buildResurrectionDateString";
 

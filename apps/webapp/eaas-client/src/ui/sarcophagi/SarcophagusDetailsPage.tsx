@@ -1,5 +1,4 @@
 import { Center, Flex } from "@chakra-ui/react";
-import React from "react";
 import { SarcophagusDetailsContainer } from "./components/SarcophagusDetailsContainer";
 import { SarcophagusDetails } from "./components/SarcophagusDetails";
 
