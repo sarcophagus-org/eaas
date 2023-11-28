@@ -11,7 +11,7 @@ export function useGetSarcophagusDetails(sarcoId: string | undefined) {
     if (!sarcoId || !isSarcoInitialized) return;
 
     setLoadingSarcophagus(true);
-    
+
     sarco.api.getSarcophagusDetails(sarcoId || "").then((res) => {
       setSarcophagus(res);
       setLoadingSarcophagus(false);

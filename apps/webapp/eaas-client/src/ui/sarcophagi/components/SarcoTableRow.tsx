@@ -31,13 +31,16 @@ export function SarcoTableRow({
   const timestampMs = Date.now();
 
   const [clientEmail, setClientEmail] = useState("--");
+  const user = useSelector((x) => x.userState.user);
 
   useEffect(() => {
-    getSarcoClientEmail(sarco.id)
-      .then((email) => setClientEmail(email))
-      .catch((err) => {
-        console.error(err);
-      });
+    if (user?.type === UserType.embalmer) {
+      getSarcoClientEmail(sarco.id)
+        .then((email) => setClientEmail(email))
+        .catch((err) => {
+          console.error(err);
+        });
+    }
   });
 
   const [resurrectionString, setResurrectionString] = useState("");
@@ -100,8 +103,6 @@ export function SarcoTableRow({
     };
   }, [dateCalculationInterval, sarco, sarco.resurrectionTime, timestampMs]);
 
-  const user = useSelector((x) => x.userState.user);
-
   return (
     <Tr>
       {/* SARCO STATE */}
@@ -160,7 +161,7 @@ export function SarcoTableRow({
       <Td textAlign="center">
         <IconButton
           as={NavLink}
-          to={`sarcophagi/${sarco.id}`}
+          to={`/sarcophagi/${sarco.id}`}
           aria-label="Details"
           variant="unstyled"
           icon={<EditIcon />}
