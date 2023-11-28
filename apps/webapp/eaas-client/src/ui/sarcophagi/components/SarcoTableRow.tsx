@@ -49,21 +49,28 @@ export function SarcoTableRow({
   const canEmbalmerClean = useGetEmbalmerCanClean(sarco);
   const { clean, isCleaning } = useCleanSarcophagus(sarco.id, canEmbalmerClean);
 
+  const cleanTooltip = canEmbalmerClean ? "Claim bonds and digging fees from Archaeologists that did not participate in the unwrapping ceremony" : "";
+  const cleanAction = canEmbalmerClean ? SarcoAction.Clean : undefined;
+
   const stateToActionMap: {
     [key: string]: {
       action?: SarcoAction;
       tooltip?: string;
     };
   } = {
+    [SarcophagusState.Active]: {
+      action: user?.type === UserType.client ? SarcoAction.Rewrap : undefined,
+      tooltip: user?.type === UserType.client ? "Extend the resurrection date of the Sarcophagus" : '',
+    },
     [SarcophagusState.Resurrected]: {
       // The embalmer isn't concerned with claiming a sarco. BUT, if they can clean a resurrected sarco,
-      // that's something they care about. Otherwise we show the Claim action to the recipient.
-      action: canEmbalmerClean ? SarcoAction.Clean : undefined,
-      tooltip: canEmbalmerClean ? "cleanTooltip" : "",
+      // that's something they care about.
+      action: cleanAction,
+      tooltip: cleanTooltip,
     },
     [SarcophagusState.Failed]: {
-      action: canEmbalmerClean ? SarcoAction.Clean : undefined,
-      tooltip: canEmbalmerClean ? "cleanTooltip" : "",
+      action: cleanAction,
+      tooltip: cleanTooltip,
     },
   };
 

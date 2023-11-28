@@ -3,20 +3,20 @@ import { BigNumber } from "ethers";
 import { SarcophagusData } from "@sarcophagus-org/sarcophagus-v2-sdk-client";
 import { useAccount, useContractRead } from "wagmi";
 import { useGetGracePeriod } from "./useGetGracePeriod";
-// import { useSelector } from '../store';
+import { useNetworkConfig } from "ui/embalmer/NetworkConfigProvider";
 
 /**
  * Uses `embalmerClaimWindow` from the contracts to check if the connected account can clean the
  * sarcophagus. Returns `false` if the connected account is not the embalmer of the sarcophagus.
  */
 export function useGetEmbalmerCanClean(sarcophagus: SarcophagusData | undefined): boolean {
-  // const networkConfig = useNetworkConfig();
+  const networkConfig = useNetworkConfig();
   const gracePeriod = useGetGracePeriod();
   // const { timestampMs } = useSelector(x => x.appState);
   const timestampMs = Date.now();
 
   const { data } = useContractRead({
-    // address: networkConfig.diamondDeployAddress as `0x${string}`,
+    address: networkConfig.diamondDeployAddress as `0x${string}`,
     abi: ViewStateFacet__factory.abi,
     functionName: "getEmbalmerClaimWindow",
   });
