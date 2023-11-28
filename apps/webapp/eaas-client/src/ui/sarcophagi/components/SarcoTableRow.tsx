@@ -10,9 +10,11 @@ import { useCleanSarcophagus } from "../../../hooks/useCleanSarcophagus";
 import { buildResurrectionDateString } from "../../../utils/buildResurrectionDateString";
 import { TableText } from "./TableText";
 import { SarcoAction } from ".";
+import { useSelector } from "store";
+import { UserType } from "types/userTypes";
 
 export interface SarcophagusTableRowProps extends TableRowProps {
-  sarco: SarcophagusData;
+  sarco: SarcophagusData & { clientEmail?: string };
   dateCalculationInterval?: number;
 }
 
@@ -87,6 +89,8 @@ export function SarcoTableRow({
     };
   }, [dateCalculationInterval, sarco, sarco.resurrectionTime, timestampMs]);
 
+  const user = useSelector((x) => x.userState.user);
+
   return (
     <Tr>
       {/* SARCO STATE */}
@@ -115,6 +119,13 @@ export function SarcoTableRow({
       <Td>
         <TableText>{resurrectionString}</TableText>
       </Td>
+
+      {/* CLIENT EMAIL */}
+      {user?.type === UserType.embalmer ? (
+        <Td textAlign="center">
+          <TableText>{sarco.clientEmail ?? `unknown client`}</TableText>
+        </Td>
+      ) : null}
 
       {/* QUICK ACTION */}
       <Td textAlign="center">
