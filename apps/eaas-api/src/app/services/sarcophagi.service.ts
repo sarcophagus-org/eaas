@@ -53,7 +53,7 @@ async function rewrapSarcophagus(sarcoId: string, resurrectionTime: number): Pro
     console.log(e);
 
     if (e.message.includes("ResurrectionTime")) {
-      throw apiErrors.editSarcophagusError(e.message);
+      throw apiErrors.editSarcophagusError(e.errorName);
     }
 
     throw apiErrors.rewrapSarcophagusFailure;
@@ -73,7 +73,7 @@ async function burySarcophagus(sarcoId: string): Promise<void> {
     console.log(e);
 
     if (e.message.includes("ResurrectionTime") || e.message.includes("SarcophagusInactive")) {
-      throw apiErrors.editSarcophagusError(e.message);
+      throw apiErrors.editSarcophagusError(e.errorName);
     }
 
     throw apiErrors.burySarcophagusFailure;
@@ -97,7 +97,7 @@ async function cleanSarcophagus(sarcoId: string): Promise<void> {
       e.message.includes("TooEarlyForClean") ||
       e.message.includes("SarcophagusAlreadyCleaned")
     ) {
-      throw apiErrors.editSarcophagusError(e.message);
+      throw apiErrors.editSarcophagusError(e.errorName);
     }
 
     throw apiErrors.cleanSarcophagusFailure;

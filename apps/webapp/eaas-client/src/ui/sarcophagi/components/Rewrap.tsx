@@ -151,14 +151,6 @@ export function Rewrap() {
         </Text>
       </Flex>
 
-      <VStack align="left" spacing={1}>
-        <Flex direction="row">
-          <Text>Fees</Text>
-          <Text ml={1} variant="secondary">
-            (estimated)
-          </Text>
-        </Flex>
-      </VStack>
       <HStack>
         <Button variant="outline" onClick={() => navigate(-1)}>
           Cancel
@@ -168,12 +160,16 @@ export function Rewrap() {
             <Button
               onClick={() => {
                 setIsRewrapping(true);
-                rewrapSarco(id!, resurrectionTime!.getDate())
+                rewrapSarco(id!, Math.trunc(resurrectionTime!.getTime() / 1000) )
                   .then(() => {
                     toast(rewrapSuccess());
                     setIsRewrapping(false);
                   })
-                  .catch((error) => toast(rewrapFailed(error)));
+                  .catch((error) => {
+                    console.log(error);
+                    toast(rewrapFailed(error));
+                    setIsRewrapping(false);
+                  });
               }}
               isDisabled={!id || !resurrectionTime || isRewrapButtonDisabled}
               isLoading={isRewrapping}

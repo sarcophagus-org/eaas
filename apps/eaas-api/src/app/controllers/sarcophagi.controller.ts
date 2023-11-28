@@ -21,19 +21,19 @@ const getSarcoClientEmail = async (req: RequestWithUser, res: Response) => {
 const rewrapSarcophagus = async (req: RequestWithUser, res: Response) => {
   const { sarcoId, resurrectionTime } = req.body;
   await sarcophagiService.rewrapSarcophagus(sarcoId, resurrectionTime);
-  res.status(200);
+  res.status(200).send();
 };
 
 const cleanSarcophagus = async (req: RequestWithUser, res: Response) => {
   const { sarcoId } = req.body;
   await sarcophagiService.cleanSarcophagus(sarcoId);
-  res.status(200);
+  res.status(200).send();
 };
 
 const burySarcophagus = async (req: RequestWithUser, res: Response) => {
   const { sarcoId } = req.body;
   await sarcophagiService.burySarcophagus(sarcoId);
-  res.status(200);
+  res.status(200).send();
 };
 
 export const sarcophagiController = {
