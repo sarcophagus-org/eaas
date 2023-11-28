@@ -115,5 +115,3 @@ export const rewrapFailed = (e: string): UseToastOptions => ({
   title: `Error rewrapping the Sarcophagus: ${e}`,
   status: "error",
 });
-
-

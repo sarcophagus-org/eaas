@@ -4,12 +4,14 @@ import { SarcophagusData } from "@sarcophagus-org/sarcophagus-v2-sdk-client";
 import { useAccount, useContractRead } from "wagmi";
 import { useGetGracePeriod } from "./useGetGracePeriod";
 import { useNetworkConfig } from "ui/embalmer/NetworkConfigProvider";
+import { useSelector } from "store";
+import { UserType } from "types/userTypes";
 
 /**
- * Uses `embalmerClaimWindow` from the contracts to check if the connected account can clean the
- * sarcophagus. Returns `false` if the connected account is not the embalmer of the sarcophagus.
+ * Uses `embalmerClaimWindow` from the contracts to check if the signed in user can clean the
+ * sarcophagus.
  */
-export function useGetEmbalmerCanClean(sarcophagus: SarcophagusData | undefined): boolean {
+export function useGetCanCleanSarcophagus(sarcophagus: SarcophagusData | undefined): boolean {
   const networkConfig = useNetworkConfig();
   const gracePeriod = useGetGracePeriod();
   // const { timestampMs } = useSelector(x => x.appState);
@@ -23,6 +25,8 @@ export function useGetEmbalmerCanClean(sarcophagus: SarcophagusData | undefined)
 
   const { address } = useAccount();
 
+  const user = useSelector((s) => s.userState.user);
+  if (user?.type !== UserType.client) return false;
   if (!data) return false;
   if (!sarcophagus || !sarcophagus.hasLockedBond) return false;
   if (sarcophagus.embalmerAddress !== address) return false;

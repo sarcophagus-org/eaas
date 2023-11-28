@@ -6,5 +6,5 @@ export enum SortDirection {
 
 export enum SarcoAction {
   Clean = "clean",
-  Rewrap = 'rewrap',
+  Rewrap = "rewrap",
 }
