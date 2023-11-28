@@ -1,8 +1,9 @@
-import { Button, Tooltip } from "@chakra-ui/react";
+import { Button, Tooltip, useToast } from "@chakra-ui/react";
 import { SarcophagusData } from "@sarcophagus-org/sarcophagus-v2-sdk-client";
 import { cleanSarco } from "api/sarcophagi";
 import { useGetCanCleanSarcophagus } from "hooks/useGetEmbalmerCanClean";
 import { useState } from "react";
+import { cleanFailure, cleanSuccess } from "utils/toast";
 
 export const cleanTooltip =
   "Claim bonds and digging fees from Archaeologists that did not participate in the unwrapping ceremony";
@@ -12,15 +13,18 @@ export function CleanButton({ sarco }: { sarco: SarcophagusData }) {
   const [error, setError] = useState(false);
 
   const canEmbalmerClean = useGetCanCleanSarcophagus(sarco);
+  const toast = useToast();
 
   async function handleClean() {
     setIsCleaning(true);
     try {
       cleanSarco(sarco.id);
-      setIsCleaning(false);
-    } catch (err) {
-      setIsCleaning(false);
+      toast(cleanSuccess());
+    } catch (err: any) {
       setError(true);
+      toast(cleanFailure(err));
+    } finally {
+      setIsCleaning(false);
     }
   }
 

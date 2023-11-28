@@ -160,7 +160,7 @@ export function Rewrap() {
             <Button
               onClick={() => {
                 setIsRewrapping(true);
-                rewrapSarco(id!, Math.trunc(resurrectionTime!.getTime() / 1000) )
+                rewrapSarco(id!, Math.trunc(resurrectionTime!.getTime() / 1000))
                   .then(() => {
                     toast(rewrapSuccess());
                     setIsRewrapping(false);

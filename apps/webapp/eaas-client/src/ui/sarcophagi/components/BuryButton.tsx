@@ -1,19 +1,24 @@
-import { Button, Tooltip } from "@chakra-ui/react";
+import { Button, Tooltip, useToast } from "@chakra-ui/react";
 import { burySarco } from "api/sarcophagi";
 import { useState } from "react";
+import { buryFailed, burySuccess } from "utils/toast";
 
 export function BuryButton({ id }: { id?: string }) {
   const [isBurying, setIsBurying] = useState(false);
   const [error, setError] = useState(false);
 
+  const toast = useToast();
+
   async function handleBury() {
     setIsBurying(true);
     try {
       burySarco(id!);
-      setIsBurying(false);
-    } catch (err) {
-      setIsBurying(false);
+      toast(burySuccess());
+    } catch (err: any) {
       setError(true);
+      toast(buryFailed(err));
+    } finally {
+      setIsBurying(false);
     }
   }
 
