@@ -20,9 +20,12 @@ export async function getSarcoClientEmail(sarcoId: string): Promise<string> {
   }
 }
 
-export async function rewrapSarco(sarcoId: string): Promise<void> {
+export async function rewrapSarco(sarcoId: string, resurrectionTime: number): Promise<void> {
   try {
-    await axios.get(`sarcophagi/${sarcoId}/rewrap`);
+    await axios.post(`sarcophagi/rewrap`, {
+      sarcoId,
+      resurrectionTime,
+    });
   } catch (error) {
     throw handleApiError(error);
   }

@@ -40,7 +40,28 @@ async function getSarcoClientEmail(sarcoId: string): Promise<string> {
   }
 }
 
+async function rewrapSarcophagus(sarcoId: string, resurrectionTime: number): Promise<void> {
+  try {
+    const sarco = new NodeSarcoClient({
+      chainId: envConfig.chainId,
+      privateKey: envConfig.privateKey,
+      providerUrl: envConfig.providerUrl,
+    });
+
+    await sarco.api.rewrapSarcophagus(sarcoId, resurrectionTime);
+  } catch (e) {
+    console.log(e);
+
+    if (e.message.includes("ResurrectionTime")) {
+      throw apiErrors.rewrapSarcophagusResurrectionTimeError(e.message);
+    }
+
+    throw apiErrors.rewrapSarcophagusFailure;
+  }
+}
+
 export const sarcophagiService = {
   getClientSarcophagi,
   getSarcoClientEmail,
+  rewrapSarcophagus,
 };

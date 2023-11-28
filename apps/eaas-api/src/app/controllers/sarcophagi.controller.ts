@@ -18,7 +18,14 @@ const getSarcoClientEmail = async (req: RequestWithUser, res: Response) => {
   res.status(200).send(clientEmail);
 };
 
+const rewrapSarcophagus = async (req: RequestWithUser, res: Response) => {
+  const { sarcoId, resurrectionTime } = req.body;
+  await sarcophagiService.rewrapSarcophagus(sarcoId, resurrectionTime);
+  res.status(200);
+};
+
 export const sarcophagiController = {
   getClientSarcophagi,
   getSarcoClientEmail,
+  rewrapSarcophagus,
 };

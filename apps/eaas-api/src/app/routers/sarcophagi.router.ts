@@ -1,8 +1,9 @@
 import { Router } from "express";
 import passport from "passport";
 import { sarcophagiController } from "../controllers";
-import { getUserTypeValidator } from "../middleware";
+import { getUserTypeValidator, validateRequestBody } from "../middleware";
 import { UserType } from "../../../src/types/EaasUser";
+import { rewrapSarcophagusSchema } from "../validationSchemas";
 
 export const sarcophagiRoute = "/sarcophagi";
 export const sarcophagiRouter = () => {
@@ -19,6 +20,14 @@ export const sarcophagiRouter = () => {
     passport.authenticate("jwt", { session: false }),
     getUserTypeValidator(UserType.embalmer),
     sarcophagiController.getSarcoClientEmail,
+  );
+
+  router.post(
+    "/rewrap",
+    passport.authenticate("jwt", { session: false }),
+    getUserTypeValidator(UserType.client),
+    validateRequestBody(rewrapSarcophagusSchema),
+    sarcophagiController.rewrapSarcophagus,
   );
 
   return router;
