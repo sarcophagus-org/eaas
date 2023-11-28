@@ -12,7 +12,7 @@ import { Box, Flex, HStack, Link } from "@chakra-ui/react";
 import { Navbar } from "./components/navbar";
 import { SarcophagusDetailsPage } from "./sarcophagi/SarcophagusDetailsPage";
 import { UserType } from "types/userTypes";
-import { ClientSarcophagi } from "./sarcophagi";
+import { ClientSarcophagi } from "./sarcophagi/ClientSarcophagi";
 
 export function AppRoutes() {
   const navigate = useNavigate();

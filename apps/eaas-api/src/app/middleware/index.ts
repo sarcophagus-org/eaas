@@ -1,2 +1,2 @@
-export { authorizeInvitationSender } from "./authorizeInvitationSender";
+export { getUserTypeValidator } from "./userTypeValidator";
 export { validateRequestBody } from "./validateRequestBody";

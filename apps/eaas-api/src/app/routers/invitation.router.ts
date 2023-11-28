@@ -1,8 +1,10 @@
 import { Router } from "express";
 import passport from "passport";
 import { invitationController } from "../controllers";
-import { authorizeInvitationSender, validateRequestBody } from "../middleware";
+import { validateRequestBody } from "../middleware";
 import { createInvitationSchema } from "../validationSchemas";
+import { getUserTypeValidator } from "../middleware/userTypeValidator";
+import { UserType } from "../../../src/types/EaasUser";
 
 export const invitationRoute = "/invitation";
 export const invitationRouter = () => {
@@ -17,7 +19,7 @@ export const invitationRouter = () => {
     "/create",
     passport.authenticate("jwt", { session: false }),
     validateRequestBody(createInvitationSchema),
-    authorizeInvitationSender,
+    getUserTypeValidator(UserType.embalmer),
     invitationController.createInvitation,
   );
   router.post("/validate", invitationController.validateInviteToken);

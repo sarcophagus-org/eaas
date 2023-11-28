@@ -12,9 +12,10 @@ import { TableText } from "./TableText";
 import { SarcoAction } from ".";
 import { useSelector } from "store";
 import { UserType } from "types/userTypes";
+import { getSarcoClientEmail } from "api/sarcophagi";
 
 export interface SarcophagusTableRowProps extends TableRowProps {
-  sarco: SarcophagusData & { clientEmail?: string };
+  sarco: SarcophagusData;
   dateCalculationInterval?: number;
 }
 
@@ -28,6 +29,12 @@ export function SarcoTableRow({
   // const navigate = useNavigate();
   // const { timestampMs } = useSelector(x => x.appState);
   const timestampMs = Date.now();
+
+  const [clientEmail, setClientEmail] = useState("");
+
+  useEffect(() => {
+    getSarcoClientEmail(sarco.id).then((email) => setClientEmail(email));
+  });
 
   const [resurrectionString, setResurrectionString] = useState("");
 
@@ -123,7 +130,7 @@ export function SarcoTableRow({
       {/* CLIENT EMAIL */}
       {user?.type === UserType.embalmer ? (
         <Td textAlign="center">
-          <TableText>{sarco.clientEmail ?? `unknown client`}</TableText>
+          <TableText>{clientEmail ?? "--"}</TableText>
         </Td>
       ) : null}
 

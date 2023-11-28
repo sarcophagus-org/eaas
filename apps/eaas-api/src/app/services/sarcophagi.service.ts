@@ -25,6 +25,21 @@ async function getClientSarcophagi(userId: string): Promise<SarcophagusData[]> {
   }
 }
 
+async function getSarcoClientEmail(sarcoId: string): Promise<string> {
+  try {
+    const clientEmail = await knex("created_sarcophagi")
+      .where({ id: sarcoId }).join("users", "users.id", "=", "client_id")
+      .select("email")
+      .then((x) => x[0]["email"]);
+
+    return clientEmail;
+  } catch (e) {
+    console.log(e);
+    throw apiErrors.fetchSarcophagiFailure;
+  }
+}
+
 export const sarcophagiService = {
   getClientSarcophagi,
+  getSarcoClientEmail,
 };

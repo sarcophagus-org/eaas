@@ -4,7 +4,7 @@ import { Box, Button, Divider, HStack, Input, Text, useToast } from "@chakra-ui/
 import { UserType } from "../../types/userTypes";
 import { useSelector } from "../../store";
 import { clientInviteFailed, clientInvited } from "utils/toast";
-import { EmbalmerSarcophagi } from "ui/sarcophagi";
+import { EmbalmerSarcophagi } from "ui/sarcophagi/EmbalmerSarcophagi";
 
 export const EmbalmerDashboard: React.FC = () => {
   const toast = useToast();
