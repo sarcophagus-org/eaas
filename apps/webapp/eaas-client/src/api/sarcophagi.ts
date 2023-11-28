@@ -13,7 +13,7 @@ export async function getClientSarcophagi(): Promise<SarcophagusData[]> {
 
 export async function getSarcoClientEmail(sarcoId: string): Promise<string> {
   try {
-    const response = await axios.get(`/api/sarcophagi/${sarcoId}/client-email`);
+    const response = await axios.get(`sarcophagi/${sarcoId}/client-email`);
     return response.data as string;
   } catch (error) {
     throw handleApiError(error);

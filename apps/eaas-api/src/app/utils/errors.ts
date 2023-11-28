@@ -22,6 +22,7 @@ export interface ApiErrors {
   noInvitationLinked: ApiError;
   invitationNotFound: ApiError;
   fetchSarcophagiFailure: ApiError;
+  fetchSarcoClientEmailFailure: ApiError;
 }
 
 export const apiErrors: ApiErrors = {
@@ -95,6 +96,10 @@ export const apiErrors: ApiErrors = {
   },
   fetchSarcophagiFailure: {
     msg: "failed to fetch sarcophagi",
+    errorCode: 500,
+  },
+  fetchSarcoClientEmailFailure: {
+    msg: "failed to fetch sarcophagus client email",
     errorCode: 500,
   },
 };

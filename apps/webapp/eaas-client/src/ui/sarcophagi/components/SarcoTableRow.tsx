@@ -30,10 +30,14 @@ export function SarcoTableRow({
   // const { timestampMs } = useSelector(x => x.appState);
   const timestampMs = Date.now();
 
-  const [clientEmail, setClientEmail] = useState("");
+  const [clientEmail, setClientEmail] = useState("--");
 
   useEffect(() => {
-    getSarcoClientEmail(sarco.id).then((email) => setClientEmail(email));
+    getSarcoClientEmail(sarco.id)
+      .then((email) => setClientEmail(email))
+      .catch((err) => {
+        console.error(err);
+      });
   });
 
   const [resurrectionString, setResurrectionString] = useState("");

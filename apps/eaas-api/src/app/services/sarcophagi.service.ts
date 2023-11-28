@@ -28,14 +28,15 @@ async function getClientSarcophagi(userId: string): Promise<SarcophagusData[]> {
 async function getSarcoClientEmail(sarcoId: string): Promise<string> {
   try {
     const clientEmail = await knex("created_sarcophagi")
-      .where({ id: sarcoId }).join("users", "users.id", "=", "client_id")
-      .select("email")
-      .then((x) => x[0]["email"]);
+      .where({ "created_sarcophagi.id": sarcoId })
+      .innerJoin("users", "users.id", "=", "client_id")
+      .select("*")
+      .then((x) => (x[0] && x[0]["email"]) ?? "no client");
 
     return clientEmail;
   } catch (e) {
     console.log(e);
-    throw apiErrors.fetchSarcophagiFailure;
+    throw apiErrors.fetchSarcoClientEmailFailure;
   }
 }
 
