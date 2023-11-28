@@ -1,18 +1,18 @@
 import { EditIcon, InfoOutlineIcon } from "@chakra-ui/icons";
-import { Button, HStack, IconButton, TableRowProps, Td, Text, Tooltip, Tr } from "@chakra-ui/react";
+import { Button, HStack, IconButton, TableRowProps, Td, Text, Tooltip, Tr, useToast } from "@chakra-ui/react";
 import { BigNumber } from "ethers";
 import { useEffect, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { SarcoStateIndicator } from "./SarcoStateIndicator";
 import { SarcophagusData, SarcophagusState } from "@sarcophagus-org/sarcophagus-v2-sdk-client";
 import { useGetCanCleanSarcophagus } from "../../../hooks/useGetEmbalmerCanClean";
-import { useCleanSarcophagus } from "../../../hooks/useCleanSarcophagus";
 import { buildResurrectionDateString } from "../../../utils/buildResurrectionDateString";
 import { TableText } from "./TableText";
 import { SarcoAction } from ".";
 import { useSelector } from "store";
 import { UserType } from "types/userTypes";
-import { getSarcoClientEmail } from "api/sarcophagi";
+import { cleanSarco, getSarcoClientEmail } from "api/sarcophagi";
+import { cleanFailure, cleanSuccess } from "utils/toast";
 
 export interface SarcophagusTableRowProps extends TableRowProps {
   sarco: SarcophagusData;
@@ -47,9 +47,25 @@ export function SarcoTableRow({
 
   const [resurrectionString, setResurrectionString] = useState("");
 
+   const [isCleaning, setIsCleaning] = useState(false);
+
+  const toast = useToast();
+
+  async function handleClean() {
+    setIsCleaning(true);
+    try {
+      cleanSarco(sarco.id);
+      toast(cleanSuccess());
+    } catch (err: any) {
+      console.log(err);
+      toast(cleanFailure(err));
+    } finally {
+      setIsCleaning(false);
+    }
+  }
+
   // Payment for clean automatically goes to the current user
   const canEmbalmerClean = useGetCanCleanSarcophagus(sarco);
-  const { clean, isCleaning } = useCleanSarcophagus(sarco.id, canEmbalmerClean);
 
   const cleanTooltip = canEmbalmerClean
     ? "Claim bonds and digging fees from Archaeologists that did not participate in the unwrapping ceremony"
@@ -86,7 +102,7 @@ export function SarcoTableRow({
   function handleClickAction() {
     switch (action) {
       case SarcoAction.Clean:
-        clean?.();
+        handleClean();
         break;
       case SarcoAction.Rewrap:
         navigate(`/sarcophagi/${sarco.id}?action=rewrap`);
