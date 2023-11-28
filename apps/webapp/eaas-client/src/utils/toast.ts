@@ -106,3 +106,14 @@ export const getClientSarcophagiFailed = (e: string): UseToastOptions => ({
   title: `Error fetching Sarcophagi: ${e}`,
   status: "error",
 });
+
+export const rewrapSuccess = (): UseToastOptions => ({
+  title: "Successfully rewrapped!",
+  status: "success",
+});
+export const rewrapFailed = (e: string): UseToastOptions => ({
+  title: `Error rewrapping the Sarcophagus: ${e}`,
+  status: "error",
+});
+
+

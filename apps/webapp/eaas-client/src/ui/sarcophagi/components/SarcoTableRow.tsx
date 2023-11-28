@@ -1,5 +1,5 @@
 import { EditIcon, InfoOutlineIcon } from "@chakra-ui/icons";
-import { Button, HStack, IconButton, TableRowProps, Td, Text, Tooltip, Tr } from "@chakra-ui/react";
+import { Button, HStack, IconButton, TableRowProps, Td, Text, Tooltip, Tr, useToast } from "@chakra-ui/react";
 import { BigNumber } from "ethers";
 import { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
@@ -12,7 +12,8 @@ import { TableText } from "./TableText";
 import { SarcoAction } from ".";
 import { useSelector } from "store";
 import { UserType } from "types/userTypes";
-import { getSarcoClientEmail } from "api/sarcophagi";
+import { getSarcoClientEmail, rewrapSarco } from "api/sarcophagi";
+import { rewrapFailed, rewrapSuccess } from "utils/toast";
 
 export interface SarcophagusTableRowProps extends TableRowProps {
   sarco: SarcophagusData;
@@ -77,10 +78,24 @@ export function SarcoTableRow({
   const action = stateToActionMap[sarco.state]?.action;
   const actionTooltip = stateToActionMap[sarco.state]?.tooltip;
 
+  const toast = useToast();
+
+  async function rewrapSarcophagus(id: string) {
+    try {
+      await rewrapSarco(id);
+      toast(rewrapSuccess());
+    } catch (error: any) {
+      toast(rewrapFailed(error));
+    }
+  }
+
   function handleClickAction() {
     switch (action) {
       case SarcoAction.Clean:
         clean?.();
+        break;
+      case SarcoAction.Rewrap:
+        rewrapSarcophagus(sarco.id);
         break;
       default:
         break;

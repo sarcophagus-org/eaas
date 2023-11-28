@@ -19,3 +19,11 @@ export async function getSarcoClientEmail(sarcoId: string): Promise<string> {
     throw handleApiError(error);
   }
 }
+
+export async function rewrapSarco(sarcoId: string): Promise<void> {
+  try {
+    await axios.get(`sarcophagi/${sarcoId}/rewrap`);
+  } catch (error) {
+    throw handleApiError(error);
+  }
+}
