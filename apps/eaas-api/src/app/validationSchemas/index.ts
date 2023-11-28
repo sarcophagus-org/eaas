@@ -42,3 +42,7 @@ export const rewrapSarcophagusSchema = Joi.object({
   sarcoId: Joi.string(),
   resurrectionTime: Joi.number(),
 });
+
+export const editSarcophagusSchema = Joi.object({
+  sarcoId: Joi.string(),
+});

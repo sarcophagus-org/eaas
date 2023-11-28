@@ -24,8 +24,22 @@ const rewrapSarcophagus = async (req: RequestWithUser, res: Response) => {
   res.status(200);
 };
 
+const cleanSarcophagus = async (req: RequestWithUser, res: Response) => {
+  const { sarcoId } = req.body;
+  await sarcophagiService.cleanSarcophagus(sarcoId);
+  res.status(200);
+};
+
+const burySarcophagus = async (req: RequestWithUser, res: Response) => {
+  const { sarcoId } = req.body;
+  await sarcophagiService.burySarcophagus(sarcoId);
+  res.status(200);
+};
+
 export const sarcophagiController = {
   getClientSarcophagi,
   getSarcoClientEmail,
   rewrapSarcophagus,
+  cleanSarcophagus,
+  burySarcophagus,
 };

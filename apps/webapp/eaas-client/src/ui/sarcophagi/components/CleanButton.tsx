@@ -1,5 +1,6 @@
 import { Button, Tooltip } from "@chakra-ui/react";
 import { SarcophagusData } from "@sarcophagus-org/sarcophagus-v2-sdk-client";
+import { cleanSarco } from "api/sarcophagi";
 import { useGetCanCleanSarcophagus } from "hooks/useGetEmbalmerCanClean";
 import { useState } from "react";
 
@@ -15,7 +16,7 @@ export function CleanButton({ sarco }: { sarco: SarcophagusData }) {
   async function handleClean() {
     setIsCleaning(true);
     try {
-      cleanSarcophagus(id);
+      cleanSarco(sarco.id);
       setIsCleaning(false);
     } catch (err) {
       setIsCleaning(false);

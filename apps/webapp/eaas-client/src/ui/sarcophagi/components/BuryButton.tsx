@@ -1,4 +1,5 @@
 import { Button, Tooltip } from "@chakra-ui/react";
+import { burySarco } from "api/sarcophagi";
 import { useState } from "react";
 
 export function BuryButton({ id }: { id?: string }) {
@@ -8,7 +9,7 @@ export function BuryButton({ id }: { id?: string }) {
   async function handleBury() {
     setIsBurying(true);
     try {
-      burySarcophagus(id);
+      burySarco(id!);
       setIsBurying(false);
     } catch (err) {
       setIsBurying(false);
@@ -24,7 +25,7 @@ export function BuryButton({ id }: { id?: string }) {
             onClick={handleBury}
             isLoading={isBurying}
             loadingText={isBurying ? "Burying..." : undefined}
-            disabled={isBurying || !!error}
+            disabled={!id || isBurying || !!error}
           >
             Bury
           </Button>

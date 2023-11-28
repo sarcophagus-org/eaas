@@ -30,3 +30,23 @@ export async function rewrapSarco(sarcoId: string, resurrectionTime: number): Pr
     throw handleApiError(error);
   }
 }
+
+export async function cleanSarco(sarcoId: string): Promise<void> {
+  try {
+    await axios.post(`sarcophagi/clean`, {
+      sarcoId,
+    });
+  } catch (error) {
+    throw handleApiError(error);
+  }
+}
+
+export async function burySarco(sarcoId: string): Promise<void> {
+  try {
+    await axios.post(`sarcophagi/bury`, {
+      sarcoId,
+    });
+  } catch (error) {
+    throw handleApiError(error);
+  }
+}

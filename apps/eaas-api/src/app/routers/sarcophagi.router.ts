@@ -3,7 +3,7 @@ import passport from "passport";
 import { sarcophagiController } from "../controllers";
 import { getUserTypeValidator, validateRequestBody } from "../middleware";
 import { UserType } from "../../../src/types/EaasUser";
-import { rewrapSarcophagusSchema } from "../validationSchemas";
+import { editSarcophagusSchema, rewrapSarcophagusSchema } from "../validationSchemas";
 
 export const sarcophagiRoute = "/sarcophagi";
 export const sarcophagiRouter = () => {
@@ -28,6 +28,22 @@ export const sarcophagiRouter = () => {
     getUserTypeValidator(UserType.client),
     validateRequestBody(rewrapSarcophagusSchema),
     sarcophagiController.rewrapSarcophagus,
+  );
+
+  router.post(
+    "/clean",
+    passport.authenticate("jwt", { session: false }),
+    getUserTypeValidator(UserType.client),
+    validateRequestBody(editSarcophagusSchema),
+    sarcophagiController.cleanSarcophagus,
+  );
+
+  router.post(
+    "/bury",
+    passport.authenticate("jwt", { session: false }),
+    getUserTypeValidator(UserType.client),
+    validateRequestBody(editSarcophagusSchema),
+    sarcophagiController.burySarcophagus,
   );
 
   return router;

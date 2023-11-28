@@ -24,7 +24,9 @@ export interface ApiErrors {
   fetchSarcophagiFailure: ApiError;
   fetchSarcoClientEmailFailure: ApiError;
   rewrapSarcophagusFailure: ApiError;
-  rewrapSarcophagusResurrectionTimeError: (e: string) => ApiError;
+  burySarcophagusFailure: ApiError;
+  cleanSarcophagusFailure: ApiError;
+  editSarcophagusError: (e: string) => ApiError;
 }
 
 export const apiErrors: ApiErrors = {
@@ -108,7 +110,15 @@ export const apiErrors: ApiErrors = {
     msg: "failed to rewrap sarcophagus",
     errorCode: 500,
   },
-  rewrapSarcophagusResurrectionTimeError: (msg: string) => ({
+  burySarcophagusFailure: {
+    msg: "failed to bury sarcophagus",
+    errorCode: 500,
+  },
+  cleanSarcophagusFailure: {
+    msg: "failed to clean sarcophagus",
+    errorCode: 500,
+  },
+  editSarcophagusError: (msg: string) => ({
     msg,
     errorCode: 400,
   }),
