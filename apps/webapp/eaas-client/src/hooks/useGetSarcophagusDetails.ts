@@ -5,6 +5,7 @@ import { useSupportedNetwork } from "ui/embalmer/NetworkConfigProvider";
 export function useGetSarcophagusDetails(sarcoId: string | undefined) {
   const [sarcophagus, setSarcophagus] = useState<SarcophagusDetails>();
   const [loadingSarcophagus, setLoadingSarcophagus] = useState(false);
+  const [error, setError] = useState("");
   const { isSarcoInitialized } = useSupportedNetwork();
 
   useEffect(() => {
@@ -12,11 +13,16 @@ export function useGetSarcophagusDetails(sarcoId: string | undefined) {
 
     setLoadingSarcophagus(true);
 
-    sarco.api.getSarcophagusDetails(sarcoId || "").then((res) => {
-      setSarcophagus(res);
-      setLoadingSarcophagus(false);
-    });
+    sarco.api
+      .getSarcophagusDetails(sarcoId || "")
+      .then((res) => {
+        setSarcophagus(res);
+      })
+      .catch((err) => {
+        setError(err.message);
+      })
+      .finally(() => setLoadingSarcophagus(false));
   }, [sarcoId, isSarcoInitialized]);
 
-  return { sarcophagus, loadingSarcophagus };
+  return { sarcophagus, loadingSarcophagus, error };
 }
