@@ -6,6 +6,7 @@ import { ethers } from "ethers";
 import { useDispatch, useSelector } from "../../store";
 import { GeneratePDFState, RecipientState, setRecipientState } from "../../store/embalm/actions";
 import { createRecipientKeyDocument } from "../useGenerateRecipientPDF/recipientKeyDocument";
+import { sarco } from "@sarcophagus-org/sarcophagus-v2-sdk-client";
 
 async function createEncryptionKeypair(): Promise<{
   privateKey: string;
@@ -33,11 +34,14 @@ export function useGenerateRecipientPDF() {
 
       const { privateKey, publicKey } = await createEncryptionKeypair();
 
+      const sarcoId = sarco.utils.generateSarchophagusId(`${publicKey}-${Date.now()}`);
+
       const recipient: RecipientState = {
         address: ethers.utils.computeAddress(publicKey),
         publicKey,
         privateKey,
         generatePDFState: GeneratePDFState.GENERATED,
+        sarcoId,
       };
 
       dispatch(setRecipientState(recipient));
@@ -48,6 +52,7 @@ export function useGenerateRecipientPDF() {
           address: "",
           publicKey: "",
           privateKey: "",
+          sarcoId: "",
           generatePDFState: GeneratePDFState.UNSET,
         }),
       );
@@ -72,6 +77,7 @@ export function useGenerateRecipientPDF() {
           address: recipientState.address,
           publicKey: recipientState.publicKey,
           privateKey: recipientState.privateKey,
+          sarcoId: recipientState.sarcoId,
           generatePDFState: GeneratePDFState.DOWNLOADED,
         };
 
@@ -82,6 +88,7 @@ export function useGenerateRecipientPDF() {
           setRecipientState({
             address: "",
             publicKey: "",
+            sarcoId: "",
           }),
         );
         const error = _error as Error;

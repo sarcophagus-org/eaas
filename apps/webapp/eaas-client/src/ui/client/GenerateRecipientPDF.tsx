@@ -92,6 +92,7 @@ export function GenerateRecipientPDF() {
                 await sendPayload({
                   resurrectionTime: resurrection,
                   preparedEncryptedPayload,
+                  sarcoId: recipientState.sarcoId,
                 });
                 toast(fileUploadSuccess());
                 navigate("/");
