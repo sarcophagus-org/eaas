@@ -58,9 +58,9 @@ export const cleanSuccess = (): UseToastOptions => ({
   ...defaultOptions,
 });
 
-export const cleanFailure = (): UseToastOptions => ({
+export const cleanFailure = (e: string): UseToastOptions => ({
   title: "Clean Failed.",
-  description: "The sarcophagus was not cleaned",
+  description: `The sarcophagus was not cleaned: ${e}`,
   status: "error",
   ...defaultOptions,
 });
@@ -80,29 +80,55 @@ export const approveFailure = (): UseToastOptions => ({
 export const fileUploadSuccess = (): UseToastOptions => ({
   title: "File uploaded",
   status: "success",
+  ...defaultOptions,
 });
 
 export const fileUploadFailure = (e: string): UseToastOptions => ({
   title: "Error while uploading",
   description: e,
   status: "error",
+  ...defaultOptions,
 });
 
 export const createAccountFailure = (e: string): UseToastOptions => ({
   title: `Error creating account: ${e}`,
   status: "error",
+  ...defaultOptions,
 });
 
 export const clientInvited = (): UseToastOptions => ({
   title: "Client invited!",
   status: "success",
+  ...defaultOptions,
 });
 export const clientInviteFailed = (e: string): UseToastOptions => ({
   title: `Error inviting client: ${e}`,
   status: "error",
+  ...defaultOptions,
 });
 
 export const getClientSarcophagiFailed = (e: string): UseToastOptions => ({
   title: `Error fetching Sarcophagi: ${e}`,
+  status: "error",
+  ...defaultOptions,
+});
+
+export const rewrapSuccess = (): UseToastOptions => ({
+  title: "Successfully rewrapped!",
+  status: "success",
+  ...defaultOptions,
+});
+export const rewrapFailed = (e: string): UseToastOptions => ({
+  title: `Error rewrapping the Sarcophagus: ${e}`,
+  status: "error",
+  ...defaultOptions,
+});
+
+export const burySuccess = (): UseToastOptions => ({
+  title: "Successfully buried!",
+  status: "success",
+});
+export const buryFailed = (e: string): UseToastOptions => ({
+  title: `Error burying the Sarcophagus: ${e}`,
   status: "error",
 });

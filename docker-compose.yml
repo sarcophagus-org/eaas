@@ -29,7 +29,6 @@ services:
     depends_on:
       - db
     volumes:
-      - ./apps/common/:/home/apps/common
       # TODO: temporary workaround to include unpublished sdk.
       # As this is system dependent, you'll likely have to edit it to the relative 
       # path from this project's root.

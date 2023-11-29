@@ -23,6 +23,10 @@ export interface ApiErrors {
   invitationNotFound: ApiError;
   fetchSarcophagiFailure: ApiError;
   fetchSarcoClientEmailFailure: ApiError;
+  rewrapSarcophagusFailure: ApiError;
+  burySarcophagusFailure: ApiError;
+  cleanSarcophagusFailure: ApiError;
+  editSarcophagusError: (e: string) => ApiError;
 }
 
 export const apiErrors: ApiErrors = {
@@ -102,4 +106,20 @@ export const apiErrors: ApiErrors = {
     msg: "failed to fetch sarcophagus client email",
     errorCode: 500,
   },
+  rewrapSarcophagusFailure: {
+    msg: "failed to rewrap sarcophagus",
+    errorCode: 500,
+  },
+  burySarcophagusFailure: {
+    msg: "failed to bury sarcophagus",
+    errorCode: 500,
+  },
+  cleanSarcophagusFailure: {
+    msg: "failed to clean sarcophagus",
+    errorCode: 500,
+  },
+  editSarcophagusError: (msg: string) => ({
+    msg,
+    errorCode: 400,
+  }),
 };
