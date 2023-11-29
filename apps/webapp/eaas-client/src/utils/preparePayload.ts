@@ -1,9 +1,10 @@
 import { ethers } from "ethers";
 import { Buffer } from "buffer";
 import { sarco } from "@sarcophagus-org/sarcophagus-v2-sdk-client";
+import { getArchConfig } from "api/embalm";
+import { ArchConfig } from "types/embalm";
 
 interface PreparePayloadArgs {
-  nArchs: number;
   file: File;
   recipientPublicKey: string;
 }
@@ -22,19 +23,27 @@ interface PreparePayloadResult {
  * Prepare the payload for upload to the Embalmer-X Server.
  */
 export const preparePayload = async (args: PreparePayloadArgs): Promise<PreparePayloadResult> => {
-  const { nArchs, file, recipientPublicKey } = args;
+  const { file, recipientPublicKey } = args;
 
   const { privateKey: payloadPrivateKey, publicKey: payloadPublicKey } =
     ethers.Wallet.createRandom();
 
+  let archConfig: ArchConfig | undefined;
+  try {
+    archConfig = await getArchConfig();
+  } catch (error: any) {
+    console.error(error);
+    throw new Error("Error getting archaeologist config");
+  }
+
   const innerEncryptionData = await sarco.utils.encryptInnerLayer({
     file,
     recipientPublicKey,
-    shares: nArchs,
-    threshold: nArchs,
+    shares: archConfig.count,
+    threshold: archConfig.threshold,
     payloadPrivateKey,
     payloadPublicKey,
-    onStep: (step: string) => {},
+    onStep: (_: any) => {},
   });
 
   return {

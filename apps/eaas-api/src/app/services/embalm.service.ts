@@ -13,7 +13,6 @@ interface ArweaveUploadArgs {
 interface EmbalmOptions {
   clientId: string;
   resurrectionTime: number;
-  requiredArchaeologists: number;
   preparedEncryptedPayload: PreparedEncryptedPayload;
 }
 
@@ -55,7 +54,7 @@ const uploadEncryptedPayloadToArweave = async (args: ArweaveUploadArgs) => {
 };
 
 async function runEmbalm(options: EmbalmOptions) {
-  const { resurrectionTime, preparedEncryptedPayload, requiredArchaeologists, clientId } = options;
+  const { resurrectionTime, preparedEncryptedPayload, clientId } = options;
 
   const sarco = new NodeSarcoClient({
     chainId: envConfig.chainId,
@@ -99,6 +98,7 @@ async function runEmbalm(options: EmbalmOptions) {
     selectedArchaeologists.forEach((arch) => {
       const res = negotiationResult.get(arch.profile.peerId)!;
       if (res.exception) {
+        // TODO: handle this more gracefully
         console.log("arch exception:", arch.profile.archAddress, res.exception);
         // Sentry.captureException(res.exception);
       } else {
@@ -126,7 +126,7 @@ async function runEmbalm(options: EmbalmOptions) {
       recipientPublicKey: preparedEncryptedPayload.recipientPublicKey,
       resurrection: resurrectionTime,
       selectedArchaeologists,
-      requiredArchaeologists,
+      requiredArchaeologists: archaeologistsConfig.requiredArchaeologists,
       negotiationTimestamp,
       archaeologistPublicKeys,
       archaeologistSignatures,
@@ -153,17 +153,26 @@ async function runEmbalm(options: EmbalmOptions) {
   }
 }
 
-let cachedArchaeologistCount: number | undefined;
-async function getArchaeologistCount() {
-  if (cachedArchaeologistCount === undefined) {
+let cachedPreparePayloadArchConfig:
+  | {
+      count: number;
+      threshold: number;
+    }
+  | undefined;
+
+async function getArchaeologistConfig() {
+  if (cachedPreparePayloadArchConfig === undefined) {
     const archaeologistsConfig = await loadArchaeologistAddressesFromFile();
-    cachedArchaeologistCount = archaeologistsConfig.addresses.length;
+    cachedPreparePayloadArchConfig = {
+      count: archaeologistsConfig.addresses.length,
+      threshold: archaeologistsConfig.requiredArchaeologists,
+    };
   }
 
-  return cachedArchaeologistCount;
+  return cachedPreparePayloadArchConfig;
 }
 
 export const embalmService = {
   runEmbalm,
-  getArchaeologistCount,
+  getArchaeologistConfig,
 };

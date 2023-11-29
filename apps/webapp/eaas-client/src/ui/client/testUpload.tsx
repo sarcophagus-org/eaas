@@ -42,7 +42,6 @@ export const TestUpload = () => {
               await sendPayload({
                 preparedEncryptedPayload,
                 resurrectionTime,
-                threshold: 1,
               });
 
               toast({ title: "File uploaded", status: "success" });

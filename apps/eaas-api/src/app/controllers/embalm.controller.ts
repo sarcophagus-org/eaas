@@ -7,12 +7,10 @@ import { SendEncryptedPayloadParams } from "../../../src/types/embalmPayload";
  * Embalm the provided payload
  */
 const runEmbalm = async (req: RequestWithUser, res: Response) => {
-  const { preparedEncryptedPayload, threshold, resurrectionTime } =
-    req.body as SendEncryptedPayloadParams;
+  const { preparedEncryptedPayload, resurrectionTime } = req.body as SendEncryptedPayloadParams;
 
   await embalmService.runEmbalm({
     preparedEncryptedPayload,
-    requiredArchaeologists: threshold,
     resurrectionTime,
     clientId: req.user.id,
   });
@@ -23,12 +21,12 @@ const runEmbalm = async (req: RequestWithUser, res: Response) => {
 /**
  * Get the number of archaeologists
  */
-const getArchaeologistCount = async (_: RequestWithUser, res: Response) => {
-  const count = await embalmService.getArchaeologistCount();
-  res.status(200).send({ count });
-}
+const getArchaeologistConfig = async (_: RequestWithUser, res: Response) => {
+  const config = await embalmService.getArchaeologistConfig();
+  res.status(200).send(config);
+};
 
 export const embalmController = {
   runEmbalm,
-  getArchaeologistCount,
+  getArchaeologistConfig,
 };

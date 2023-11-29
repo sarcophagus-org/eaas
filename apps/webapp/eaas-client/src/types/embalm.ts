@@ -11,6 +11,10 @@ export interface PreparedEncryptedPayload {
 
 export interface SendEncryptedPayloadParams {
   preparedEncryptedPayload: PreparedEncryptedPayload;
-  threshold: number;
   resurrectionTime: number;
+}
+
+export interface ArchConfig {
+  count: number;
+  threshold: number;
 }

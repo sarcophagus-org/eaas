@@ -86,7 +86,6 @@ export function GenerateRecipientPDF() {
               try {
                 const preparedEncryptedPayload = await preparePayload({
                   file: file!,
-                  nArchs: 1,
                   recipientPublicKey: recipientState.publicKey,
                 });
 
@@ -94,7 +93,6 @@ export function GenerateRecipientPDF() {
                 await sendPayload({
                   resurrectionTime: resurrection,
                   preparedEncryptedPayload,
-                  threshold: 1,
                 });
                 toast(fileUploadSuccess());
                 navigate("/");
