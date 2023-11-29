@@ -5,7 +5,7 @@ export function handleApiError(error: unknown) {
 
   console.log(error);
   if (error instanceof AxiosError) {
-    errorMessage = error.response?.data.error ?? error.response?.data ?? error.message;
+    errorMessage = error.response?.data.error ?? error.response?.statusText ?? error.message;
   }
 
   return errorMessage;
