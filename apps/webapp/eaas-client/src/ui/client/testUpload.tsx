@@ -32,7 +32,6 @@ export const TestUpload = () => {
 
             const preparedEncryptedPayload = await preparePayload({
               file,
-              nArchs: 1,
               recipientPublicKey,
             });
 

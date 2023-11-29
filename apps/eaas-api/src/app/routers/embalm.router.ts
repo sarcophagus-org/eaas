@@ -16,9 +16,9 @@ export const embalmRouter = () => {
   );
 
   router.get(
-    "archaeologist-count",
+    "/archaeologist-config",
     passport.authenticate("jwt", { session: false }),
-    embalmController.getArchaeologistCount,
+    embalmController.getArchaeologistConfig,
   );
 
   return router;

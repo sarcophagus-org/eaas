@@ -43,7 +43,6 @@ export function GenerateRecipientPDF() {
     if (recipientState.generatePDFState === GeneratePDFState.GENERATED) {
       toast({
         title: "Generated PDF",
-        description: recipientState.generatePDFState,
         status: "success",
       });
 

@@ -48,9 +48,7 @@ export const preparePayload = async (args: PreparePayloadArgs): Promise<PrepareP
 
   return {
     ...innerEncryptionData,
-    innerEncryptedkeyShares: innerEncryptionData.innerEncryptedkeyShares.map((share) =>
-      Buffer.from(share),
-    ),
+    innerEncryptedkeyShares: innerEncryptionData.innerEncryptedkeyShares.map(Buffer.from),
     recipientPublicKey,
   };
 };
