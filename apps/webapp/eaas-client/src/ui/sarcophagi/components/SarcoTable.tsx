@@ -3,8 +3,9 @@ import { useState } from "react";
 import { SarcoTableHead } from "./SarcoTableHead";
 import { SarcoTableRow } from "./SarcoTableRow";
 import { SarcophagusData } from "@sarcophagus-org/sarcophagus-v2-sdk-client";
-import React from "react";
 import { SortDirection } from ".";
+import { useSelector } from "store";
+import { UserType } from "types/userTypes";
 
 enum SortableColumn {
   State = "state",
@@ -68,6 +69,8 @@ export function SarcoTable({ sarcophagi }: SarcoTableProps) {
     }
   }
 
+  const user = useSelector((x) => x.userState.user);
+
   return (
     <TableContainer overflowY="auto" h="100%">
       <Table variant="unstyled" size="sm">
@@ -106,6 +109,7 @@ export function SarcoTable({ sarcophagi }: SarcoTableProps) {
             >
               Resurrection
             </SarcoTableHead>
+            {user?.type === UserType.embalmer ? <SarcoTableHead>Client</SarcoTableHead> : null}
             <SarcoTableHead>Actions</SarcoTableHead>
             <SarcoTableHead>Details</SarcoTableHead>
           </Tr>

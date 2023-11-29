@@ -77,7 +77,10 @@ export const approveFailure = (): UseToastOptions => ({
   ...defaultOptions,
 });
 
-export const fileUploadSuccess = (): UseToastOptions => ({ title: "File uploaded", status: "success" });
+export const fileUploadSuccess = (): UseToastOptions => ({
+  title: "File uploaded",
+  status: "success",
+});
 
 export const fileUploadFailure = (e: string): UseToastOptions => ({
   title: "Error while uploading",

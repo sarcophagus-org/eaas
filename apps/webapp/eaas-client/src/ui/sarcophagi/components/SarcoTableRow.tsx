@@ -10,6 +10,9 @@ import { useCleanSarcophagus } from "../../../hooks/useCleanSarcophagus";
 import { buildResurrectionDateString } from "../../../utils/buildResurrectionDateString";
 import { TableText } from "./TableText";
 import { SarcoAction } from ".";
+import { useSelector } from "store";
+import { UserType } from "types/userTypes";
+import { getSarcoClientEmail } from "api/sarcophagi";
 
 export interface SarcophagusTableRowProps extends TableRowProps {
   sarco: SarcophagusData;
@@ -26,6 +29,19 @@ export function SarcoTableRow({
   // const navigate = useNavigate();
   // const { timestampMs } = useSelector(x => x.appState);
   const timestampMs = Date.now();
+
+  const [clientEmail, setClientEmail] = useState("--");
+  const user = useSelector((x) => x.userState.user);
+
+  useEffect(() => {
+    if (user?.type === UserType.embalmer) {
+      getSarcoClientEmail(sarco.id)
+        .then((email) => setClientEmail(email))
+        .catch((err) => {
+          console.error(err);
+        });
+    }
+  });
 
   const [resurrectionString, setResurrectionString] = useState("");
 
@@ -116,6 +132,13 @@ export function SarcoTableRow({
         <TableText>{resurrectionString}</TableText>
       </Td>
 
+      {/* CLIENT EMAIL */}
+      {user?.type === UserType.embalmer ? (
+        <Td textAlign="center">
+          <TableText>{clientEmail ?? "--"}</TableText>
+        </Td>
+      ) : null}
+
       {/* QUICK ACTION */}
       <Td textAlign="center">
         {action ? (
@@ -138,7 +161,7 @@ export function SarcoTableRow({
       <Td textAlign="center">
         <IconButton
           as={NavLink}
-          to={sarco.id || ""}
+          to={`/sarcophagi/${sarco.id}`}
           aria-label="Details"
           variant="unstyled"
           icon={<EditIcon />}
