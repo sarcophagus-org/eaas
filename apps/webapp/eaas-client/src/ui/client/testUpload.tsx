@@ -32,7 +32,6 @@ export const TestUpload = () => {
 
             const preparedEncryptedPayload = await preparePayload({
               file,
-              nArchs: 1,
               recipientPublicKey,
             });
 
@@ -42,7 +41,6 @@ export const TestUpload = () => {
               await sendPayload({
                 preparedEncryptedPayload,
                 resurrectionTime,
-                threshold: 1,
               });
 
               toast({ title: "File uploaded", status: "success" });

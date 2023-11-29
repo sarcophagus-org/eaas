@@ -12,7 +12,6 @@ export const preparedEncryptedPayloadSchema = Joi.object({
 
 export const sendEncryptedPayloadSchema = Joi.object({
   preparedEncryptedPayload: preparedEncryptedPayloadSchema,
-  threshold: Joi.number().required(),
   resurrectionTime: Joi.number().required(),
 });
 

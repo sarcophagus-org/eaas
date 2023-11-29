@@ -2,6 +2,7 @@ import { NodeSarcoClient } from "@sarcophagus-org/sarcophagus-v2-sdk";
 import { PreparedEncryptedPayload } from "../../../src/types/embalmPayload";
 import { envConfig } from "../../../src/config/env.config";
 import { knex } from "../../../src/database";
+import { loadArchaeologistAddressesFromFile } from "../utils/loadArchaeologists";
 
 interface ArweaveUploadArgs {
   sarco: NodeSarcoClient;
@@ -12,7 +13,6 @@ interface ArweaveUploadArgs {
 interface EmbalmOptions {
   clientId: string;
   resurrectionTime: number;
-  requiredArchaeologists: number;
   preparedEncryptedPayload: PreparedEncryptedPayload;
 }
 
@@ -54,7 +54,7 @@ const uploadEncryptedPayloadToArweave = async (args: ArweaveUploadArgs) => {
 };
 
 async function runEmbalm(options: EmbalmOptions) {
-  const { resurrectionTime, preparedEncryptedPayload, requiredArchaeologists, clientId } = options;
+  const { resurrectionTime, preparedEncryptedPayload, clientId } = options;
 
   const sarco = new NodeSarcoClient({
     chainId: envConfig.chainId,
@@ -65,17 +65,14 @@ async function runEmbalm(options: EmbalmOptions) {
 
   await sarco.init();
 
-  const allArchaeologists = await sarco.archaeologist
-    .getFullArchProfiles({ filterOffline: false })
+  const archaeologistsConfig = await loadArchaeologistAddressesFromFile();
+
+  const selectedArchaeologists = await sarco.archaeologist
+    .getFullArchProfiles({ filterOffline: false, addresses: archaeologistsConfig.addresses })
     .catch((error) => {
       console.error("Failed to get archaeologist profiles", error);
       throw error;
     });
-
-  const nArchs = preparedEncryptedPayload.innerEncryptedkeyShares.length;
-
-  // TODO: select archaeologists from config file / env
-  const selectedArchaeologists = allArchaeologists.slice(0, nArchs);
 
   await Promise.all(
     selectedArchaeologists.map(async (arch) => {
@@ -101,6 +98,7 @@ async function runEmbalm(options: EmbalmOptions) {
     selectedArchaeologists.forEach((arch) => {
       const res = negotiationResult.get(arch.profile.peerId)!;
       if (res.exception) {
+        // TODO: handle this more gracefully
         console.log("arch exception:", arch.profile.archAddress, res.exception);
         // Sentry.captureException(res.exception);
       } else {
@@ -128,7 +126,7 @@ async function runEmbalm(options: EmbalmOptions) {
       recipientPublicKey: preparedEncryptedPayload.recipientPublicKey,
       resurrection: resurrectionTime,
       selectedArchaeologists,
-      requiredArchaeologists,
+      requiredArchaeologists: archaeologistsConfig.requiredArchaeologists,
       negotiationTimestamp,
       archaeologistPublicKeys,
       archaeologistSignatures,
@@ -155,6 +153,26 @@ async function runEmbalm(options: EmbalmOptions) {
   }
 }
 
+let cachedPreparePayloadArchConfig:
+  | {
+      count: number;
+      threshold: number;
+    }
+  | undefined;
+
+async function getArchaeologistConfig() {
+  if (cachedPreparePayloadArchConfig === undefined) {
+    const archaeologistsConfig = await loadArchaeologistAddressesFromFile();
+    cachedPreparePayloadArchConfig = {
+      count: archaeologistsConfig.addresses.length,
+      threshold: archaeologistsConfig.requiredArchaeologists,
+    };
+  }
+
+  return cachedPreparePayloadArchConfig;
+}
+
 export const embalmService = {
   runEmbalm,
+  getArchaeologistConfig,
 };

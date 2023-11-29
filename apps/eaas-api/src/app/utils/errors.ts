@@ -26,6 +26,7 @@ export interface ApiErrors {
   rewrapSarcophagusFailure: ApiError;
   burySarcophagusFailure: ApiError;
   cleanSarcophagusFailure: ApiError;
+  loadArchaeologistsFailure: ApiError;
   editSarcophagusError: (e: string) => ApiError;
 }
 
@@ -116,6 +117,10 @@ export const apiErrors: ApiErrors = {
   },
   cleanSarcophagusFailure: {
     msg: "failed to clean sarcophagus",
+    errorCode: 500,
+  },
+  loadArchaeologistsFailure: {
+    msg: "failed to load archaeologists",
     errorCode: 500,
   },
   editSarcophagusError: (msg: string) => ({
