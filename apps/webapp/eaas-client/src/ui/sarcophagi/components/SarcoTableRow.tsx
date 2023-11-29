@@ -1,5 +1,15 @@
 import { EditIcon, InfoOutlineIcon } from "@chakra-ui/icons";
-import { Button, HStack, IconButton, TableRowProps, Td, Text, Tooltip, Tr, useToast } from "@chakra-ui/react";
+import {
+  Button,
+  HStack,
+  IconButton,
+  TableRowProps,
+  Td,
+  Text,
+  Tooltip,
+  Tr,
+  useToast,
+} from "@chakra-ui/react";
 import { BigNumber } from "ethers";
 import { useEffect, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
@@ -47,7 +57,7 @@ export function SarcoTableRow({
 
   const [resurrectionString, setResurrectionString] = useState("");
 
-   const [isCleaning, setIsCleaning] = useState(false);
+  const [isCleaning, setIsCleaning] = useState(false);
 
   const toast = useToast();
 

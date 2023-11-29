@@ -2,6 +2,7 @@ import { NodeSarcoClient } from "@sarcophagus-org/sarcophagus-v2-sdk";
 import { PreparedEncryptedPayload } from "../../../src/types/embalmPayload";
 import { envConfig } from "../../../src/config/env.config";
 import { knex } from "../../../src/database";
+import { loadArchaeologistAddressesFromFile } from "../utils/loadArchaeologists";
 
 interface ArweaveUploadArgs {
   sarco: NodeSarcoClient;
@@ -65,17 +66,14 @@ async function runEmbalm(options: EmbalmOptions) {
 
   await sarco.init();
 
-  const allArchaeologists = await sarco.archaeologist
-    .getFullArchProfiles({ filterOffline: false })
+  const archaeologistsConfig = await loadArchaeologistAddressesFromFile();
+
+  const selectedArchaeologists = await sarco.archaeologist
+    .getFullArchProfiles({ filterOffline: false, addresses: archaeologistsConfig.addresses })
     .catch((error) => {
       console.error("Failed to get archaeologist profiles", error);
       throw error;
     });
-
-  const nArchs = preparedEncryptedPayload.innerEncryptedkeyShares.length;
-
-  // TODO: select archaeologists from config file / env
-  const selectedArchaeologists = allArchaeologists.slice(0, nArchs);
 
   await Promise.all(
     selectedArchaeologists.map(async (arch) => {
@@ -155,6 +153,17 @@ async function runEmbalm(options: EmbalmOptions) {
   }
 }
 
+let cachedArchaeologistCount: number | undefined;
+async function getArchaeologistCount() {
+  if (cachedArchaeologistCount === undefined) {
+    const archaeologistsConfig = await loadArchaeologistAddressesFromFile();
+    cachedArchaeologistCount = archaeologistsConfig.addresses.length;
+  }
+
+  return cachedArchaeologistCount;
+}
+
 export const embalmService = {
   runEmbalm,
+  getArchaeologistCount,
 };

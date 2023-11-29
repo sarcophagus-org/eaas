@@ -20,6 +20,15 @@ const runEmbalm = async (req: RequestWithUser, res: Response) => {
   res.status(200).send("Success");
 };
 
+/**
+ * Get the number of archaeologists
+ */
+const getArchaeologistCount = async (_: RequestWithUser, res: Response) => {
+  const count = await embalmService.getArchaeologistCount();
+  res.status(200).send({ count });
+}
+
 export const embalmController = {
   runEmbalm,
+  getArchaeologistCount,
 };
