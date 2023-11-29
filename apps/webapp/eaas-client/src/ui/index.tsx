@@ -1,4 +1,4 @@
-import { NavLink, Route, Routes, useNavigate } from "react-router-dom";
+import { NavLink, Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import { Login, LogoutButton } from "./login";
 import { RouteKey, RoutesPathMap } from "./routerConstants";
 import { NotFoundPage } from "./notFound";
@@ -7,25 +7,20 @@ import { ClientDashboard } from "./client/dashboard";
 import { ClientOnboarding } from "./client/onboarding";
 import { useEffect } from "react";
 import { useSelector } from "../store";
-import { TestUpload } from "./client/testUpload";
 import { Box, Flex, HStack, Link } from "@chakra-ui/react";
 import { Navbar } from "./components/navbar";
 import { SarcophagusDetailsPage } from "./sarcophagi/SarcophagusDetailsPage";
 import { UserType } from "types/userTypes";
 import { ClientSarcophagi } from "./sarcophagi/ClientSarcophagi";
+import { Claim } from "./sarcophagi/components/Claim";
 
 export function AppRoutes() {
   const navigate = useNavigate();
+  const location = useLocation();
   const appUser = useSelector((x) => x.userState.user);
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const routes: any[] = [
-    {
-      path: RoutesPathMap[RouteKey.TEST_PAGE],
-      element: <TestUpload />,
-      label: "Test",
-      hidden: true,
-    },
     {
       path: RoutesPathMap[RouteKey.HOME_PAGE],
       element: !appUser ? (
@@ -42,6 +37,12 @@ export function AppRoutes() {
       path: RoutesPathMap[RouteKey.LOGIN_PAGE],
       element: <Login />,
       label: "Login",
+      hidden: true,
+    },
+    {
+      path: RoutesPathMap[RouteKey.CLAIM_PAGE],
+      element: <Claim />,
+      label: "Claim Sarcophagus",
       hidden: true,
     },
     {
@@ -77,8 +78,10 @@ export function AppRoutes() {
   ];
 
   useEffect(() => {
-    if (!appUser) navigate("/login", { replace: true });
-  }, [appUser, navigate]);
+    if (location.pathname !== RoutesPathMap[RouteKey.CLAIM_PAGE] && !appUser) {
+      navigate("/login", { replace: true });
+    }
+  }, [appUser, navigate, location]);
 
   return (
     <Flex direction="column" height="100vh" overflow="hidden">

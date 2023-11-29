@@ -15,6 +15,7 @@ export const embalmInitialState: EmbalmState = {
   recipientState: {
     address: "",
     publicKey: "",
+    sarcoId: "",
   },
   resurrection: 0,
   resurrectionRadioValue: "",
@@ -28,6 +29,7 @@ export function embalmReducer(state: EmbalmState, action: Actions): EmbalmState 
         recipientState: {
           publicKey: action.payload.publicKey,
           address: action.payload.address,
+          sarcoId: action.payload.sarcoId,
           privateKey: action.payload.privateKey,
           generatePDFState: action.payload.generatePDFState,
         },

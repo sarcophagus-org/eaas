@@ -13,6 +13,7 @@ export const preparedEncryptedPayloadSchema = Joi.object({
 export const sendEncryptedPayloadSchema = Joi.object({
   preparedEncryptedPayload: preparedEncryptedPayloadSchema,
   resurrectionTime: Joi.number().required(),
+  sarcoId: Joi.string().required(),
 });
 
 export const createInvitationSchema = Joi.object({

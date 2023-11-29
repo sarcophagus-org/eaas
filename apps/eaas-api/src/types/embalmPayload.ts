@@ -12,4 +12,5 @@ export interface PreparedEncryptedPayload {
 export interface SendEncryptedPayloadParams {
   preparedEncryptedPayload: PreparedEncryptedPayload;
   resurrectionTime: number;
+  sarcoId: string;
 }
