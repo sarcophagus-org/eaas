@@ -7,13 +7,15 @@ import {
   Heading,
   Input,
   Text,
+  useToast,
 } from "@chakra-ui/react";
 import React from "react";
 import { useQuery } from "../../hooks/useQuery";
 import { useState } from "react";
 import { clientRegister } from "../../api/user";
-import { setUser, setTokens } from "../../store/tempMemoryStore";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "../../store";
+import { setTokens, setUser } from "../../store/user/actions";
 
 interface FormFieldValidation {
   password?: string;
@@ -26,7 +28,9 @@ export const ClientOnboarding: React.FC = () => {
   const [passwordConfirm, setPasswordConfirm] = useState("");
   const [formErrors, setFormErrors] = useState<FormFieldValidation>({});
 
+  const toast = useToast();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const validatePassword = () => {
     if (!password) {
@@ -60,17 +64,22 @@ export const ClientOnboarding: React.FC = () => {
       return;
     }
 
-    const response = await clientRegister({
-      user: { password },
-      inviteToken: token!,
-    });
+    try {
+      const response = await clientRegister({
+        user: { password },
+        inviteToken: token!,
+      });
 
-    if (response?.user) {
       // TOOO: extract response into global store
-      setTokens(response.tokens);
-      setUser(response.user);
+      dispatch(setTokens(response.tokens));
+      dispatch(setUser(response.user));
 
       navigate("/dashboard/client", { replace: true });
+    } catch (err) {
+      toast({
+        title: `Error creating account: ${err}`,
+        status: "error",
+      });
     }
   };
 

@@ -1,23 +1,11 @@
-import axios from "axios";
-import { SendEncryptedPayloadParams } from "../../../common/types";
 import { handleApiError } from "./utils";
-import { userTokens } from "../store/tempMemoryStore";
+import { axiosInstance as axios } from ".";
+import { SendEncryptedPayloadParams } from "../types/embalmPayload";
 
 export async function sendPayload(params: SendEncryptedPayloadParams) {
   try {
-    const res = await axios.post(
-      `${import.meta.env.VITE_API_BASE_URL}/embalm/send-payload`,
-      params,
-      {
-        headers: {
-          Authorization: `Bearer ${userTokens?.access.token}`,
-          "Content-Type": "application/json",
-        },
-      },
-    );
-    return res.status === 200;
+    await axios.post(`embalm/send-payload`, params);
   } catch (error) {
-    handleApiError(error);
-    return false;
+    throw handleApiError(error);
   }
 }

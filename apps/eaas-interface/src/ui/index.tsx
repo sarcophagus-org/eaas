@@ -1,13 +1,21 @@
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { Route, Routes, useNavigate } from "react-router-dom";
 import { Login } from "./login";
 import { RouteKey, RoutesPathMap } from "./routerConstants";
 import { NotFoundPage } from "./notFound";
 import { EmbalmerDashboard } from "./embalmer/dashboard";
 import { ClientDashboard } from "./client/dashboard";
 import { ClientOnboarding } from "./client/onboarding";
+import React, { useEffect } from "react";
+import { useSelector } from "../store";
+import { TestUpload } from "./client/testUpload";
 
 export function AppRoutes() {
   const routes = [
+    {
+      path: RoutesPathMap[RouteKey.TEST_PAGE],
+      element: <TestUpload />,
+      label: "Test",
+    },
     {
       path: RoutesPathMap[RouteKey.HOME_PAGE],
       element: <Login />,
@@ -35,14 +43,19 @@ export function AppRoutes() {
     },
   ];
 
+  const navigate = useNavigate();
+  const appUser = useSelector((x) => x.userState.user);
+
+  useEffect(() => {
+    if (!appUser) navigate("/login", { replace: true });
+  }, [appUser, navigate]);
+
   return (
-    <Router>
-      <Routes>
-        {routes.map((route) => (
-          <Route key={route.path} path={route.path} element={route.element} />
-        ))}
-        <Route path="*" element={<NotFoundPage />} />
-      </Routes>
-    </Router>
+    <Routes>
+      {routes.map((route) => (
+        <Route key={route.path} path={route.path} element={route.element} />
+      ))}
+      <Route path="*" element={<NotFoundPage />} />
+    </Routes>
   );
 }

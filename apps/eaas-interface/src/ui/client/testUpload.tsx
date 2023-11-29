@@ -1,10 +1,11 @@
+import React from "react";
 import { Button, Container, Spinner, Text, useToast } from "@chakra-ui/react";
 import { testApi } from "../../api";
 import { preparePayload } from "../../utils/prepare-payload";
 import { useState } from "react";
 import { sendPayload } from "../../api/embalm";
 
-export const ClientHome = () => {
+export const TestUpload = () => {
   const toast = useToast();
   const [isUploading, setIsUploading] = useState(false);
 
@@ -38,29 +39,22 @@ export const ClientHome = () => {
             const resurrectionTime = Date.now() + 1_800_000; // +30mins
 
             try {
-              const sendSuccess = await sendPayload({
-                chainId: 11155111,
+              await sendPayload({
                 preparedEncryptedPayload,
                 resurrectionTime,
-                sarcophagusName: "test sarco",
                 threshold: 1,
               });
 
-              console.log("sent", sendSuccess);
-
-              if (sendSuccess) {
-                toast({ title: "File uploaded", status: "success" });
-              } else {
-                toast({ title: "File upload failed", status: "error" });
-              }
+              toast({ title: "File uploaded", status: "success" });
             } catch (e) {
+              toast({ title: `File upload failed: ${e}`, status: "error" });
               console.log(e);
             } finally {
               setIsUploading(false);
             }
           }}
         >
-          <Text>Prepare payload</Text>
+          <Text>Upload dummy payload</Text>
         </Button>
       ) : (
         <Spinner />

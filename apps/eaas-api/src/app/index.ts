@@ -17,6 +17,8 @@ import {
 import { jwtStrategy } from "../../src/config/jwtConfig";
 import { apiErrorHandler } from "./middleware/errorHandler";
 
+import bodyParser from "body-parser";
+
 export function initialiseApp() {
   const app = express();
 
@@ -27,7 +29,13 @@ export function initialiseApp() {
   //   }),
   // );
   app.use(cors());
+
+  const jsonbodyLimit = "500mb";
+  app.use(bodyParser.json({ limit: jsonbodyLimit }));
+  app.use(bodyParser.urlencoded({ limit: jsonbodyLimit, extended: true }));
+
   app.use(express.json());
+
   app.use(passport.initialize());
   passport.use("jwt", jwtStrategy);
 

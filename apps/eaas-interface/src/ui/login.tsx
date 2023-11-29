@@ -1,13 +1,28 @@
 import React, { useState } from "react";
 import { login } from "../api/user";
 import { useNavigate } from "react-router-dom";
-import { FormControl, FormLabel, Input, Button, VStack } from "@chakra-ui/react";
-import { setUser, setTokens } from "../store/tempMemoryStore";
+import { FormControl, FormLabel, Input, Button, VStack, useToast } from "@chakra-ui/react";
+import { useDispatch } from "../store";
+import { clearTokens, setTokens, setUser } from "../store/user/actions";
+
+export const LogoutButton: React.FC = () => {
+  const dispatch = useDispatch();
+
+  const handleLogout = () => {
+    dispatch(clearTokens());
+    dispatch(setUser(null));
+  };
+
+  return <Button onClick={handleLogout}>Logout</Button>;
+};
 
 export const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+
+  const toast = useToast();
 
   const handleUsernameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(event.target.value);
@@ -19,14 +34,19 @@ export const Login = () => {
 
   const handleSubmit = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
     event.preventDefault();
-    const response = await login({ email, password });
-    if (response?.user) {
-      // TOOO: extract response into global store
-      setTokens(response.tokens);
-      setUser(response.user);
+    try {
+      const response = await login({ email, password });
+
+      dispatch(setTokens(response.tokens));
+      dispatch(setUser(response.user));
 
       navigate(`/dashboard/${response.user.type.toString()}`, {
         replace: true,
+      });
+    } catch (err) {
+      toast({
+        title: `Error Logging in: ${err}`,
+        status: "error",
       });
     }
   };

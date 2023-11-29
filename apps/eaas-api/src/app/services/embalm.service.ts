@@ -1,5 +1,6 @@
 import { ArchaeologistExceptionCode, NodeSarcoClient } from "@sarcophagus-org/sarcophagus-v2-sdk";
 import { PreparedEncryptedPayload } from "../../../src/types/embalmPayload";
+import { envConfig } from "src/config/env.config";
 
 interface ArweaveUploadArgs {
   sarco: NodeSarcoClient;
@@ -8,8 +9,6 @@ interface ArweaveUploadArgs {
 }
 
 interface EmbalmOptions {
-  chainId: number;
-  sarcophagusName: string;
   resurrectionTime: number;
   requiredArchaeologists: number;
   preparedEncryptedPayload: PreparedEncryptedPayload;
@@ -53,19 +52,13 @@ const uploadEncryptedPayloadToArweave = async (args: ArweaveUploadArgs) => {
 };
 
 async function runEmbalm(options: EmbalmOptions) {
-  const {
-    chainId,
-    sarcophagusName,
-    resurrectionTime,
-    preparedEncryptedPayload,
-    requiredArchaeologists,
-  } = options;
+  const { resurrectionTime, preparedEncryptedPayload, requiredArchaeologists } = options;
 
   const sarco = new NodeSarcoClient({
-    chainId,
-    privateKey: process.env.PRIVATE_KEY!,
-    providerUrl: process.env.PROVIDER_URL!,
-    zeroExApiKey: process.env.ZERO_EX_API_KEY!,
+    chainId: envConfig.chainId,
+    privateKey: envConfig.privateKey,
+    providerUrl: envConfig.providerUrl,
+    zeroExApiKey: envConfig.zeroExApiKey,
   });
 
   await sarco.init();
@@ -132,7 +125,7 @@ async function runEmbalm(options: EmbalmOptions) {
     });
 
     const { submitSarcophagusArgs } = sarco.utils.formatSubmitSarcophagusArgs({
-      name: sarcophagusName,
+      name: `${preparedEncryptedPayload.encryptedPayloadMetadata.fileName}-${Date.now()}}`,
       recipientPublicKey: preparedEncryptedPayload.recipientPublicKey,
       resurrection: resurrectionTime,
       selectedArchaeologists,
