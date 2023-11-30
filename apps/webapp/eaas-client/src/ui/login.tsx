@@ -13,9 +13,13 @@ export const LogoutButton: React.FC = () => {
     dispatch(setUser(null));
   };
 
-  return <Button p={0} onClick={handleLogout}>
-    <Text mx={2} fontSize={14} color="black">Logout</Text>
-  </Button>;
+  return (
+    <Button p={0} onClick={handleLogout}>
+      <Text mx={2} fontSize={14} color="black">
+        Logout
+      </Text>
+    </Button>
+  );
 };
 
 export const Login = () => {
@@ -69,9 +73,12 @@ export const Login = () => {
         Login
       </Button>
 
-      <Button colorScheme="blue" onClick={() => {
-        navigate("/claim");
-      }}>
+      <Button
+        colorScheme="blue"
+        onClick={() => {
+          navigate("/claim");
+        }}
+      >
         Claim a Sarcophagus
       </Button>
     </VStack>

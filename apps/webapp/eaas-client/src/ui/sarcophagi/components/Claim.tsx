@@ -130,7 +130,7 @@ export function Claim() {
       )}
     </Flex>
   ) : (
-    <Flex m={10} align="left" direction={"column"}>
+    <Flex mx={10} align="left" direction={"column"}>
       <Text mb={5}>Enter Sarcophagus ID</Text>
       <Textarea mb={10} onChange={(e) => setSarcophagusIdInput(e.target.value)} resize="none" />
       <Button onClick={() => setSarcophagusId(sarcophagusIdInput)}>Submit</Button>

@@ -78,7 +78,10 @@ export function AppRoutes() {
   ];
 
   useEffect(() => {
-    if (location.pathname !== RoutesPathMap[RouteKey.CLAIM_PAGE] && !appUser) {
+    const isAuthorisedPath =
+      location.pathname !== RoutesPathMap[RouteKey.LOGIN_PAGE] &&
+      location.pathname !== RoutesPathMap[RouteKey.CLAIM_PAGE];
+    if (isAuthorisedPath && !appUser) {
       navigate("/login", { replace: true });
     }
   }, [appUser, navigate, location]);
@@ -118,12 +121,14 @@ export function AppRoutes() {
           </Flex>
         </Navbar>
       )}
-      <Routes>
-        {routes.map((route) => (
-          <Route key={route.path} path={route.path} element={route.element} />
-        ))}
-        <Route path="*" element={<NotFoundPage />} />
-      </Routes>
+      <Box alignSelf="center" my={10} width="1400px" maxW="90%">
+        <Routes>
+          {routes.map((route) => (
+            <Route key={route.path} path={route.path} element={route.element} />
+          ))}
+          <Route path="*" element={<NotFoundPage />} />
+        </Routes>
+      </Box>
     </Flex>
   );
 }

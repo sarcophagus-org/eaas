@@ -162,9 +162,7 @@ export const createRecipientKeyDocument = async (sender: string, recipient: Reci
 
           <View style={styles.bodyMain}>
             <Text style={{ marginBottom: 10 }}>Sarcophagus ID:</Text>
-            <Text>
-              { recipient.sarcoId }
-            </Text>
+            <Text>{recipient.sarcoId}</Text>
           </View>
 
           <View style={styles.bodyMain}>
