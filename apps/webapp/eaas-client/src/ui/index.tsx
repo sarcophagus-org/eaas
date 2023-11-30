@@ -84,6 +84,10 @@ export function AppRoutes() {
     if (isAuthorisedPath && !appUser) {
       navigate("/login", { replace: true });
     }
+
+    if (location.pathname === RoutesPathMap[RouteKey.LOGIN_PAGE] && appUser) {
+      navigate("/", { replace: true });
+    }
   }, [appUser, navigate, location]);
 
   return (
