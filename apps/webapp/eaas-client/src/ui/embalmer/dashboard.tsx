@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { inviteClient } from "../../api/invite";
-import { Box, Button, Divider, HStack, Input, Text, useToast } from "@chakra-ui/react";
+import { Box, Button, Input, Text, useToast } from "@chakra-ui/react";
 import { UserType } from "../../types/userTypes";
 import { useSelector } from "../../store";
 import { clientInviteFailed, clientInvited } from "utils/toast";
@@ -32,10 +32,6 @@ export const EmbalmerDashboard: React.FC = () => {
     </Box>
   ) : (
     <Box>
-      <HStack spacing={10}>
-        <Text mt={5}>Logged in as: {appUser?.email}</Text>
-      </HStack>
-      <Divider marginY={10} />
       <Text fontWeight="bold" mb={5}>
         Invite a Client
       </Text>

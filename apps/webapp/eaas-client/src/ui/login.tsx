@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { login } from "../api/user";
 import { useNavigate } from "react-router-dom";
-import { FormControl, FormLabel, Input, Button, VStack, useToast } from "@chakra-ui/react";
+import { FormControl, FormLabel, Input, Button, VStack, useToast, Text } from "@chakra-ui/react";
 import { useDispatch } from "../store";
 import { clearTokens, setTokens, setUser } from "../store/user/actions";
 
@@ -13,7 +13,9 @@ export const LogoutButton: React.FC = () => {
     dispatch(setUser(null));
   };
 
-  return <Button onClick={handleLogout}>Logout</Button>;
+  return <Button p={0} onClick={handleLogout}>
+    <Text mx={2} fontSize={14} color="black">Logout</Text>
+  </Button>;
 };
 
 export const Login = () => {

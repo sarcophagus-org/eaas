@@ -7,7 +7,7 @@ import { ClientDashboard } from "./client/dashboard";
 import { ClientOnboarding } from "./client/onboarding";
 import { useEffect } from "react";
 import { useSelector } from "../store";
-import { Box, Flex, HStack, Link } from "@chakra-ui/react";
+import { Box, Flex, HStack, Link, Text } from "@chakra-ui/react";
 import { Navbar } from "./components/navbar";
 import { SarcophagusDetailsPage } from "./sarcophagi/SarcophagusDetailsPage";
 import { UserType } from "types/userTypes";
@@ -111,6 +111,8 @@ export function AppRoutes() {
               ))}
             </Flex>
             <HStack>
+              <Text fontSize={10}>Logged in as:</Text>
+              <Text fontSize={10}>{appUser?.email}</Text>
               <LogoutButton />
             </HStack>
           </Flex>
