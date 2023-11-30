@@ -71,17 +71,23 @@ export function GenerateRecipientPDF() {
       </VStack>
     ),
     [GeneratePDFState.DOWNLOADED]: (
-      <VStack spacing={6} w="100%">
-        <Text fontSize="xl">Download PDF</Text>
-        <Text align="center">
+      <VStack spacing={6} w="100%" align={"left"}>
+        <Text>
           Your recipient file has been downloaded. You will need to send this securely to your
           recipient. Do not store this online or let anyone else see it!
         </Text>
+        <Button alignSelf={"flex-start"} onClick={() => downloadRecipientPDF(user!.email)}>
+          Redownload PDF
+        </Button>
+        <Textarea mb={10} disabled value={recipientState.publicKey} resize="none" />
         {isUploading ? (
           <Spinner />
         ) : (
           <Button
             w="100%"
+            maxW={"150px"}
+            isLoading={isUploading}
+            alignSelf={"center"}
             onClick={async () => {
               try {
                 const preparedEncryptedPayload = await preparePayload({
@@ -106,11 +112,9 @@ export function GenerateRecipientPDF() {
               }
             }}
           >
-            Upload File
+            Submit
           </Button>
         )}
-
-        <Textarea disabled value={recipientState.publicKey} resize="none" />
       </VStack>
     ),
     [GeneratePDFState.GENERATED]: undefined,
