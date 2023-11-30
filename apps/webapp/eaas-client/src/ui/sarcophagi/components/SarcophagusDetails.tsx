@@ -59,7 +59,7 @@ export function SarcophagusDetails() {
         {canClean && !!sarcophagus && <CleanButton sarco={sarcophagus} />}
       </HStack>
 
-      <Button my={10} onClick={() => navigate("./..")}>
+      <Button my={10} onClick={() => navigate(user?.type === UserType.embalmer ? "/" : "./..")}>
         Back
       </Button>
     </Flex>
