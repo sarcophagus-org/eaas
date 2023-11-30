@@ -1,5 +1,5 @@
 import React from "react";
-import { VStack, Button, Text, Textarea, useToast, Spinner } from "@chakra-ui/react";
+import { VStack, Button, Text, Textarea, useToast, Spinner, Box } from "@chakra-ui/react";
 import { useGenerateRecipientPDF } from "../../hooks/useGenerateRecipientPDF";
 import { GeneratePDFState } from "../../store/embalm/actions";
 import { useSelector } from "../../store";
@@ -8,6 +8,7 @@ import { sendPayload } from "../../api/embalm";
 import { preparePayload } from "../../utils/preparePayload";
 import { fileUploadFailure, fileUploadSuccess, generatePDFFailure } from "utils/toast";
 import { useNavigate } from "react-router-dom";
+import EmbalmStepHeader from "ui/components/embalmStepHeader";
 
 export function GenerateRecipientPDF() {
   const { generatePublicKey, downloadRecipientPDF, isLoading, generateError } =
@@ -56,7 +57,7 @@ export function GenerateRecipientPDF() {
     [GeneratePDFState.UNSET]: (
       <VStack align="left" spacing={4}>
         <Button width="fit-content" onClick={handleGeneratePDFClick} isLoading={isLoading}>
-          Generate a new public key
+          Generate Recipient PDF
         </Button>
         <Text>
           When you click this, it will generate a new wallet and public key. Send the downloadable
@@ -116,7 +117,12 @@ export function GenerateRecipientPDF() {
   };
 
   return (
-    <VStack spacing={0}>
+    <VStack w="100%" align="left" spacing={0}>
+      <EmbalmStepHeader
+        headerText="Create Recipient PDF"
+        subText="When you click this, it will generate a new wallet and public key. Send the downloadable PDF to the recipient."
+      />
+      <Box h={3} />
       {generateStateMap[recipientState.generatePDFState || GeneratePDFState.UNSET]}
     </VStack>
   );

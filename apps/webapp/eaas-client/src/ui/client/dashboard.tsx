@@ -1,4 +1,4 @@
-import { Box, Text } from "@chakra-ui/react";
+import { Box, Text, VStack } from "@chakra-ui/react";
 import React from "react";
 
 import { UserType } from "../../types/userTypes";
@@ -14,10 +14,10 @@ export const ClientDashboard: React.FC = () => {
       <Text>You are not authorized to view this page.</Text>
     </Box>
   ) : (
-    <Box>
+    <VStack spacing={10}>
       <UploadFile />
-      <SetResurrection mb={10} />
+      <SetResurrection />
       <GenerateRecipientPDF />
-    </Box>
+    </VStack>
   );
 };
