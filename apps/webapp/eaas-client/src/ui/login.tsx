@@ -66,6 +66,12 @@ export const Login = () => {
       <Button colorScheme="blue" type="submit" onClick={handleSubmit}>
         Login
       </Button>
+
+      <Button colorScheme="blue" onClick={() => {
+        navigate("/claim");
+      }}>
+        Claim a Sarcophagus
+      </Button>
     </VStack>
   );
 };

@@ -143,7 +143,8 @@ export const createRecipientKeyDocument = async (sender: string, recipient: Reci
         <View style={styles.inset}>
           <View style={styles.header}>
             <View style={styles.headerLeft}>
-              <Text>RECIPIENT INFORMATION FOR SARCOPHAGUS FROM:</Text>
+              <Text>RECIPIENT INFORMATION FOR SARCOPHAGUS</Text>
+              <Text>FROM:</Text>
               <Text style={{ marginTop: 10 }}>{sender}</Text>
             </View>
 
@@ -157,6 +158,13 @@ export const createRecipientKeyDocument = async (sender: string, recipient: Reci
                 PROTECT IT & KEEP STORED IN A SAFE LOCATION.
               </Text>
             </View>
+          </View>
+
+          <View style={styles.bodyMain}>
+            <Text style={{ marginBottom: 10 }}>Sarcophagus ID:</Text>
+            <Text>
+              { recipient.sarcoId }
+            </Text>
           </View>
 
           <View style={styles.bodyMain}>

@@ -40,7 +40,74 @@ async function getSarcoClientEmail(sarcoId: string): Promise<string> {
   }
 }
 
+async function rewrapSarcophagus(sarcoId: string, resurrectionTime: number): Promise<void> {
+  try {
+    const sarco = new NodeSarcoClient({
+      chainId: envConfig.chainId,
+      privateKey: envConfig.privateKey,
+      providerUrl: envConfig.providerUrl,
+    });
+
+    await sarco.api.rewrapSarcophagus(sarcoId, resurrectionTime);
+  } catch (e) {
+    console.log(e);
+
+    if (e.message.includes("ResurrectionTime")) {
+      throw apiErrors.editSarcophagusError(e.errorName);
+    }
+
+    throw apiErrors.rewrapSarcophagusFailure;
+  }
+}
+
+async function burySarcophagus(sarcoId: string): Promise<void> {
+  try {
+    const sarco = new NodeSarcoClient({
+      chainId: envConfig.chainId,
+      privateKey: envConfig.privateKey,
+      providerUrl: envConfig.providerUrl,
+    });
+
+    await sarco.api.burySarcophagus(sarcoId);
+  } catch (e) {
+    console.log(e);
+
+    if (e.message.includes("ResurrectionTime") || e.message.includes("SarcophagusInactive")) {
+      throw apiErrors.editSarcophagusError(e.errorName);
+    }
+
+    throw apiErrors.burySarcophagusFailure;
+  }
+}
+
+async function cleanSarcophagus(sarcoId: string): Promise<void> {
+  try {
+    const sarco = new NodeSarcoClient({
+      chainId: envConfig.chainId,
+      privateKey: envConfig.privateKey,
+      providerUrl: envConfig.providerUrl,
+    });
+
+    await sarco.api.cleanSarcophagus(sarcoId);
+  } catch (e) {
+    console.log(e);
+
+    if (
+      e.message.includes("EmbalmerClaimWindowPassed") ||
+      e.message.includes("TooEarlyForClean") ||
+      e.message.includes("SarcophagusAlreadyCleaned")
+    ) {
+      throw apiErrors.editSarcophagusError(e.errorName);
+    }
+
+    throw apiErrors.cleanSarcophagusFailure;
+  }
+}
+
 export const sarcophagiService = {
   getClientSarcophagi,
   getSarcoClientEmail,
+  rewrapSarcophagus,
+  cleanSarcophagus,
+  burySarcophagus,
 };

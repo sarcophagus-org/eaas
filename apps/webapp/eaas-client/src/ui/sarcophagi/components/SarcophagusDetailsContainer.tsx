@@ -1,10 +1,9 @@
 import { Button, Heading, HStack, Link, Text, VStack } from "@chakra-ui/react";
-import { NavLink, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { SarcoStateIndicator } from "./SarcoStateIndicator";
 import { SarcophagusState } from "@sarcophagus-org/sarcophagus-v2-sdk-client";
 import React from "react";
 import { useQuery } from "../../../hooks/useQuery";
-import { RouteKey, RoutesPathMap } from "../../routerConstants";
 import { useGetSarcophagusDetails } from "../../../hooks/useGetSarcophagusDetails";
 
 interface SarcophagusDetailsProps {
@@ -24,15 +23,6 @@ export function SarcophagusDetailsContainer({ children }: SarcophagusDetailsProp
   return (
     <VStack align="left" w="100%">
       <HStack>
-        <Link
-          as={NavLink}
-          to={RoutesPathMap[RouteKey.HOME_PAGE]}
-          color="brand.400"
-          _hover={{ color: "brand.950", textDecor: "underline" }}
-        >
-          Tomb
-        </Link>
-        <Text> / </Text>
         {currentAction ? (
           <HStack>
             <Button

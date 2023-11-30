@@ -23,6 +23,7 @@ export enum SortDirection {
 
 export interface RecipientState {
   address: string;
+  sarcoId: string;
   publicKey: string;
   privateKey?: string;
   generatePDFState?: GeneratePDFState;
