@@ -16,6 +16,7 @@
     "@fontsource/roboto-mono": "^4.5.8",
     "@rainbow-me/rainbowkit": "^0.12.18",
     "@react-pdf/renderer": "^3.0.0",
+    "@sarcophagus-org/sarcophagus-v2-contracts": "0.17.2",
     "@sarcophagus-org/sarcophagus-v2-sdk-client": "file:../../../../sarcophagus-v2-sdk-client",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
