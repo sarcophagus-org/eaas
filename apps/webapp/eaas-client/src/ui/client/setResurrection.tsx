@@ -51,7 +51,6 @@ export function SetResurrection({ ...rest }: FlexProps) {
             <Text textAlign="center">{options[2]}</Text>
           </Radio>
         </HStack>
-        <HStack spacing={6}>
           <Radio {...getRadioProps({ value: "Other" })}>
             <DatePicker
               selected={customResurrectionDate}
@@ -71,7 +70,6 @@ export function SetResurrection({ ...rest }: FlexProps) {
               }
             />
           </Radio>
-        </HStack>
 
         <Text>{`Resurrection: ${resurrectionDate} ${
           resurrectionTime && "at "
