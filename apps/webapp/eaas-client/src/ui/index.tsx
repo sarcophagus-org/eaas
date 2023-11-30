@@ -118,8 +118,8 @@ export function AppRoutes() {
               ))}
             </Flex>
             <HStack>
-              <Text fontSize={10}>Logged in as:</Text>
-              <Text fontSize={10}>{appUser?.email}</Text>
+              <Text fontSize={12}>Logged in as:</Text>
+              <Text fontSize={12}>{appUser?.email}</Text>
               <LogoutButton />
             </HStack>
           </Flex>

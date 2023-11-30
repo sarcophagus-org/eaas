@@ -51,25 +51,25 @@ export function SetResurrection({ ...rest }: FlexProps) {
             <Text textAlign="center">{options[2]}</Text>
           </Radio>
         </HStack>
-          <Radio {...getRadioProps({ value: "Other" })}>
-            <DatePicker
-              selected={customResurrectionDate}
-              onChange={handleCustomDateChange}
-              onInputClick={handleCustomDateClick}
-              showTimeSelect
-              minDate={new Date(timestampMs)}
-              showPopperArrow={false}
-              timeIntervals={30}
-              timeCaption="Time"
-              timeFormat="hh:mma"
-              dateFormat="MM.dd.yyyy hh:mma"
-              fixedHeight
-              filterTime={(date) => timestampMs < date.getTime()}
-              customInput={
-                <DatePickerButton variant={radioValue !== "Other" ? "disabledLook" : "solid"} />
-              }
-            />
-          </Radio>
+        <Radio {...getRadioProps({ value: "Other" })}>
+          <DatePicker
+            selected={customResurrectionDate}
+            onChange={handleCustomDateChange}
+            onInputClick={handleCustomDateClick}
+            showTimeSelect
+            minDate={new Date(timestampMs)}
+            showPopperArrow={false}
+            timeIntervals={30}
+            timeCaption="Time"
+            timeFormat="hh:mma"
+            dateFormat="MM.dd.yyyy hh:mma"
+            fixedHeight
+            filterTime={(date) => timestampMs < date.getTime()}
+            customInput={
+              <DatePickerButton variant={radioValue !== "Other" ? "disabledLook" : "solid"} />
+            }
+          />
+        </Radio>
 
         <Text>{`Resurrection: ${resurrectionDate} ${
           resurrectionTime && "at "
