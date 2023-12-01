@@ -2,14 +2,14 @@ import { useEffect, useState } from "react";
 import { Center, Flex, Spinner, TabPanel, TabPanels, Tabs, Text, useToast } from "@chakra-ui/react";
 import { NoSarcpohagi } from "./components/NoSarcophagi";
 import { SarcoTable } from "./components/SarcoTable";
-import { SarcophagusData } from "@sarcophagus-org/sarcophagus-v2-sdk-client";
 import { getClientSarcophagi } from "api/sarcophagi";
 import { getClientSarcophagiFailed } from "utils/toast";
+import { SarcophagusDataWithClientEmail } from "./EmbalmerSarcophagi";
 
 export function ClientSarcophagi() {
   const [isLoadingSarcophagi, setIsLoadingSarcophagi] = useState(false);
   const [loadedSarcophagi, setLoadedSarcophagi] = useState(false);
-  const [clientSarcophagi, setClientSarcophagi] = useState<SarcophagusData[]>([]);
+  const [clientSarcophagi, setClientSarcophagi] = useState<SarcophagusDataWithClientEmail[]>([]);
   const toast = useToast();
 
   useEffect(() => {
