@@ -78,7 +78,8 @@ export const approveFailure = (): UseToastOptions => ({
 });
 
 export const fileUploadSuccess = (): UseToastOptions => ({
-  title: "File uploaded",
+  title: "Your file has been uploaded!",
+  description: "Please wait while the transaction is confirmed.",
   status: "success",
   ...defaultOptions,
 });

@@ -1,5 +1,5 @@
-import React from "react";
-import { VStack, Button, Text, Textarea, useToast, Spinner, Box } from "@chakra-ui/react";
+import React, { useState } from "react";
+import { VStack, Button, Text, Textarea, useToast, Box } from "@chakra-ui/react";
 import { useGenerateRecipientPDF } from "../../hooks/useGenerateRecipientPDF";
 import { GeneratePDFState } from "../../store/embalm/actions";
 import { useSelector } from "../../store";
@@ -9,6 +9,7 @@ import { preparePayload } from "../../utils/preparePayload";
 import { fileUploadFailure, fileUploadSuccess, generatePDFFailure } from "utils/toast";
 import { useNavigate } from "react-router-dom";
 import EmbalmStepHeader from "ui/components/embalmStepHeader";
+import { sarco } from "@sarcophagus-org/sarcophagus-v2-sdk-client";
 
 export function GenerateRecipientPDF() {
   const { generatePublicKey, downloadRecipientPDF, isLoading, generateError } =
@@ -53,16 +54,46 @@ export function GenerateRecipientPDF() {
 
   const navigate = useNavigate();
 
+  const [payloadUploaded, setPayloadUploaded] = useState(false);
+  const [sarcoCreated, setSarcoCreated] = useState(false);
+
+  let sarcoCreatedPingCount = 0;
+
+  useEffect(() => {
+    if (payloadUploaded) {
+      const timer = setTimeout(() => {
+        sarco.api
+          .getSarcophagiByIds([recipientState.sarcoId])
+          .then((sarcophagi) => {
+            if (sarcophagi[0].name !== "not found") {
+              setSarcoCreated(true);
+              clearTimeout(timer);
+            }
+          })
+          .catch(console.log)
+          .finally(() => {
+            if (sarcoCreatedPingCount < 10) {
+              sarcoCreatedPingCount++;
+            } else {
+              clearTimeout(timer);
+            }
+          });
+      }, 5000);
+    }
+  }, [payloadUploaded, recipientState.sarcoId, sarcoCreatedPingCount]);
+
+  useEffect(() => {
+    if (sarcoCreated) {
+      navigate("/sarcophagi");
+    }
+  }, [navigate, sarcoCreated]);
+
   const generateStateMap: Record<GeneratePDFState, any> = {
     [GeneratePDFState.UNSET]: (
       <VStack align="left" spacing={4}>
         <Button width="fit-content" onClick={handleGeneratePDFClick} isLoading={isLoading}>
           Generate Recipient PDF
         </Button>
-        <Text>
-          When you click this, it will generate a new wallet and public key. Send the downloadable
-          PDF to the recipient.
-        </Text>
         {/* {generateError && (
               <SarcoAlert status="error" title="Error while generating">
                 {generateError}
@@ -80,9 +111,7 @@ export function GenerateRecipientPDF() {
           Redownload PDF
         </Button>
         <Textarea mb={10} disabled value={recipientState.publicKey} resize="none" />
-        {isUploading ? (
-          <Spinner />
-        ) : (
+
           <Button
             w="100%"
             maxW={"150px"}
@@ -101,20 +130,19 @@ export function GenerateRecipientPDF() {
                   preparedEncryptedPayload,
                   sarcoId: recipientState.sarcoId,
                 });
+
                 toast(fileUploadSuccess());
-                navigate("/");
+                setPayloadUploaded(true);
 
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
               } catch (e: any) {
                 toast(fileUploadFailure(e));
-              } finally {
-                setIsUploading(false);
               }
             }}
           >
             Submit
           </Button>
-        )}
+
       </VStack>
     ),
     [GeneratePDFState.GENERATED]: undefined,

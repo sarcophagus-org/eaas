@@ -28,7 +28,7 @@ export function SarcoTable({ sarcophagi }: SarcoTableProps) {
   const [sortDirection, setSortDirection] = useState<SortDirection>(SortDirection.None);
 
   // Sort the sarcophagi using the sortColumnId and sortDirection states
-  const sortedSarcophagi = sarcophagi?.toSorted ((a, b) => {
+  const sortedSarcophagi = sarcophagi?.toSorted((a, b) => {
     if (sortColumnId === SortableColumn.State) {
       if (sortDirection === SortDirection.Ascending) {
         return a.state > b.state ? 1 : -1;
