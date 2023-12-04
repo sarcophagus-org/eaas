@@ -19,7 +19,7 @@ const envVarsSchema = Joi.object()
     PROVIDER_URL: Joi.string().required().description("Ethereum provider url"),
     ZERO_EX_API_KEY: Joi.string().required().description("0x API key"),
 
-    CLIENT_URL: Joi.string().default("http://localhost:5173"),
+    CLIENT_URL: Joi.string().default("http://localhost:3000"),
 
     /**
      * Required ENV Vars

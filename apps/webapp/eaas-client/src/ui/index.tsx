@@ -13,6 +13,8 @@ import { SarcophagusDetailsPage } from "./sarcophagi/SarcophagusDetailsPage";
 import { UserType } from "types/userTypes";
 import { ClientSarcophagi } from "./sarcophagi/ClientSarcophagi";
 import { Claim } from "./sarcophagi/components/Claim";
+import { ForgotPassword } from "./forgotPassword";
+import { ResetPassword } from "./resetPassword";
 
 export function AppRoutes() {
   const navigate = useNavigate();
@@ -37,6 +39,18 @@ export function AppRoutes() {
       path: RoutesPathMap[RouteKey.LOGIN_PAGE],
       element: <Login />,
       label: "Login",
+      hidden: true,
+    },
+    {
+      path: RoutesPathMap[RouteKey.FORGOT_PASSWORD_PAGE],
+      element: <ForgotPassword />,
+      label: "Forgot Password",
+      hidden: true,
+    },
+    {
+      path: RoutesPathMap[RouteKey.RESET_PASSWORD_PAGE],
+      element: <ResetPassword />,
+      label: "Reset Password",
       hidden: true,
     },
     {
@@ -78,10 +92,14 @@ export function AppRoutes() {
   ];
 
   useEffect(() => {
-    const isAuthorisedPath =
-      location.pathname !== RoutesPathMap[RouteKey.LOGIN_PAGE] &&
-      location.pathname !== RoutesPathMap[RouteKey.CLAIM_PAGE];
-    if (isAuthorisedPath && !appUser) {
+    const unauthenticatedRoutes = [
+      RoutesPathMap[RouteKey.LOGIN_PAGE],
+      RoutesPathMap[RouteKey.FORGOT_PASSWORD_PAGE],
+      RoutesPathMap[RouteKey.RESET_PASSWORD_PAGE],
+      RoutesPathMap[RouteKey.CLAIM_PAGE],
+    ];
+
+    if (!unauthenticatedRoutes.includes(location.pathname) && !appUser) {
       navigate("/login", { replace: true });
     }
 

@@ -1,7 +1,17 @@
 import React, { useState } from "react";
 import { login } from "../api/user";
 import { useNavigate } from "react-router-dom";
-import { FormControl, FormLabel, Input, Button, VStack, useToast, Text } from "@chakra-ui/react";
+import {
+  FormControl,
+  FormLabel,
+  Input,
+  Button,
+  VStack,
+  useToast,
+  Text,
+  Link,
+  Heading,
+} from "@chakra-ui/react";
 import { useDispatch } from "../store";
 import { clearTokens, setTokens, setUser } from "../store/user/actions";
 
@@ -72,6 +82,14 @@ export const Login = () => {
       <Button colorScheme="blue" type="submit" onClick={handleSubmit}>
         Login
       </Button>
+
+      <Link color="blue.500" onClick={() => navigate("/forgot-password")}>
+        Forgot Password?
+      </Link>
+
+      <Heading mt={50} mb={5}>
+        Looking to claim a Sarcophagus?
+      </Heading>
 
       <Button
         colorScheme="blue"
