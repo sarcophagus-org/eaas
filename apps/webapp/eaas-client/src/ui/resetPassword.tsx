@@ -12,7 +12,7 @@ import React from "react";
 import { useQuery } from "../hooks/useQuery";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { resetPasswordError } from "utils/toast";
+import { resetPasswordError, resetPasswordSuccess } from "utils/toast";
 import { resetPassword } from "api/user";
 
 interface FormFieldValidation {
@@ -50,6 +50,8 @@ export const ResetPassword: React.FC = () => {
         ...prevErrors,
         passwordConfirm: "Passwords do not match",
       }));
+    } else {
+      setFormErrors({});
     }
   };
 
@@ -69,6 +71,8 @@ export const ResetPassword: React.FC = () => {
         password,
         token: token!,
       });
+
+      toast(resetPasswordSuccess());
 
       navigate("/login", { replace: true });
     } catch (err) {

@@ -141,6 +141,13 @@ export const forgotPasswordSuccess = (): UseToastOptions => ({
   ...defaultOptions,
 });
 
+export const resetPasswordSuccess = (): UseToastOptions => ({
+  title: "Success!",
+  description: "Please login with your new password.",
+  status: "success",
+  ...defaultOptions,
+});
+
 export const resetPasswordError = (e: string): UseToastOptions => ({
   title: "Failed to reset password",
   description: e,

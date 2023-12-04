@@ -51,6 +51,8 @@ export const ClientOnboarding: React.FC = () => {
         ...prevErrors,
         passwordConfirm: "Passwords do not match",
       }));
+    } else {
+      setFormErrors({});
     }
   };
 
