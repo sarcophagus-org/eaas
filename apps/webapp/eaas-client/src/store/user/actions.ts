@@ -1,13 +1,16 @@
+import { Invitation } from "types/invitation";
 import { EaasTokens, EaasUser } from "../../types/userTypes";
 import { ActionMap } from "../ActionMap";
 
 export enum ActionType {
+  SetInvites = "USER_SET_INVITES",
   SetUser = "USER_SET_USER",
   SetTokens = "USER_SET_TOKENS",
   ClearTokens = "USER_CLEAR_TOKENS",
 }
 
 type UserPayload = {
+  [ActionType.SetInvites]: { invites: Invitation[] };
   [ActionType.SetUser]: { user: EaasUser | null };
   [ActionType.SetTokens]: { tokens: EaasTokens | null };
   [ActionType.ClearTokens]: object;
@@ -34,6 +37,15 @@ export function setUser(user: EaasUser | null): UserActions {
     type: ActionType.SetUser,
     payload: {
       user,
+    },
+  };
+}
+
+export function setInvites(invites: Invitation[]): UserActions {
+  return {
+    type: ActionType.SetInvites,
+    payload: {
+      invites,
     },
   };
 }

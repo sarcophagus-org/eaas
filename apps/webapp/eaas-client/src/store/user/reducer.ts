@@ -1,3 +1,4 @@
+import { Invitation } from "types/invitation";
 import { Actions } from "..";
 import {
   clearTokens,
@@ -12,6 +13,7 @@ import { ActionType } from "./actions";
 export interface UserState {
   tokens: EaasTokens | null;
   user: EaasUser | null;
+  invites: Invitation[];
 }
 
 const localStorageUser = getUser();
@@ -19,6 +21,7 @@ const localStorageUser = getUser();
 export const userInitialState: UserState = {
   tokens: null,
   user: localStorageUser,
+  invites: [],
 };
 
 export function userReducer(state: UserState, action: Actions): UserState {
@@ -37,6 +40,9 @@ export function userReducer(state: UserState, action: Actions): UserState {
     case ActionType.SetUser:
       saveUser(action.payload.user);
       return { ...state, user: action.payload.user };
+
+    case ActionType.SetInvites:
+      return { ...state, invites: action.payload.invites };
 
     default:
       return state;

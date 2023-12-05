@@ -15,6 +15,7 @@ import { ClientSarcophagi } from "./sarcophagi/ClientSarcophagi";
 import { Claim } from "./sarcophagi/components/Claim";
 import { ForgotPassword } from "./forgotPassword";
 import { ResetPassword } from "./resetPassword";
+import { InvitesPage } from "./embalmer/invites";
 
 export function AppRoutes() {
   const navigate = useNavigate();
@@ -88,6 +89,11 @@ export function AppRoutes() {
       element: <SarcophagusDetailsPage />,
       label: "Sarcophagus Details",
       hidden: true,
+    },
+    {
+      path: RoutesPathMap[RouteKey.INVITES_PAGE],
+      element: <InvitesPage />,
+      label: "Invites",
     },
   ];
 

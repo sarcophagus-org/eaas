@@ -19,7 +19,7 @@ export function ClientSarcophagi() {
   useEffect(() => {
     if (!loadedSarcophagi) {
       setIsLoadingSarcophagi(true);
-      
+
       getClientSarcophagi()
         .then((res) => {
           dispatch(setClientSarcophagi(res));
