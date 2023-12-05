@@ -112,37 +112,36 @@ export function GenerateRecipientPDF() {
         </Button>
         <Textarea mb={10} disabled value={recipientState.publicKey} resize="none" />
 
-          <Button
-            w="100%"
-            maxW={"150px"}
-            isLoading={isUploading}
-            alignSelf={"center"}
-            onClick={async () => {
-              try {
-                const preparedEncryptedPayload = await preparePayload({
-                  file: file!,
-                  recipientPublicKey: recipientState.publicKey,
-                });
+        <Button
+          w="100%"
+          maxW={"150px"}
+          isLoading={isUploading}
+          alignSelf={"center"}
+          onClick={async () => {
+            try {
+              const preparedEncryptedPayload = await preparePayload({
+                file: file!,
+                recipientPublicKey: recipientState.publicKey,
+              });
 
-                setIsUploading(true);
-                await sendPayload({
-                  resurrectionTime: resurrection,
-                  preparedEncryptedPayload,
-                  sarcoId: recipientState.sarcoId,
-                });
+              setIsUploading(true);
+              await sendPayload({
+                resurrectionTime: resurrection,
+                preparedEncryptedPayload,
+                sarcoId: recipientState.sarcoId,
+              });
 
-                toast(fileUploadSuccess());
-                setPayloadUploaded(true);
+              toast(fileUploadSuccess());
+              setPayloadUploaded(true);
 
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-              } catch (e: any) {
-                toast(fileUploadFailure(e));
-              }
-            }}
-          >
-            Submit
-          </Button>
-
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            } catch (e: any) {
+              toast(fileUploadFailure(e));
+            }
+          }}
+        >
+          Submit
+        </Button>
       </VStack>
     ),
     [GeneratePDFState.GENERATED]: undefined,

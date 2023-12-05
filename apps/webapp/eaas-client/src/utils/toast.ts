@@ -133,3 +133,24 @@ export const buryFailed = (e: string): UseToastOptions => ({
   title: `Error burying the Sarcophagus: ${e}`,
   status: "error",
 });
+
+export const forgotPasswordSuccess = (): UseToastOptions => ({
+  title: "Success!",
+  description: "Please check your email for a link to reset your password.",
+  status: "success",
+  ...defaultOptions,
+});
+
+export const resetPasswordSuccess = (): UseToastOptions => ({
+  title: "Success!",
+  description: "Please login with your new password.",
+  status: "success",
+  ...defaultOptions,
+});
+
+export const resetPasswordError = (e: string): UseToastOptions => ({
+  title: "Failed to reset password",
+  description: e,
+  status: "error",
+  ...defaultOptions,
+});
