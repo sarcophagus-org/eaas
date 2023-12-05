@@ -15,7 +15,7 @@ export async function inviteClient(email: string) {
 
 export async function getInvites() {
   try {
-    const res = await axios.get(`invitation/all`);
+    const res = await axios.get(`invitation/sent`);
     return res.data as Invitation[];
   } catch (error) {
     throw handleApiError(error);
