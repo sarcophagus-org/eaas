@@ -9,6 +9,7 @@ export enum RouteKey {
   CLIENT_ONBOARDING_PAGE,
   SARCOPHAGI_PAGE,
   SARCOPHAGUS_DETAIL,
+  INVITES_PAGE,
 }
 
 export const RoutesPathMap: { [key: number]: string } = {
@@ -22,4 +23,5 @@ export const RoutesPathMap: { [key: number]: string } = {
   [RouteKey.CLIENT_ONBOARDING_PAGE]: "/onboard",
   [RouteKey.SARCOPHAGI_PAGE]: "/sarcophagi",
   [RouteKey.SARCOPHAGUS_DETAIL]: "/sarcophagi/:id",
+  [RouteKey.INVITES_PAGE]: "/invites",
 };
