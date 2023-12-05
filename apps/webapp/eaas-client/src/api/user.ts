@@ -20,6 +20,22 @@ export async function login(params: {
   }
 }
 
+export async function forgotPassword(email: string): Promise<void> {
+  try {
+    await axios.post(`auth/forgot-password`, { email });
+  } catch (error) {
+    throw handleApiError(error);
+  }
+}
+
+export async function resetPassword(params: { password: string; token: string }): Promise<void> {
+  try {
+    await axios.post(`auth/reset-password`, params);
+  } catch (error) {
+    throw handleApiError(error);
+  }
+}
+
 export async function clientRegister(params: {
   user: RegisterUser;
   inviteToken: string;

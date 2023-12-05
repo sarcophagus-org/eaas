@@ -3,6 +3,7 @@ import { Tooltip, VStack, Text, Link, Container, Input } from "@chakra-ui/react"
 import { useSelectFile } from "../../hooks/useSelectFile";
 import { FileDragAndDrop } from "./fileDragAndDrop";
 import prettyBytes from "pretty-bytes";
+import EmbalmStepHeader from "ui/components/embalmStepHeader";
 
 export const UploadFile = () => {
   const { error, file, fileInputRef, handleSetFile } = useSelectFile();
@@ -20,6 +21,10 @@ export const UploadFile = () => {
 
   return (
     <VStack w="100%" align="left">
+      <EmbalmStepHeader
+        headerText="Upload Document"
+        subText="This is the file you want to your recipient to receive at the end of the resurrection period."
+      />
       <FileDragAndDrop
         onClick={() => {
           if (fileInputRef.current) {

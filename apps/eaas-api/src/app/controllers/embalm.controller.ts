@@ -7,7 +7,8 @@ import { SendEncryptedPayloadParams } from "../../../src/types/embalmPayload";
  * Embalm the provided payload
  */
 const runEmbalm = async (req: RequestWithUser, res: Response) => {
-  const { preparedEncryptedPayload, resurrectionTime, sarcoId } = req.body as SendEncryptedPayloadParams;
+  const { preparedEncryptedPayload, resurrectionTime, sarcoId } =
+    req.body as SendEncryptedPayloadParams;
 
   await embalmService.runEmbalm({
     preparedEncryptedPayload,

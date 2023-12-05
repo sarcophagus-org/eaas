@@ -1,7 +1,17 @@
 import React, { useState } from "react";
 import { login } from "../api/user";
 import { useNavigate } from "react-router-dom";
-import { FormControl, FormLabel, Input, Button, VStack, useToast } from "@chakra-ui/react";
+import {
+  FormControl,
+  FormLabel,
+  Input,
+  Button,
+  VStack,
+  useToast,
+  Text,
+  Link,
+  Heading,
+} from "@chakra-ui/react";
 import { useDispatch } from "../store";
 import { clearTokens, setTokens, setUser } from "../store/user/actions";
 
@@ -13,7 +23,13 @@ export const LogoutButton: React.FC = () => {
     dispatch(setUser(null));
   };
 
-  return <Button onClick={handleLogout}>Logout</Button>;
+  return (
+    <Button p={0} onClick={handleLogout}>
+      <Text mx={2} fontSize={14} color="black">
+        Logout
+      </Text>
+    </Button>
+  );
 };
 
 export const Login = () => {
@@ -67,9 +83,20 @@ export const Login = () => {
         Login
       </Button>
 
-      <Button colorScheme="blue" onClick={() => {
-        navigate("/claim");
-      }}>
+      <Link color="blue.500" onClick={() => navigate("/forgot-password")}>
+        Forgot Password?
+      </Link>
+
+      <Heading mt={50} mb={5}>
+        Looking to claim a Sarcophagus?
+      </Heading>
+
+      <Button
+        colorScheme="blue"
+        onClick={() => {
+          navigate("/claim");
+        }}
+      >
         Claim a Sarcophagus
       </Button>
     </VStack>

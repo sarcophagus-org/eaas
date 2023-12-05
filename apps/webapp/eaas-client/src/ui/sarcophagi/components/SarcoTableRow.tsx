@@ -14,18 +14,19 @@ import { BigNumber } from "ethers";
 import { useEffect, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { SarcoStateIndicator } from "./SarcoStateIndicator";
-import { SarcophagusData, SarcophagusState } from "@sarcophagus-org/sarcophagus-v2-sdk-client";
+import { SarcophagusState } from "@sarcophagus-org/sarcophagus-v2-sdk-client";
 import { useGetCanCleanSarcophagus } from "../../../hooks/useGetEmbalmerCanClean";
 import { buildResurrectionDateString } from "../../../utils/buildResurrectionDateString";
 import { TableText } from "./TableText";
 import { SarcoAction } from ".";
 import { useSelector } from "store";
 import { UserType } from "types/userTypes";
-import { cleanSarco, getSarcoClientEmail } from "api/sarcophagi";
+import { cleanSarco } from "api/sarcophagi";
 import { cleanFailure, cleanSuccess } from "utils/toast";
+import { SarcophagusDataWithClientEmail } from "../EmbalmerSarcophagi";
 
 export interface SarcophagusTableRowProps extends TableRowProps {
-  sarco: SarcophagusData;
+  sarco: SarcophagusDataWithClientEmail;
   dateCalculationInterval?: number;
 }
 
@@ -38,22 +39,10 @@ export function SarcoTableRow({
   sarco,
   dateCalculationInterval = 60_000,
 }: SarcophagusTableRowProps) {
-  // const navigate = useNavigate();
   // const { timestampMs } = useSelector(x => x.appState);
   const timestampMs = Date.now();
 
-  const [clientEmail, setClientEmail] = useState("--");
   const user = useSelector((x) => x.userState.user);
-
-  useEffect(() => {
-    if (user?.type === UserType.embalmer) {
-      getSarcoClientEmail(sarco.id)
-        .then((email) => setClientEmail(email))
-        .catch((err) => {
-          console.error(err);
-        });
-    }
-  });
 
   const [resurrectionString, setResurrectionString] = useState("");
 
@@ -177,7 +166,7 @@ export function SarcoTableRow({
       {/* CLIENT EMAIL */}
       {user?.type === UserType.embalmer ? (
         <Td textAlign="center">
-          <TableText>{clientEmail ?? "--"}</TableText>
+          <TableText>{sarco.clientEmail ?? "--"}</TableText>
         </Td>
       ) : null}
 

@@ -1,5 +1,5 @@
 import { Button, ButtonProps, Flex } from "@chakra-ui/react";
-import React, { forwardRef } from "react";
+import { forwardRef } from "react";
 
 export const DatePickerButton = forwardRef<HTMLButtonElement, ButtonProps>(
   ({ value, variant, onClick }, ref) => (

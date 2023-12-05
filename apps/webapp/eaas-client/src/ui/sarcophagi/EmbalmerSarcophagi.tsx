@@ -7,6 +7,9 @@ import { SarcophagusData, sarco } from "@sarcophagus-org/sarcophagus-v2-sdk-clie
 import { useAccount } from "wagmi";
 import { ConnectWalletButton } from "./components/ConnectWalletButton";
 import { useSupportedNetwork } from "ui/embalmer/NetworkConfigProvider";
+import { getSarcoClientEmail } from "api/sarcophagi";
+
+export type SarcophagusDataWithClientEmail = SarcophagusData & { clientEmail?: string };
 
 export function EmbalmerSarcophagi() {
   const { address, isConnected: isWalletConnected } = useAccount();
@@ -14,7 +17,9 @@ export function EmbalmerSarcophagi() {
   const [showSarcophagi, setShowSarcophagi] = useState(false);
   const [isLoadingEmbalmerSarcophagi, setIsLoadingEmbalmerSarcophagi] = useState(false);
   const [loadedEmbalmerSarcophagi, setLoadedEmbalmerSarcophagi] = useState(false);
-  const [embalmerSarcophagi, setEmbalmerSarcophagi] = useState<SarcophagusData[]>([]);
+  const [embalmerSarcophagi, setEmbalmerSarcophagi] = useState<SarcophagusDataWithClientEmail[]>(
+    [],
+  );
 
   const { isSarcoInitialized } = useSupportedNetwork();
 
@@ -22,8 +27,22 @@ export function EmbalmerSarcophagi() {
     if (showSarcophagi && isWalletConnected && isSarcoInitialized && !loadedEmbalmerSarcophagi) {
       setIsLoadingEmbalmerSarcophagi(true);
 
-      sarco.api.getEmbalmerSarcophagi(address!.toString()).then((res) => {
-        setEmbalmerSarcophagi(res);
+      sarco.api.getEmbalmerSarcophagi(address!.toString()).then(async (res) => {
+        const embalmerSarco: SarcophagusDataWithClientEmail[] = [];
+
+        for await (const s of res) {
+          try {
+            const clientEmail = await getSarcoClientEmail(s.id);
+
+            if (clientEmail !== "no client") {
+              embalmerSarco.push({ ...s, clientEmail });
+            }
+          } catch (err) {
+            console.error(err);
+          }
+        }
+
+        setEmbalmerSarcophagi(embalmerSarco);
         setIsLoadingEmbalmerSarcophagi(false);
         setLoadedEmbalmerSarcophagi(true);
       });

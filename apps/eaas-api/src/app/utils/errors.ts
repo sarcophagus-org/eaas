@@ -69,7 +69,7 @@ export const apiErrors: ApiErrors = {
   },
   tokenExpired: {
     msg: "token expired",
-    errorCode: 404,
+    errorCode: 400,
   },
   noUserFoundOnToken: {
     msg: "no user found on token",

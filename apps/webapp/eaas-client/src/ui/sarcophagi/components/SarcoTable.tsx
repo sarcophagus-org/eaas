@@ -2,20 +2,21 @@ import { Table, TableContainer, Tbody, Thead, Tr } from "@chakra-ui/react";
 import { useState } from "react";
 import { SarcoTableHead } from "./SarcoTableHead";
 import { SarcoTableRow } from "./SarcoTableRow";
-import { SarcophagusData } from "@sarcophagus-org/sarcophagus-v2-sdk-client";
 import { SortDirection } from ".";
 import { useSelector } from "store";
 import { UserType } from "types/userTypes";
+import { SarcophagusDataWithClientEmail } from "../EmbalmerSarcophagi";
 
 enum SortableColumn {
   State = "state",
   Name = "name",
   Resurrection = "resurrection",
+  Client = "client",
   None = "none",
 }
 
 interface SarcoTableProps {
-  sarcophagi: SarcophagusData[];
+  sarcophagi: SarcophagusDataWithClientEmail[];
 }
 
 /**
@@ -27,7 +28,7 @@ export function SarcoTable({ sarcophagi }: SarcoTableProps) {
   const [sortDirection, setSortDirection] = useState<SortDirection>(SortDirection.None);
 
   // Sort the sarcophagi using the sortColumnId and sortDirection states
-  const sortedSarcophagi = sarcophagi?.sort((a, b) => {
+  const sortedSarcophagi = sarcophagi?.toSorted((a, b) => {
     if (sortColumnId === SortableColumn.State) {
       if (sortDirection === SortDirection.Ascending) {
         return a.state > b.state ? 1 : -1;
@@ -45,6 +46,14 @@ export function SarcoTable({ sarcophagi }: SarcoTableProps) {
         return a.resurrectionTime.gt(b.resurrectionTime) ? 1 : -1;
       } else if (sortDirection === SortDirection.Descending) {
         return a.resurrectionTime.lt(b.resurrectionTime) ? 1 : -1;
+      }
+    } else if (sortColumnId === SortableColumn.Client) {
+      const aClientEmail = a.clientEmail?.toLowerCase() ?? "";
+      const bClientEmail = b.clientEmail?.toLowerCase() ?? "";
+      if (sortDirection === SortDirection.Ascending) {
+        return aClientEmail > bClientEmail ? 1 : -1;
+      } else if (sortDirection === SortDirection.Descending) {
+        return aClientEmail < bClientEmail ? 1 : -1;
       }
     }
 
@@ -109,7 +118,17 @@ export function SarcoTable({ sarcophagi }: SarcoTableProps) {
             >
               Resurrection
             </SarcoTableHead>
-            {user?.type === UserType.embalmer ? <SarcoTableHead>Client</SarcoTableHead> : null}
+            {user?.type === UserType.embalmer ? (
+              <SarcoTableHead
+                sortable
+                sortDirection={
+                  sortColumnId === SortableColumn.Client ? sortDirection : SortDirection.None
+                }
+                onClickSort={() => handleClickSort(SortableColumn.Client)}
+              >
+                Client
+              </SarcoTableHead>
+            ) : null}
             <SarcoTableHead>Actions</SarcoTableHead>
             <SarcoTableHead>Details</SarcoTableHead>
           </Tr>

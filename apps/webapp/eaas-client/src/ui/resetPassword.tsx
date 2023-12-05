@@ -6,32 +6,31 @@ import {
   FormLabel,
   Heading,
   Input,
-  Text,
   useToast,
 } from "@chakra-ui/react";
 import React from "react";
-import { useQuery } from "../../hooks/useQuery";
+import { useQuery } from "../hooks/useQuery";
 import { useState } from "react";
-import { clientRegister } from "../../api/user";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "../../store";
-import { setTokens, setUser } from "../../store/user/actions";
-import { createAccountFailure } from "utils/toast";
+import { resetPasswordError, resetPasswordSuccess } from "utils/toast";
+import { resetPassword } from "api/user";
 
 interface FormFieldValidation {
   password?: string;
   passwordConfirm?: string;
 }
 
-export const ClientOnboarding: React.FC = () => {
+export const ResetPassword: React.FC = () => {
   const token = useQuery().get("token");
+  if (!token) {
+    throw new Error("No token provided");
+  }
   const [password, setPassword] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
   const [formErrors, setFormErrors] = useState<FormFieldValidation>({});
 
   const toast = useToast();
   const navigate = useNavigate();
-  const dispatch = useDispatch();
 
   const validatePassword = () => {
     if (!password) {
@@ -56,30 +55,29 @@ export const ClientOnboarding: React.FC = () => {
     }
   };
 
-  const handleRegister = async () => {
+  const handleResetPassword = async () => {
     // Reset form errors
     setFormErrors({});
 
     validatePassword();
 
-    // If there are errors, stop registration process
+    // If there are errors, stop process
     if (!!formErrors.password || !!formErrors.passwordConfirm) {
       return;
     }
 
     try {
-      const response = await clientRegister({
-        user: { password },
-        inviteToken: token!,
+      await resetPassword({
+        password,
+        token: token!,
       });
 
-      dispatch(setTokens(response.tokens));
-      dispatch(setUser(response.user));
+      toast(resetPasswordSuccess());
 
-      navigate("/dashboard/client", { replace: true });
+      navigate("/login", { replace: true });
     } catch (err) {
       if (typeof err === "string") {
-        toast(createAccountFailure(err));
+        toast(resetPasswordError(err));
       }
     }
   };
@@ -87,9 +85,9 @@ export const ClientOnboarding: React.FC = () => {
   return (
     <Box>
       <Heading as="h1" size="xl">
-        Client Onboarding
+        Reset your password
       </Heading>
-      <Text>Set a password to register your account</Text>
+      <Box mt={10} />
       <FormControl id="password" isRequired isInvalid={!!formErrors.password}>
         <FormLabel>Password</FormLabel>
         <Input
@@ -100,6 +98,8 @@ export const ClientOnboarding: React.FC = () => {
         />
         <FormErrorMessage>{formErrors.password}</FormErrorMessage>
       </FormControl>
+
+      <Box mt={4} />
 
       <FormControl id="password_confirm" isRequired isInvalid={!!formErrors.passwordConfirm}>
         <FormLabel>Confirm Password</FormLabel>
@@ -112,8 +112,8 @@ export const ClientOnboarding: React.FC = () => {
         <FormErrorMessage>{formErrors.passwordConfirm}</FormErrorMessage>
       </FormControl>
 
-      <Button mt={4} colorScheme="teal" onClick={handleRegister}>
-        Register
+      <Button mt={4} colorScheme="teal" onClick={handleResetPassword}>
+        Reset Password
       </Button>
     </Box>
   );

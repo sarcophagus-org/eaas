@@ -7,12 +7,14 @@ import { ClientDashboard } from "./client/dashboard";
 import { ClientOnboarding } from "./client/onboarding";
 import { useEffect } from "react";
 import { useSelector } from "../store";
-import { Box, Flex, HStack, Link } from "@chakra-ui/react";
+import { Box, Flex, HStack, Link, Text } from "@chakra-ui/react";
 import { Navbar } from "./components/navbar";
 import { SarcophagusDetailsPage } from "./sarcophagi/SarcophagusDetailsPage";
 import { UserType } from "types/userTypes";
 import { ClientSarcophagi } from "./sarcophagi/ClientSarcophagi";
 import { Claim } from "./sarcophagi/components/Claim";
+import { ForgotPassword } from "./forgotPassword";
+import { ResetPassword } from "./resetPassword";
 
 export function AppRoutes() {
   const navigate = useNavigate();
@@ -37,6 +39,18 @@ export function AppRoutes() {
       path: RoutesPathMap[RouteKey.LOGIN_PAGE],
       element: <Login />,
       label: "Login",
+      hidden: true,
+    },
+    {
+      path: RoutesPathMap[RouteKey.FORGOT_PASSWORD_PAGE],
+      element: <ForgotPassword />,
+      label: "Forgot Password",
+      hidden: true,
+    },
+    {
+      path: RoutesPathMap[RouteKey.RESET_PASSWORD_PAGE],
+      element: <ResetPassword />,
+      label: "Reset Password",
       hidden: true,
     },
     {
@@ -78,8 +92,19 @@ export function AppRoutes() {
   ];
 
   useEffect(() => {
-    if (location.pathname !== RoutesPathMap[RouteKey.CLAIM_PAGE] && !appUser) {
+    const unauthenticatedRoutes = [
+      RoutesPathMap[RouteKey.LOGIN_PAGE],
+      RoutesPathMap[RouteKey.FORGOT_PASSWORD_PAGE],
+      RoutesPathMap[RouteKey.RESET_PASSWORD_PAGE],
+      RoutesPathMap[RouteKey.CLAIM_PAGE],
+    ];
+
+    if (!unauthenticatedRoutes.includes(location.pathname) && !appUser) {
       navigate("/login", { replace: true });
+    }
+
+    if (location.pathname === RoutesPathMap[RouteKey.LOGIN_PAGE] && appUser) {
+      navigate("/", { replace: true });
     }
   }, [appUser, navigate, location]);
 
@@ -111,17 +136,21 @@ export function AppRoutes() {
               ))}
             </Flex>
             <HStack>
+              <Text fontSize={12}>Logged in as:</Text>
+              <Text fontSize={12}>{appUser?.email}</Text>
               <LogoutButton />
             </HStack>
           </Flex>
         </Navbar>
       )}
-      <Routes>
-        {routes.map((route) => (
-          <Route key={route.path} path={route.path} element={route.element} />
-        ))}
-        <Route path="*" element={<NotFoundPage />} />
-      </Routes>
+      <Box alignSelf="center" my={10} width="1400px" maxW="90%">
+        <Routes>
+          {routes.map((route) => (
+            <Route key={route.path} path={route.path} element={route.element} />
+          ))}
+          <Route path="*" element={<NotFoundPage />} />
+        </Routes>
+      </Box>
     </Flex>
   );
 }

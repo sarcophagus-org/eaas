@@ -2,23 +2,27 @@ import { useEffect, useState } from "react";
 import { Center, Flex, Spinner, TabPanel, TabPanels, Tabs, Text, useToast } from "@chakra-ui/react";
 import { NoSarcpohagi } from "./components/NoSarcophagi";
 import { SarcoTable } from "./components/SarcoTable";
-import { SarcophagusData } from "@sarcophagus-org/sarcophagus-v2-sdk-client";
 import { getClientSarcophagi } from "api/sarcophagi";
 import { getClientSarcophagiFailed } from "utils/toast";
+import { useDispatch, useSelector } from "store";
+import { setClientSarcophagi } from "store/sarcophagi/actions";
 
 export function ClientSarcophagi() {
   const [isLoadingSarcophagi, setIsLoadingSarcophagi] = useState(false);
   const [loadedSarcophagi, setLoadedSarcophagi] = useState(false);
-  const [clientSarcophagi, setClientSarcophagi] = useState<SarcophagusData[]>([]);
+
   const toast = useToast();
+
+  const dispatch = useDispatch();
+  const { clientSarcophagi } = useSelector((state) => state.sarcophagiState);
 
   useEffect(() => {
     if (!loadedSarcophagi) {
       setIsLoadingSarcophagi(true);
-
+      
       getClientSarcophagi()
         .then((res) => {
-          setClientSarcophagi(res);
+          dispatch(setClientSarcophagi(res));
           setIsLoadingSarcophagi(false);
           setLoadedSarcophagi(true);
         })
@@ -27,10 +31,10 @@ export function ClientSarcophagi() {
           setIsLoadingSarcophagi(false);
         });
     }
-  }, [loadedSarcophagi, toast]);
+  }, [dispatch, loadedSarcophagi, toast]);
 
   function sarcophagiPanel() {
-    if (isLoadingSarcophagi) {
+    if (clientSarcophagi.length === 0 && isLoadingSarcophagi) {
       return (
         <Center my={16}>
           <Spinner size="xl" />
@@ -38,7 +42,7 @@ export function ClientSarcophagi() {
       );
     }
 
-    if (!isLoadingSarcophagi && clientSarcophagi?.length === 0) {
+    if (!isLoadingSarcophagi && clientSarcophagi.length === 0) {
       return <NoSarcpohagi />;
     }
 

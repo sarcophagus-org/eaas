@@ -78,7 +78,8 @@ export const approveFailure = (): UseToastOptions => ({
 });
 
 export const fileUploadSuccess = (): UseToastOptions => ({
-  title: "File uploaded",
+  title: "Your file has been uploaded!",
+  description: "Please wait while the transaction is confirmed.",
   status: "success",
   ...defaultOptions,
 });
@@ -131,4 +132,25 @@ export const burySuccess = (): UseToastOptions => ({
 export const buryFailed = (e: string): UseToastOptions => ({
   title: `Error burying the Sarcophagus: ${e}`,
   status: "error",
+});
+
+export const forgotPasswordSuccess = (): UseToastOptions => ({
+  title: "Success!",
+  description: "Please check your email for a link to reset your password.",
+  status: "success",
+  ...defaultOptions,
+});
+
+export const resetPasswordSuccess = (): UseToastOptions => ({
+  title: "Success!",
+  description: "Please login with your new password.",
+  status: "success",
+  ...defaultOptions,
+});
+
+export const resetPasswordError = (e: string): UseToastOptions => ({
+  title: "Failed to reset password",
+  description: e,
+  status: "error",
+  ...defaultOptions,
 });
