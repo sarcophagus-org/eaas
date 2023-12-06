@@ -6,7 +6,12 @@ import { useSelector } from "../../store";
 import { useEffect } from "react";
 import { sendPayload } from "../../api/embalm";
 import { preparePayload } from "../../utils/preparePayload";
-import { fileUploadFailure, fileUploadSuccess, generatePDFFailure } from "utils/toast";
+import {
+  fileUploadFailure,
+  fileUploadSuccess,
+  generatePDFFailure,
+  redownloadPdfSuccess,
+} from "utils/toast";
 import { useNavigate } from "react-router-dom";
 import EmbalmStepHeader from "ui/components/embalmStepHeader";
 import { sarco } from "@sarcophagus-org/sarcophagus-v2-sdk-client";
@@ -44,7 +49,7 @@ export function GenerateRecipientPDF() {
   useEffect(() => {
     if (recipientState.generatePDFState === GeneratePDFState.GENERATED) {
       toast({
-        title: "Generated PDF",
+        title: "Downloaded PDF",
         status: "success",
       });
 
@@ -107,7 +112,13 @@ export function GenerateRecipientPDF() {
           Your recipient file has been downloaded. You will need to send this securely to your
           recipient. Do not store this online or let anyone else see it!
         </Text>
-        <Button alignSelf={"flex-start"} onClick={() => downloadRecipientPDF(user!.email)}>
+        <Button
+          alignSelf={"flex-start"}
+          onClick={async () => {
+            await downloadRecipientPDF(user!.email);
+            toast(redownloadPdfSuccess());
+          }}
+        >
           Redownload PDF
         </Button>
         <Textarea mb={10} disabled value={recipientState.publicKey} resize="none" />

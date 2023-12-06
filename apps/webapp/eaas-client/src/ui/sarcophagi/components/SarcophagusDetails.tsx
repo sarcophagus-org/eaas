@@ -58,6 +58,11 @@ export function SarcophagusDetails() {
           </>
         )}
 
+        {/* REDOWNLOAD RECIPIENT PDF BUTTON */}
+        {user?.type === UserType.client && (
+          <Button onClick={() => navigate(`/redownload-pdf?id=${id!}`)}>Redownload PDF</Button>
+        )}
+
         {/* CLAIM BUTTON */}
         {canClaim && (
           <Button as={NavLink} to="?action=claim">
