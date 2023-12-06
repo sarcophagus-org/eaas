@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { VStack, Button, Text, Textarea, useToast, Box } from "@chakra-ui/react";
+import { VStack, Button, Text, useToast, Box, Input } from "@chakra-ui/react";
 import { useGenerateRecipientPDF } from "../../hooks/useGenerateRecipientPDF";
 import { GeneratePDFState } from "../../store/embalm/actions";
 import { useSelector } from "../../store";
@@ -61,6 +61,7 @@ export function GenerateRecipientPDF() {
 
   const [payloadUploaded, setPayloadUploaded] = useState(false);
   const [sarcoCreated, setSarcoCreated] = useState(false);
+  const [pdfPassword, setPdfPassword] = useState("");
 
   let sarcoCreatedPingCount = 0;
 
@@ -121,13 +122,25 @@ export function GenerateRecipientPDF() {
         >
           Redownload PDF
         </Button>
-        <Textarea mb={10} disabled value={recipientState.publicKey} resize="none" />
+
+        <Text>
+          Enter a password that you will use in the future to securely redownload this pdf in case
+          you lose it:
+        </Text>
+        <Input
+          type="password"
+          mb={10}
+          onChange={(e) => setPdfPassword(e.target.value)}
+          value={pdfPassword}
+          resize="none"
+        />
 
         <Button
           w="100%"
           maxW={"150px"}
           isLoading={isUploading}
           alignSelf={"center"}
+          isDisabled={!pdfPassword}
           onClick={async () => {
             try {
               const preparedEncryptedPayload = await preparePayload({
@@ -136,11 +149,15 @@ export function GenerateRecipientPDF() {
               });
 
               setIsUploading(true);
-              await sendPayload({
-                resurrectionTime: resurrection,
-                preparedEncryptedPayload,
-                sarcoId: recipientState.sarcoId,
-              });
+              await sendPayload(
+                {
+                  resurrectionTime: resurrection,
+                  preparedEncryptedPayload,
+                  sarcoId: recipientState.sarcoId,
+                },
+                pdfPassword,
+                Buffer.from(await recipientState.pdfBlob!.arrayBuffer()),
+              );
 
               toast(fileUploadSuccess());
               setPayloadUploaded(true);

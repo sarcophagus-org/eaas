@@ -79,6 +79,7 @@ export function useGenerateRecipientPDF() {
           privateKey: recipientState.privateKey,
           sarcoId: recipientState.sarcoId,
           generatePDFState: GeneratePDFState.DOWNLOADED,
+          pdfBlob,
         };
 
         dispatch(setRecipientState(newRecipientState));
