@@ -7,7 +7,7 @@ import { ClientDashboard } from "./client/dashboard";
 import { ClientOnboarding } from "./client/onboarding";
 import { useEffect } from "react";
 import { useSelector } from "../store";
-import { Box, Flex, HStack, Link, Text } from "@chakra-ui/react";
+import { Flex, HStack, Link, Text } from "@chakra-ui/react";
 import { Navbar } from "./components/navbar";
 import { SarcophagusDetailsPage } from "./sarcophagi/SarcophagusDetailsPage";
 import { UserType } from "types/userTypes";
@@ -115,7 +115,7 @@ export function AppRoutes() {
   }, [appUser, navigate, location]);
 
   return (
-    <Flex direction="column" height="100vh" overflow="hidden">
+    <Flex direction="column" height="100vh" overflow="auto">
       {appUser && (
         <Navbar>
           <Flex justifyContent="space-between" width="100%">
@@ -135,9 +135,9 @@ export function AppRoutes() {
                   hidden={route.hidden}
                   key={route.path}
                 >
-                  <Box px={route.noBackground ? 0 : 5} py={route.noBackground ? 0 : 2.5}>
+                  <Flex px={route.noBackground ? 0 : 5} py={route.noBackground ? 0 : 2.5}>
                     {route.label}
-                  </Box>
+                  </Flex>
                 </Link>
               ))}
             </Flex>
@@ -149,14 +149,14 @@ export function AppRoutes() {
           </Flex>
         </Navbar>
       )}
-      <Box alignSelf="center" my={10} width="1400px" maxW="90%">
+      <Flex alignSelf="center" my={10} width="1400px" maxW="90%">
         <Routes>
           {routes.map((route) => (
             <Route key={route.path} path={route.path} element={route.element} />
           ))}
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
-      </Box>
+      </Flex>
     </Flex>
   );
 }
