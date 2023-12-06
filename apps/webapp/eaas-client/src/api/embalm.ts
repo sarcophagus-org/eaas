@@ -10,7 +10,10 @@ export async function sendPayload(
   pdfBuffer: Buffer,
 ) {
   try {
-    const encryptedPdfBlob = await encrypt(Buffer.from(ethers.utils.arrayify(pdfPassword)), pdfBuffer);
+    const encryptedPdfBlob = await encrypt(
+      Buffer.from(ethers.utils.arrayify(pdfPassword)),
+      pdfBuffer,
+    );
 
     await axios.post(`embalm/send-payload`, {
       ...params,

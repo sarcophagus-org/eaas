@@ -13,4 +13,5 @@ export interface SendEncryptedPayloadParams {
   preparedEncryptedPayload: PreparedEncryptedPayload;
   resurrectionTime: number;
   sarcoId: string;
+  encryptedPdf: Buffer;
 }

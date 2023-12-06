@@ -14,6 +14,7 @@ export const sendEncryptedPayloadSchema = Joi.object({
   preparedEncryptedPayload: preparedEncryptedPayloadSchema,
   resurrectionTime: Joi.number().required(),
   sarcoId: Joi.string().required(),
+  encryptedPdfBlob: Joi.binary().required(),
 });
 
 export const createInvitationSchema = Joi.object({
