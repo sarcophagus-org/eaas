@@ -3,6 +3,7 @@ import { SarcophagusDetailsContainer } from "./components/SarcophagusDetailsCont
 import { SarcophagusDetails } from "./components/SarcophagusDetails";
 import { useQuery } from "hooks/useQuery";
 import { Rewrap } from "./components/Rewrap";
+import { Claim } from "./components/Claim";
 
 export function SarcophagusDetailsPage() {
   const query = useQuery();
@@ -10,6 +11,7 @@ export function SarcophagusDetailsPage() {
 
   const actionComponentMap: { [key: string]: React.ReactNode } = {
     rewrap: <Rewrap />,
+    claim: <Claim />,
   };
 
   return (

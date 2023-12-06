@@ -32,6 +32,9 @@ export function SarcophagusDetails() {
   const canRewrapOrBury =
     sarcophagus?.state === SarcophagusState.Active && user?.type === UserType.client;
 
+  const canClaim =
+    sarcophagus?.state === SarcophagusState.Resurrected && user?.type === UserType.client;
+
   return (
     <Flex pb={100} direction="column">
       {sarcophagus && <DetailsCollapse id={id} sarcophagus={sarcophagus} />}
@@ -53,6 +56,13 @@ export function SarcophagusDetails() {
             {/* BURY BUTTON */}
             {<BuryButton id={id} />}
           </>
+        )}
+
+        {/* CLAIM BUTTON */}
+        {canClaim && (
+          <Button as={NavLink} to="?action=claim">
+            Claim
+          </Button>
         )}
 
         {/* CLEAN BUTTON */}

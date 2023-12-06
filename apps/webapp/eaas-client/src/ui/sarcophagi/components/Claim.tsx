@@ -4,14 +4,17 @@ import { useRef, useState } from "react";
 import { useGetSarcophagusDetails } from "hooks/useGetSarcophagusDetails";
 import { useResurrection } from "hooks/useResurrection";
 import { buildResurrectionDateString } from "utils/buildResurrectionDateString";
+import { useParams } from "react-router-dom";
 
 export function Claim() {
   const toast = useToast();
   const [privateKey, setPrivateKey] = useState("");
 
+  const { id } = useParams();
+
   const [resurrectError, setResurrectError] = useState("");
-  const [sarcophagusIdInput, setSarcophagusIdInput] = useState<string>();
-  const [sarcophagusId, setSarcophagusId] = useState<string>();
+  const [sarcophagusIdInput, setSarcophagusIdInput] = useState("");
+  const [sarcophagusId, setSarcophagusId] = useState(id ?? "");
 
   const {
     sarcophagus,
