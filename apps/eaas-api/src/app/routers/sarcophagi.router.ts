@@ -3,7 +3,11 @@ import passport from "passport";
 import { sarcophagiController } from "../controllers";
 import { getUserTypeValidator, validateRequestBody } from "../middleware";
 import { UserType } from "../../../src/types/EaasUser";
-import { editSarcophagusSchema, encryptedPdfSchema, rewrapSarcophagusSchema } from "../validationSchemas";
+import {
+  editSarcophagusSchema,
+  encryptedPdfSchema,
+  rewrapSarcophagusSchema,
+} from "../validationSchemas";
 
 export const sarcophagiRoute = "/sarcophagi";
 export const sarcophagiRouter = () => {

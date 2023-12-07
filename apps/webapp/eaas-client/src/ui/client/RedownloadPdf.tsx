@@ -1,13 +1,17 @@
 import { Button, Flex, Input, Link, Text, useToast } from "@chakra-ui/react";
 import { useRef, useState } from "react";
-import { useParams } from "react-router-dom";
 import { downloadRecipientPdf } from "api/sarcophagi";
 import { redownloadPdfError, redownloadPdfSuccess } from "utils/toast";
+import { useQuery } from "hooks/useQuery";
 
 export function RedownloadPdfPage() {
   const [pdfPassword, setPdfPassword] = useState("");
 
-  const { id } = useParams();
+  const sarcoId = useQuery().get("id");
+
+  if (!sarcoId) {
+    throw new Error("No sarco id provided");
+  }
 
   const [isdownloading, setIsdownloading] = useState(false);
   const [redownloadError, setError] = useState(false);
@@ -17,7 +21,7 @@ export function RedownloadPdfPage() {
   async function handleRedownloadPdf() {
     setIsdownloading(true);
     try {
-      downloadRecipientPdf(id!, pdfPassword);
+      await downloadRecipientPdf(sarcoId!, pdfPassword);
       toast(redownloadPdfSuccess());
     } catch (err: any) {
       setError(true);

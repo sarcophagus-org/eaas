@@ -1,6 +1,7 @@
 import { handleApiError } from "./utils";
 import { axiosInstance as axios } from ".";
 import { SarcophagusData } from "@sarcophagus-org/sarcophagus-v2-sdk-client";
+import { createEncryptor } from "simple-encryptor";
 
 export async function getClientSarcophagi(): Promise<SarcophagusData[]> {
   try {
@@ -53,10 +54,12 @@ export async function burySarco(sarcoId: string): Promise<void> {
 
 export async function downloadRecipientPdf(sarcoId: string, password: string): Promise<void> {
   try {
-    await axios.post(`sarcophagi/download-pdf`, {
+    const encryptedPdf = await axios.post(`sarcophagi/download-pdf`, {
       sarcoId,
       password,
     });
+
+    createEncryptor(password).decrypt(encryptedPdf.data);
   } catch (error) {
     throw handleApiError(error);
   }

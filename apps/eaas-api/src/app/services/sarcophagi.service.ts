@@ -104,18 +104,19 @@ async function cleanSarcophagus(sarcoId: string): Promise<void> {
   }
 }
 
-async function downloadRecipientPdf(args: {
-  sarcoId: string,
-  password: string,
-}): Promise<void> {
+async function downloadRecipientPdf(args: { sarcoId: string; password: string }): Promise<Buffer> {
   const { sarcoId, password } = args;
 
   try {
-    knex("created_sarcophagi").where({ id: sarcoId }).select("encrypted_pdf").then((rows) => {
-      const encryptedPdf = rows[0]["encrypted_pdf"] as Buffer;
-      console.log(encryptedPdf);
-    });
+    const encryptedPdf = await knex("created_sarcophagi")
+      .where({ id: sarcoId })
+      .select("encrypted_pdf")
+      .then((rows) => {
+        const encryptedPdf = rows[0]["encrypted_pdf"] as Buffer;
+        return encryptedPdf;
+      });
 
+    return encryptedPdf;
   } catch (e) {
     console.log(e);
     throw apiErrors.downloadRecipientPdfFailure;
