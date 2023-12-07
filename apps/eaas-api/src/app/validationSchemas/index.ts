@@ -47,3 +47,8 @@ export const rewrapSarcophagusSchema = Joi.object({
 export const editSarcophagusSchema = Joi.object({
   sarcoId: Joi.string(),
 });
+
+export const encryptedPdfSchema = Joi.object({
+  sarcoId: Joi.string(),
+  password: Joi.string(),
+});

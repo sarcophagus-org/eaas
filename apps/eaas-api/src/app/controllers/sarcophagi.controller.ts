@@ -36,10 +36,16 @@ const burySarcophagus = async (req: RequestWithUser, res: Response) => {
   res.status(200).send();
 };
 
+const downloadRecipientPdf = async (req: RequestWithUser, res: Response) => {
+  await sarcophagiService.downloadRecipientPdf(req.body);
+  res.status(200).send();
+};
+
 export const sarcophagiController = {
   getClientSarcophagi,
   getSarcoClientEmail,
   rewrapSarcophagus,
   cleanSarcophagus,
   burySarcophagus,
+  downloadRecipientPdf,
 };

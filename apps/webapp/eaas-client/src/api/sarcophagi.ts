@@ -50,3 +50,14 @@ export async function burySarco(sarcoId: string): Promise<void> {
     throw handleApiError(error);
   }
 }
+
+export async function downloadRecipientPdf(sarcoId: string, password: string): Promise<void> {
+  try {
+    await axios.post(`sarcophagi/download-pdf`, {
+      sarcoId,
+      password,
+    });
+  } catch (error) {
+    throw handleApiError(error);
+  }
+}

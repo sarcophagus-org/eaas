@@ -3,7 +3,7 @@ import passport from "passport";
 import { sarcophagiController } from "../controllers";
 import { getUserTypeValidator, validateRequestBody } from "../middleware";
 import { UserType } from "../../../src/types/EaasUser";
-import { editSarcophagusSchema, rewrapSarcophagusSchema } from "../validationSchemas";
+import { editSarcophagusSchema, encryptedPdfSchema, rewrapSarcophagusSchema } from "../validationSchemas";
 
 export const sarcophagiRoute = "/sarcophagi";
 export const sarcophagiRouter = () => {
@@ -44,6 +44,14 @@ export const sarcophagiRouter = () => {
     getUserTypeValidator(UserType.client),
     validateRequestBody(editSarcophagusSchema),
     sarcophagiController.burySarcophagus,
+  );
+
+  router.post(
+    "/download-pdf",
+    passport.authenticate("jwt", { session: false }),
+    getUserTypeValidator(UserType.client),
+    validateRequestBody(encryptedPdfSchema),
+    sarcophagiController.downloadRecipientPdf,
   );
 
   return router;
