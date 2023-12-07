@@ -15,7 +15,7 @@ interface EmbalmOptions {
   sarcoId: string;
   resurrectionTime: number;
   preparedEncryptedPayload: PreparedEncryptedPayload;
-  encryptedPdf: Buffer;
+  encryptedPdfBlob: Buffer;
 }
 
 const uploadEncryptedPayloadToArweave = async (args: ArweaveUploadArgs) => {
@@ -56,7 +56,7 @@ const uploadEncryptedPayloadToArweave = async (args: ArweaveUploadArgs) => {
 };
 
 async function runEmbalm(options: EmbalmOptions) {
-  const { resurrectionTime, preparedEncryptedPayload, clientId, sarcoId, encryptedPdf } = options;
+  const { resurrectionTime, preparedEncryptedPayload, clientId, sarcoId, encryptedPdfBlob } = options;
 
   const sarco = new NodeSarcoClient({
     chainId: envConfig.chainId,
@@ -149,7 +149,7 @@ async function runEmbalm(options: EmbalmOptions) {
       id: submitSarcophagusArgs[0],
       client_id: clientId,
       embalmer_id,
-      encrypted_pdf: encryptedPdf,
+      encrypted_pdf: encryptedPdfBlob,
     });
   } catch (e) {
     //   const errorMsg = handleRpcError(e);

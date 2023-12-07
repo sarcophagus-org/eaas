@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { VStack, Button, Text, useToast, Box, Input } from "@chakra-ui/react";
 import { useGenerateRecipientPDF } from "../../hooks/useGenerateRecipientPDF";
 import { GeneratePDFState } from "../../store/embalm/actions";
@@ -65,23 +65,26 @@ export function GenerateRecipientPDF() {
 
   let sarcoCreatedPingCount = 0;
 
+  let timer = useRef<NodeJS.Timeout>();
   useEffect(() => {
     if (payloadUploaded) {
-      const timer = setTimeout(() => {
+      timer.current = setTimeout(() => {
         sarco.api
           .getSarcophagiByIds([recipientState.sarcoId])
           .then((sarcophagi) => {
             if (sarcophagi[0].name !== "not found") {
               setSarcoCreated(true);
-              clearTimeout(timer);
+              clearTimeout(timer.current);
             }
           })
           .catch(console.log)
           .finally(() => {
             if (sarcoCreatedPingCount < 10) {
               sarcoCreatedPingCount++;
+              console.log("sarcoCreatedPingCount", sarcoCreatedPingCount);
+              
             } else {
-              clearTimeout(timer);
+              clearTimeout(timer.current);
             }
           });
       }, 5000);
@@ -166,7 +169,6 @@ export function GenerateRecipientPDF() {
               // eslint-disable-next-line @typescript-eslint/no-explicit-any
             } catch (e: any) {
               toast(fileUploadFailure(e));
-            } finally {
               setIsUploading(false);
             }
           }}
