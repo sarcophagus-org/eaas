@@ -82,7 +82,6 @@ export function GenerateRecipientPDF() {
             if (sarcoCreatedPingCount < 10) {
               sarcoCreatedPingCount++;
               console.log("sarcoCreatedPingCount", sarcoCreatedPingCount);
-              
             } else {
               clearTimeout(timer.current);
             }

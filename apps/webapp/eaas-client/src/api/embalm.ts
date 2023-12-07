@@ -2,7 +2,7 @@ import { handleApiError } from "./utils";
 import { axiosInstance as axios } from ".";
 import { ArchConfig, SendEncryptedPayloadParams } from "../types/embalm";
 import { createEncryptor } from "simple-encryptor";
-import bcrypt from "bcryptjs";
+import { createHash } from "crypto-browserify";
 
 export async function sendPayload(
   params: SendEncryptedPayloadParams,
@@ -10,14 +10,12 @@ export async function sendPayload(
   pdfBuffer: Buffer,
 ) {
   try {
-    const hashedPassword = await bcrypt.hash(pdfPassword, 10);
-
+    const hashedPassword = createHash("sha256").update(pdfPassword).digest("hex").substring(0, 32);
     const encryptedPdfStr = createEncryptor(hashedPassword).encrypt(pdfBuffer);
-    const encryptedPdfBlob = Buffer.from(encryptedPdfStr);
 
     await axios.post(`embalm/send-payload`, {
       ...params,
-      encryptedPdfBlob,
+      encryptedPdfStr,
     });
   } catch (error) {
     throw handleApiError(error);

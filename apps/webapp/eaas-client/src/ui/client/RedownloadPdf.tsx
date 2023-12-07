@@ -3,6 +3,10 @@ import { useRef, useState } from "react";
 import { downloadRecipientPdf } from "api/sarcophagi";
 import { redownloadPdfError, redownloadPdfSuccess } from "utils/toast";
 import { useQuery } from "hooks/useQuery";
+import { saveAs } from "file-saver";
+import sanitize from "sanitize-filename";
+import { bufferToBlob } from "utils/bufferToBlob";
+import { useSelector } from "store";
 
 export function RedownloadPdfPage() {
   const [pdfPassword, setPdfPassword] = useState("");
@@ -16,12 +20,15 @@ export function RedownloadPdfPage() {
   const [isdownloading, setIsdownloading] = useState(false);
   const [redownloadError, setError] = useState(false);
 
+  const userEmail = useSelector((s) => s.userState.user?.email);
+
   const toast = useToast();
 
   async function handleRedownloadPdf() {
     setIsdownloading(true);
     try {
-      await downloadRecipientPdf(sarcoId!, pdfPassword);
+      const pdfBlob = await downloadRecipientPdf(sarcoId!, pdfPassword);
+      saveAs(bufferToBlob(pdfBlob), sanitize(userEmail + "-" + sarcoId?.slice(0, 6) + ".pdf"));
       toast(redownloadPdfSuccess());
     } catch (err: any) {
       setError(true);

@@ -23,7 +23,6 @@
     "@testing-library/user-event": "^13.5.0",
     "@wagmi/chains": "^0.1.5",
     "axios": "^1.6.0",
-    "bcryptjs": "^2.4.3",
     "dotenv": "^16.3.1",
     "ecies-geth": "^1.7.0",
     "file-saver": "^2.0.5",
@@ -44,7 +43,6 @@
   },
   "devDependencies": {
     "@esbuild-plugins/node-globals-polyfill": "^0.2.3",
-    "@types/bcryptjs": "^2.4.6",
     "@types/file-saver": "^2.0.7",
     "@types/qrcode": "^1.5.5",
     "@types/react": "^18.2.15",
