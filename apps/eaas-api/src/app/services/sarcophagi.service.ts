@@ -104,13 +104,13 @@ async function cleanSarcophagus(sarcoId: string): Promise<void> {
   }
 }
 
-async function downloadRecipientPdf(args: { sarcoId: string; password: string }): Promise<string> {
-  const { sarcoId, password } = args;
+async function downloadRecipientPdf(args: { sarcoId: string; clientId: string }): Promise<string> {
+  const { sarcoId, clientId } = args;
 
   let encryptedPdf: string;
   try {
     encryptedPdf = await knex("created_sarcophagi")
-      .where({ id: sarcoId })
+      .where({ id: sarcoId, client_id: clientId })
       .select("encrypted_pdf")
       .then((rows) => {
         const encryptedPdf = rows[0]["encrypted_pdf"] as string;

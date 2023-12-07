@@ -37,7 +37,12 @@ const burySarcophagus = async (req: RequestWithUser, res: Response) => {
 };
 
 const downloadRecipientPdf = async (req: RequestWithUser, res: Response) => {
-  const encryptedPdf = await sarcophagiService.downloadRecipientPdf(req.body);
+  const { sarcoId } = req.body;
+  const user = req.user;
+  const encryptedPdf = await sarcophagiService.downloadRecipientPdf({
+    sarcoId,
+    clientId: user.id,
+  });
   res.status(200).send({ encryptedPdf });
 };
 

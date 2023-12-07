@@ -55,10 +55,7 @@ export async function burySarco(sarcoId: string): Promise<void> {
 
 export async function downloadRecipientPdf(sarcoId: string, password: string): Promise<Buffer> {
   try {
-    const res = await axios.post(`sarcophagi/download-pdf`, {
-      sarcoId,
-      password,
-    });
+    const res = await axios.post(`sarcophagi/download-pdf`, { sarcoId });
 
     const encryptedPdf = res.data.encryptedPdf as string;
     const hashedPassword = createHash("sha256").update(password).digest("hex").substring(0, 32);

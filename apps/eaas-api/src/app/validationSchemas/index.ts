@@ -50,5 +50,4 @@ export const editSarcophagusSchema = Joi.object({
 
 export const encryptedPdfSchema = Joi.object({
   sarcoId: Joi.string().required(),
-  password: Joi.string().required(),
 });
