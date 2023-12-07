@@ -63,7 +63,7 @@ export async function downloadRecipientPdf(sarcoId: string, password: string): P
     const encryptedPdf = res.data.encryptedPdf as string;
     const hashedPassword = createHash("sha256").update(password).digest("hex").substring(0, 32);
 
-    const decryptedPdfStr = createEncryptor(hashedPassword).decrypt(encryptedPdf).data;
+    const decryptedPdfStr = createEncryptor(hashedPassword).decrypt(encryptedPdf)?.data;
     if (!decryptedPdfStr) {
       // eslint-disable-next-line no-throw-literal
       throw "Check your password and try again";
