@@ -149,6 +149,7 @@ export function GenerateRecipientPDF() {
               });
 
               setIsUploading(true);
+
               await sendPayload(
                 {
                   resurrectionTime: resurrection,
@@ -165,6 +166,8 @@ export function GenerateRecipientPDF() {
               // eslint-disable-next-line @typescript-eslint/no-explicit-any
             } catch (e: any) {
               toast(fileUploadFailure(e));
+            } finally {
+              setIsUploading(false);
             }
           }}
         >

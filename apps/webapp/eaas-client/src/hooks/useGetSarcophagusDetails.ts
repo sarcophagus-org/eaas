@@ -11,6 +11,8 @@ export function useGetSarcophagusDetails(sarcoId: string | undefined) {
   useEffect(() => {
     if (!sarcoId || !isSarcoInitialized) return;
 
+    if (!!sarcophagus) return;
+
     setLoadingSarcophagus(true);
 
     sarco.api
@@ -22,7 +24,11 @@ export function useGetSarcophagusDetails(sarcoId: string | undefined) {
         setError(err.message);
       })
       .finally(() => setLoadingSarcophagus(false));
-  }, [sarcoId, isSarcoInitialized]);
+  }, [sarcoId, isSarcoInitialized, sarcophagus]);
 
-  return { sarcophagus, loadingSarcophagus, error };
+  return {
+    sarcophagus,
+    loadingSarcophagus,
+    error,
+  };
 }

@@ -1,8 +1,8 @@
 import { handleApiError } from "./utils";
 import { axiosInstance as axios } from ".";
 import { ArchConfig, SendEncryptedPayloadParams } from "../types/embalm";
-import { ethers } from "ethers";
 import { createEncryptor } from "simple-encryptor";
+import bcrypt from "bcryptjs";
 
 export async function sendPayload(
   params: SendEncryptedPayloadParams,
@@ -10,8 +10,10 @@ export async function sendPayload(
   pdfBuffer: Buffer,
 ) {
   try {
-    const encryptedPdfStr = createEncryptor(pdfPassword).encrypt(pdfBuffer);
-    const encryptedPdfBlob =  Buffer.from(ethers.utils.arrayify(encryptedPdfStr));
+    const hashedPassword = await bcrypt.hash(pdfPassword, 10);
+
+    const encryptedPdfStr = createEncryptor(hashedPassword).encrypt(pdfBuffer);
+    const encryptedPdfBlob = Buffer.from(encryptedPdfStr);
 
     await axios.post(`embalm/send-payload`, {
       ...params,

@@ -28,6 +28,7 @@ export interface ApiErrors {
   cleanSarcophagusFailure: ApiError;
   loadArchaeologistsFailure: ApiError;
   downloadRecipientPdfFailure: ApiError;
+  noRecipientPdf: ApiError;
   incorrectPdfPassword: ApiError;
   editSarcophagusError: (e: string) => ApiError;
 }
@@ -128,6 +129,10 @@ export const apiErrors: ApiErrors = {
   downloadRecipientPdfFailure: {
     msg: "failed to download recipient pdf",
     errorCode: 500,
+  },
+  noRecipientPdf: {
+    msg: "no recipient pdf",
+    errorCode: 404,
   },
   incorrectPdfPassword: {
     msg: "incorrect pdf password",
