@@ -9,8 +9,6 @@ import { setClientSarcophagi } from "store/sarcophagi/actions";
 import { getClientSarcophagiFailed } from "utils/toast";
 
 export function EmbalmerSarcophagi() {
-  const [showSarcophagi, setShowSarcophagi] = useState(false);
-
   const [isLoadingSarcophagi, setIsLoadingSarcophagi] = useState(false);
   const [loadedSarcophagi, setLoadedSarcophagi] = useState(false);
 
@@ -20,7 +18,7 @@ export function EmbalmerSarcophagi() {
   const { clientSarcophagi } = useSelector((state) => state.sarcophagiState);
 
   useEffect(() => {
-    if (showSarcophagi && !loadedSarcophagi) {
+    if (!loadedSarcophagi) {
       setIsLoadingSarcophagi(true);
 
       getUserSarcophagi()
@@ -34,7 +32,7 @@ export function EmbalmerSarcophagi() {
           setIsLoadingSarcophagi(false);
         });
     }
-  }, [dispatch, loadedSarcophagi, showSarcophagi, toast]);
+  }, [dispatch, loadedSarcophagi, toast]);
 
   function embalmerPanel() {
     if (isLoadingSarcophagi) {
@@ -55,14 +53,13 @@ export function EmbalmerSarcophagi() {
   return (
     <Flex direction="column" w="100%" h="100%">
       <Flex
-        onClick={() => (!showSarcophagi ? setShowSarcophagi(true) : null)}
         cursor={"pointer"}
         justify="center"
         w="100%"
         bg="whiteAlpha.400"
         py={3}
       >
-        <Text>{`${showSarcophagi ? "MY" : "VIEW"} SARCOPHAGI`}</Text>
+        <Text>MY SARCOPHAGI</Text>
       </Flex>
       <Tabs
         variant="enclosed"
@@ -73,14 +70,12 @@ export function EmbalmerSarcophagi() {
         border="1px solid"
         borderColor="whiteAlpha.300"
       >
-        {showSarcophagi ? (
-          <TabPanels
-            overflow="hidden"
-            bg="linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.09) 100%);"
-          >
-            <TabPanel h="100%">{embalmerPanel()}</TabPanel>
-          </TabPanels>
-        ) : null}
+        <TabPanels
+          overflow="hidden"
+          bg="linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.09) 100%);"
+        >
+          <TabPanel h="100%">{embalmerPanel()}</TabPanel>
+        </TabPanels>
       </Tabs>
     </Flex>
   );
