@@ -3,7 +3,7 @@ import { Center, Flex, Spinner, TabPanel, TabPanels, Tabs, Text, useToast } from
 import { NoSarcpohagi } from "./components/NoSarcophagi";
 import { SarcoTable } from "./components/SarcoTable";
 
-import { getClientSarcophagi } from "api/sarcophagi";
+import { getUserSarcophagi } from "api/sarcophagi";
 import { useDispatch, useSelector } from "store";
 import { setClientSarcophagi } from "store/sarcophagi/actions";
 import { getClientSarcophagiFailed } from "utils/toast";
@@ -23,7 +23,7 @@ export function EmbalmerSarcophagi() {
     if (showSarcophagi && !loadedSarcophagi) {
       setIsLoadingSarcophagi(true);
 
-      getClientSarcophagi()
+      getUserSarcophagi()
         .then(async (res) => {
           dispatch(setClientSarcophagi(res));
           setIsLoadingSarcophagi(false);

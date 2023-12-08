@@ -16,7 +16,7 @@ export const sarcophagiRouter = () => {
   router.get(
     "/all",
     passport.authenticate("jwt", { session: false }),
-    sarcophagiController.getClientSarcophagi,
+    sarcophagiController.getUserSarcophagi,
   );
 
   router.post(

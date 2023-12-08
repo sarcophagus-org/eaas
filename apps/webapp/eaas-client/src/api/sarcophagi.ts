@@ -5,7 +5,7 @@ import { createEncryptor } from "simple-encryptor";
 import { createHash } from "crypto-browserify";
 import { SarcophagusDataWithClientEmail } from "types/sarcophagi";
 
-export async function getClientSarcophagi(): Promise<SarcophagusDataWithClientEmail[]> {
+export async function getUserSarcophagi(): Promise<SarcophagusDataWithClientEmail[]> {
   try {
     const res = await axios.get("sarcophagi/all");
     return res.data as SarcophagusData[];

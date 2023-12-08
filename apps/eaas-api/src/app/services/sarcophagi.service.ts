@@ -5,7 +5,7 @@ import { knex } from "../../../src/database";
 import { EaasUser, UserType } from "../../../src/types/EaasUser";
 import { SarcophagusDataWithClientEmail } from "../../../src/types/SarcophagusDataWithClientEmail";
 
-async function getClientSarcophagi(user: EaasUser): Promise<SarcophagusDataWithClientEmail[]> {
+async function getUserSarcophagi(user: EaasUser): Promise<SarcophagusDataWithClientEmail[]> {
   try {
     const sarco = new NodeSarcoClient({
       chainId: envConfig.chainId,
@@ -19,6 +19,7 @@ async function getClientSarcophagi(user: EaasUser): Promise<SarcophagusDataWithC
       .join("users", "users.id", "=", "created_sarcophagi.client_id")
       .select("created_sarcophagi.id", "users.email")
       .then((rows) => rows);
+
     const sarcophagi = await sarco.api.getSarcophagiByIds(sarcoIdsWithEmails.map((x) => x["id"]));
 
     switch (user.type) {
@@ -149,7 +150,7 @@ async function downloadRecipientPdf(args: { sarcoId: string; clientId: string })
 }
 
 export const sarcophagiService = {
-  getClientSarcophagi,
+  getUserSarcophagi,
   getSarcoClientEmail,
   rewrapSarcophagus,
   cleanSarcophagus,
