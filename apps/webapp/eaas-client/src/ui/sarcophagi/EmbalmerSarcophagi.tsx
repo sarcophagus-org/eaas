@@ -1,56 +1,60 @@
 import { useEffect, useState } from "react";
-import { Center, Flex, Spinner, TabPanel, TabPanels, Tabs, Text } from "@chakra-ui/react";
+import { Center, Flex, Spinner, TabPanel, TabPanels, Tabs, Text, useToast } from "@chakra-ui/react";
 import { NoSarcpohagi } from "./components/NoSarcophagi";
 import { SarcoTable } from "./components/SarcoTable";
-import { SarcophagusData, sarco } from "@sarcophagus-org/sarcophagus-v2-sdk-client";
+import { SarcophagusData } from "@sarcophagus-org/sarcophagus-v2-sdk-client";
 
-import { useAccount } from "wagmi";
-import { ConnectWalletButton } from "./components/ConnectWalletButton";
-import { useSupportedNetwork } from "ui/embalmer/NetworkConfigProvider";
-import { getSarcoClientEmail } from "api/sarcophagi";
+import { getClientSarcophagi, getSarcoClientEmail } from "api/sarcophagi";
+import { useDispatch, useSelector } from "store";
+import { setClientSarcophagi } from "store/sarcophagi/actions";
+import { getClientSarcophagiFailed } from "utils/toast";
 
 export type SarcophagusDataWithClientEmail = SarcophagusData & { clientEmail?: string };
 
 export function EmbalmerSarcophagi() {
-  const { address, isConnected: isWalletConnected } = useAccount();
-
   const [showSarcophagi, setShowSarcophagi] = useState(false);
-  const [isLoadingEmbalmerSarcophagi, setIsLoadingEmbalmerSarcophagi] = useState(false);
-  const [loadedEmbalmerSarcophagi, setLoadedEmbalmerSarcophagi] = useState(false);
-  const [embalmerSarcophagi, setEmbalmerSarcophagi] = useState<SarcophagusDataWithClientEmail[]>(
-    [],
-  );
 
-  const { isSarcoInitialized } = useSupportedNetwork();
+  const [isLoadingSarcophagi, setIsLoadingSarcophagi] = useState(false);
+  const [loadedSarcophagi, setLoadedSarcophagi] = useState(false);
+
+  const toast = useToast();
+
+  const dispatch = useDispatch();
+  const { clientSarcophagi } = useSelector((state) => state.sarcophagiState);
 
   useEffect(() => {
-    if (showSarcophagi && isWalletConnected && isSarcoInitialized && !loadedEmbalmerSarcophagi) {
-      setIsLoadingEmbalmerSarcophagi(true);
+    if (showSarcophagi && !loadedSarcophagi) {
+      setIsLoadingSarcophagi(true);
 
-      sarco.api.getEmbalmerSarcophagi(address!.toString()).then(async (res) => {
-        const embalmerSarco: SarcophagusDataWithClientEmail[] = [];
+      getClientSarcophagi()
+        .then(async (res) => {
+          const embalmerSarco: SarcophagusDataWithClientEmail[] = [];
 
-        for await (const s of res) {
-          try {
-            const clientEmail = await getSarcoClientEmail(s.id);
+          for await (const s of res) {
+            try {
+              const clientEmail = await getSarcoClientEmail(s.id);
 
-            if (clientEmail !== "no client") {
-              embalmerSarco.push({ ...s, clientEmail });
+              if (clientEmail !== "no client") {
+                embalmerSarco.push({ ...s, clientEmail });
+              }
+            } catch (err) {
+              console.error(err);
             }
-          } catch (err) {
-            console.error(err);
           }
-        }
 
-        setEmbalmerSarcophagi(embalmerSarco);
-        setIsLoadingEmbalmerSarcophagi(false);
-        setLoadedEmbalmerSarcophagi(true);
-      });
+          dispatch(setClientSarcophagi(embalmerSarco));
+          setIsLoadingSarcophagi(false);
+          setLoadedSarcophagi(true);
+        })
+        .catch((err) => {
+          toast(getClientSarcophagiFailed(err));
+          setIsLoadingSarcophagi(false);
+        });
     }
-  }, [address, isSarcoInitialized, isWalletConnected, loadedEmbalmerSarcophagi, showSarcophagi]);
+  }, [dispatch, loadedSarcophagi, showSarcophagi, toast]);
 
   function embalmerPanel() {
-    if (isLoadingEmbalmerSarcophagi) {
+    if (isLoadingSarcophagi) {
       return (
         <Center my={16}>
           <Spinner size="xl" />
@@ -58,15 +62,11 @@ export function EmbalmerSarcophagi() {
       );
     }
 
-    if (isWalletConnected && !isLoadingEmbalmerSarcophagi && embalmerSarcophagi?.length === 0) {
+    if (loadedSarcophagi && clientSarcophagi?.length === 0) {
       return <NoSarcpohagi />;
     }
 
-    return !isWalletConnected ? (
-      <ConnectWalletButton />
-    ) : (
-      <SarcoTable sarcophagi={embalmerSarcophagi} />
-    );
+    return <SarcoTable sarcophagi={clientSarcophagi} />;
   }
 
   return (

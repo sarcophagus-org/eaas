@@ -42,7 +42,7 @@ export function ClientSarcophagi() {
       );
     }
 
-    if (!isLoadingSarcophagi && clientSarcophagi.length === 0) {
+    if (loadedSarcophagi && clientSarcophagi.length === 0) {
       return <NoSarcpohagi />;
     }
 
