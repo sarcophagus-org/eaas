@@ -3,9 +3,9 @@ import { Center, Flex, Spinner, TabPanel, TabPanels, Tabs, Text, useToast } from
 import { NoSarcpohagi } from "./components/NoSarcophagi";
 import { SarcoTable } from "./components/SarcoTable";
 import { getUserSarcophagi } from "api/sarcophagi";
-import { getClientSarcophagiFailed } from "utils/toast";
+import { getUserSarcophagiFailed } from "utils/toast";
 import { useDispatch, useSelector } from "store";
-import { setClientSarcophagi } from "store/sarcophagi/actions";
+import { setUserSarcophagi } from "store/sarcophagi/actions";
 
 export function ClientSarcophagi() {
   const [isLoadingSarcophagi, setIsLoadingSarcophagi] = useState(false);
@@ -14,7 +14,7 @@ export function ClientSarcophagi() {
   const toast = useToast();
 
   const dispatch = useDispatch();
-  const { clientSarcophagi } = useSelector((state) => state.sarcophagiState);
+  const { userSarcophagi } = useSelector((state) => state.sarcophagiState);
 
   useEffect(() => {
     if (!loadedSarcophagi) {
@@ -22,19 +22,19 @@ export function ClientSarcophagi() {
 
       getUserSarcophagi()
         .then((res) => {
-          dispatch(setClientSarcophagi(res));
+          dispatch(setUserSarcophagi(res));
           setIsLoadingSarcophagi(false);
           setLoadedSarcophagi(true);
         })
         .catch((err) => {
-          toast(getClientSarcophagiFailed(err));
+          toast(getUserSarcophagiFailed(err));
           setIsLoadingSarcophagi(false);
         });
     }
   }, [dispatch, loadedSarcophagi, toast]);
 
   function sarcophagiPanel() {
-    if (clientSarcophagi.length === 0 && isLoadingSarcophagi) {
+    if (userSarcophagi.length === 0 && isLoadingSarcophagi) {
       return (
         <Center my={16}>
           <Spinner size="xl" />
@@ -42,11 +42,11 @@ export function ClientSarcophagi() {
       );
     }
 
-    if (loadedSarcophagi && clientSarcophagi.length === 0) {
+    if (loadedSarcophagi && userSarcophagi.length === 0) {
       return <NoSarcpohagi />;
     }
 
-    return <SarcoTable sarcophagi={clientSarcophagi} />;
+    return <SarcoTable sarcophagi={userSarcophagi} />;
   }
 
   return (

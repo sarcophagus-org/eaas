@@ -108,7 +108,7 @@ export const clientInviteFailed = (e: string): UseToastOptions => ({
   ...defaultOptions,
 });
 
-export const getClientSarcophagiFailed = (e: string): UseToastOptions => ({
+export const getUserSarcophagiFailed = (e: string): UseToastOptions => ({
   title: `Error fetching Sarcophagi: ${e}`,
   status: "error",
   ...defaultOptions,

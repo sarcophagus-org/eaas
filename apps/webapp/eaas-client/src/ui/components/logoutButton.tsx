@@ -5,7 +5,7 @@ import {
 } from "@chakra-ui/react";
 import { useDispatch } from "../../store";
 import { clearTokens, setUser } from "../../store/user/actions";
-import { setClientSarcophagi } from "store/sarcophagi/actions";
+import { setUserSarcophagi } from "store/sarcophagi/actions";
 
 export const LogoutButton: React.FC = () => {
   const dispatch = useDispatch();
@@ -13,7 +13,7 @@ export const LogoutButton: React.FC = () => {
   const handleLogout = () => {
     dispatch(clearTokens());
     dispatch(setUser(null));
-    dispatch(setClientSarcophagi([]));
+    dispatch(setUserSarcophagi([]));
   };
 
   return (
