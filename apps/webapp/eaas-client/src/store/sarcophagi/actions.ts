@@ -1,4 +1,4 @@
-import { SarcophagusDataWithClientEmail } from "ui/sarcophagi/EmbalmerSarcophagi";
+import { SarcophagusDataWithClientEmail } from "types/sarcophagi";
 import { ActionMap } from "../ActionMap";
 
 export enum ActionType {

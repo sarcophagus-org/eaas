@@ -5,7 +5,7 @@ import { sarcophagiService } from "../services";
 const getClientSarcophagi = async (req: RequestWithUser, res: Response) => {
   const { user } = req;
 
-  const clientSarcophagi = await sarcophagiService.getClientSarcophagi(user.id);
+  const clientSarcophagi = await sarcophagiService.getClientSarcophagi(user);
 
   res.status(200).send(clientSarcophagi);
 };

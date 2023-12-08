@@ -23,7 +23,7 @@ import { useSelector } from "store";
 import { UserType } from "types/userTypes";
 import { cleanSarco } from "api/sarcophagi";
 import { cleanFailure, cleanSuccess } from "utils/toast";
-import { SarcophagusDataWithClientEmail } from "../EmbalmerSarcophagi";
+import { SarcophagusDataWithClientEmail } from "types/sarcophagi";
 
 export interface SarcophagusTableRowProps extends TableRowProps {
   sarco: SarcophagusDataWithClientEmail;

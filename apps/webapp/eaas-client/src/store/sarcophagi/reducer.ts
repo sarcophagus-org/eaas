@@ -1,4 +1,4 @@
-import { SarcophagusDataWithClientEmail } from "ui/sarcophagi/EmbalmerSarcophagi";
+import { SarcophagusDataWithClientEmail } from "types/sarcophagi";
 import { Actions } from "..";
 import { ActionType } from "./actions";
 

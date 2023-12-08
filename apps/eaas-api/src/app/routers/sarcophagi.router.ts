@@ -19,13 +19,6 @@ export const sarcophagiRouter = () => {
     sarcophagiController.getClientSarcophagi,
   );
 
-  router.get(
-    "/:sarcoId/client-email",
-    passport.authenticate("jwt", { session: false }),
-    getUserTypeValidator(UserType.embalmer),
-    sarcophagiController.getSarcoClientEmail,
-  );
-
   router.post(
     "/rewrap",
     passport.authenticate("jwt", { session: false }),

@@ -5,7 +5,7 @@ import { SarcoTableRow } from "./SarcoTableRow";
 import { SortDirection } from ".";
 import { useSelector } from "store";
 import { UserType } from "types/userTypes";
-import { SarcophagusDataWithClientEmail } from "../EmbalmerSarcophagi";
+import { SarcophagusDataWithClientEmail } from "types/sarcophagi";
 
 enum SortableColumn {
   State = "state",

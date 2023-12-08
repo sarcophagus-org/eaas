@@ -2,14 +2,11 @@ import { useEffect, useState } from "react";
 import { Center, Flex, Spinner, TabPanel, TabPanels, Tabs, Text, useToast } from "@chakra-ui/react";
 import { NoSarcpohagi } from "./components/NoSarcophagi";
 import { SarcoTable } from "./components/SarcoTable";
-import { SarcophagusData } from "@sarcophagus-org/sarcophagus-v2-sdk-client";
 
-import { getClientSarcophagi, getSarcoClientEmail } from "api/sarcophagi";
+import { getClientSarcophagi } from "api/sarcophagi";
 import { useDispatch, useSelector } from "store";
 import { setClientSarcophagi } from "store/sarcophagi/actions";
 import { getClientSarcophagiFailed } from "utils/toast";
-
-export type SarcophagusDataWithClientEmail = SarcophagusData & { clientEmail?: string };
 
 export function EmbalmerSarcophagi() {
   const [showSarcophagi, setShowSarcophagi] = useState(false);
@@ -28,21 +25,7 @@ export function EmbalmerSarcophagi() {
 
       getClientSarcophagi()
         .then(async (res) => {
-          const embalmerSarco: SarcophagusDataWithClientEmail[] = [];
-
-          for await (const s of res) {
-            try {
-              const clientEmail = await getSarcoClientEmail(s.id);
-
-              if (clientEmail !== "no client") {
-                embalmerSarco.push({ ...s, clientEmail });
-              }
-            } catch (err) {
-              console.error(err);
-            }
-          }
-
-          dispatch(setClientSarcophagi(embalmerSarco));
+          dispatch(setClientSarcophagi(res));
           setIsLoadingSarcophagi(false);
           setLoadedSarcophagi(true);
         })
