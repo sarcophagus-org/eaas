@@ -28,7 +28,6 @@ export const InvitesPage: React.FC = () => {
 
     getInvites()
       .then((res) => {
-        console.log(res);
         dispatch(setInvites(res));
       })
       .catch((err) => {
@@ -49,7 +48,7 @@ export const InvitesPage: React.FC = () => {
         Your Invites
       </Text>
 
-      <TableContainer overflowY="auto" h="100%">
+      <TableContainer overflowY="auto" h="100%" maxH={"600px"}>
         <Table variant="unstyled" size="sm">
           <Thead
             position="sticky"
@@ -104,7 +103,7 @@ export const InvitesPage: React.FC = () => {
         </Table>
       </TableContainer>
 
-      <Box my={100} />
+      <Box my={"80px"} />
 
       <InviteForm />
     </Box>

@@ -8,29 +8,11 @@ import {
   Button,
   VStack,
   useToast,
-  Text,
   Link,
   Heading,
 } from "@chakra-ui/react";
 import { useDispatch } from "../store";
-import { clearTokens, setTokens, setUser } from "../store/user/actions";
-
-export const LogoutButton: React.FC = () => {
-  const dispatch = useDispatch();
-
-  const handleLogout = () => {
-    dispatch(clearTokens());
-    dispatch(setUser(null));
-  };
-
-  return (
-    <Button p={0} onClick={handleLogout}>
-      <Text mx={2} fontSize={14} color="black">
-        Logout
-      </Text>
-    </Button>
-  );
-};
+import { setTokens, setUser } from "../store/user/actions";
 
 export const Login = () => {
   const [email, setEmail] = useState("");

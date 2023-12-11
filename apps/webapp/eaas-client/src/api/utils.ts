@@ -8,5 +8,9 @@ export function handleApiError(error: unknown) {
     errorMessage = error.response?.data.error ?? error.response?.statusText ?? error.message;
   }
 
+  if (typeof error === "string") {
+    return error;
+  }
+
   return errorMessage;
 }

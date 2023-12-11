@@ -27,6 +27,7 @@ export interface RecipientState {
   publicKey: string;
   privateKey?: string;
   generatePDFState?: GeneratePDFState;
+  pdfBlob?: Blob;
 }
 
 type EmbalmPayload = {

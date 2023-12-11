@@ -1,56 +1,41 @@
 import { useEffect, useState } from "react";
-import { Center, Flex, Spinner, TabPanel, TabPanels, Tabs, Text } from "@chakra-ui/react";
+import { Center, Flex, Spinner, TabPanel, TabPanels, Tabs, Text, useToast } from "@chakra-ui/react";
 import { NoSarcpohagi } from "./components/NoSarcophagi";
 import { SarcoTable } from "./components/SarcoTable";
-import { SarcophagusData, sarco } from "@sarcophagus-org/sarcophagus-v2-sdk-client";
 
-import { useAccount } from "wagmi";
-import { ConnectWalletButton } from "./components/ConnectWalletButton";
-import { useSupportedNetwork } from "ui/embalmer/NetworkConfigProvider";
-import { getSarcoClientEmail } from "api/sarcophagi";
-
-export type SarcophagusDataWithClientEmail = SarcophagusData & { clientEmail?: string };
+import { getUserSarcophagi } from "api/sarcophagi";
+import { useDispatch, useSelector } from "store";
+import { setUserSarcophagi } from "store/sarcophagi/actions";
+import { getUserSarcophagiFailed } from "utils/toast";
 
 export function EmbalmerSarcophagi() {
-  const { address, isConnected: isWalletConnected } = useAccount();
+  const [isLoadingSarcophagi, setIsLoadingSarcophagi] = useState(false);
+  const [loadedSarcophagi, setLoadedSarcophagi] = useState(false);
 
-  const [showSarcophagi, setShowSarcophagi] = useState(false);
-  const [isLoadingEmbalmerSarcophagi, setIsLoadingEmbalmerSarcophagi] = useState(false);
-  const [loadedEmbalmerSarcophagi, setLoadedEmbalmerSarcophagi] = useState(false);
-  const [embalmerSarcophagi, setEmbalmerSarcophagi] = useState<SarcophagusDataWithClientEmail[]>(
-    [],
-  );
+  const toast = useToast();
 
-  const { isSarcoInitialized } = useSupportedNetwork();
+  const dispatch = useDispatch();
+  const { userSarcophagi } = useSelector((state) => state.sarcophagiState);
 
   useEffect(() => {
-    if (showSarcophagi && isWalletConnected && isSarcoInitialized && !loadedEmbalmerSarcophagi) {
-      setIsLoadingEmbalmerSarcophagi(true);
+    if (!loadedSarcophagi) {
+      setIsLoadingSarcophagi(true);
 
-      sarco.api.getEmbalmerSarcophagi(address!.toString()).then(async (res) => {
-        const embalmerSarco: SarcophagusDataWithClientEmail[] = [];
-
-        for await (const s of res) {
-          try {
-            const clientEmail = await getSarcoClientEmail(s.id);
-
-            if (clientEmail !== "no client") {
-              embalmerSarco.push({ ...s, clientEmail });
-            }
-          } catch (err) {
-            console.error(err);
-          }
-        }
-
-        setEmbalmerSarcophagi(embalmerSarco);
-        setIsLoadingEmbalmerSarcophagi(false);
-        setLoadedEmbalmerSarcophagi(true);
-      });
+      getUserSarcophagi()
+        .then(async (res) => {
+          dispatch(setUserSarcophagi(res));
+          setIsLoadingSarcophagi(false);
+          setLoadedSarcophagi(true);
+        })
+        .catch((err) => {
+          toast(getUserSarcophagiFailed(err));
+          setIsLoadingSarcophagi(false);
+        });
     }
-  }, [address, isSarcoInitialized, isWalletConnected, loadedEmbalmerSarcophagi, showSarcophagi]);
+  }, [dispatch, loadedSarcophagi, toast]);
 
   function embalmerPanel() {
-    if (isLoadingEmbalmerSarcophagi) {
+    if (userSarcophagi.length === 0 && isLoadingSarcophagi) {
       return (
         <Center my={16}>
           <Spinner size="xl" />
@@ -58,28 +43,23 @@ export function EmbalmerSarcophagi() {
       );
     }
 
-    if (isWalletConnected && !isLoadingEmbalmerSarcophagi && embalmerSarcophagi?.length === 0) {
+    if (loadedSarcophagi && userSarcophagi?.length === 0) {
       return <NoSarcpohagi />;
     }
 
-    return !isWalletConnected ? (
-      <ConnectWalletButton />
-    ) : (
-      <SarcoTable sarcophagi={embalmerSarcophagi} />
-    );
+    return <SarcoTable sarcophagi={userSarcophagi} />;
   }
 
   return (
     <Flex direction="column" w="100%" h="100%">
       <Flex
-        onClick={() => (!showSarcophagi ? setShowSarcophagi(true) : null)}
         cursor={"pointer"}
         justify="center"
         w="100%"
         bg="whiteAlpha.400"
         py={3}
       >
-        <Text>{`${showSarcophagi ? "MY" : "VIEW"} SARCOPHAGI`}</Text>
+        <Text>MY SARCOPHAGI</Text>
       </Flex>
       <Tabs
         variant="enclosed"
@@ -90,14 +70,12 @@ export function EmbalmerSarcophagi() {
         border="1px solid"
         borderColor="whiteAlpha.300"
       >
-        {showSarcophagi ? (
-          <TabPanels
-            overflow="hidden"
-            bg="linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.09) 100%);"
-          >
-            <TabPanel h="100%">{embalmerPanel()}</TabPanel>
-          </TabPanels>
-        ) : null}
+        <TabPanels
+          overflow="hidden"
+          bg="linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.09) 100%);"
+        >
+          <TabPanel h="100%">{embalmerPanel()}</TabPanel>
+        </TabPanels>
       </Tabs>
     </Flex>
   );

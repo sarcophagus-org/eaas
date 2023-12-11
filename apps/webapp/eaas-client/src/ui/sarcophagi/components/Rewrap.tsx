@@ -89,6 +89,8 @@ export function Rewrap() {
     },
   );
 
+  const [updatedResurrectionString, setUpdatedResurrectionString] = useState<string>();
+
   const isRewrapButtonDisabled = !resurrectionTime || isRewrapping;
 
   const toast = useToast();
@@ -135,7 +137,7 @@ export function Rewrap() {
             />
           </GridItem>
           <GridItem alignSelf="center" justifySelf="center">
-            <Text fontSize="md">{currentResurrectionString}</Text>
+            <Text fontSize="md">{updatedResurrectionString ?? currentResurrectionString}</Text>
           </GridItem>
           <GridItem alignSelf="center" justifySelf="center">
             <GridItem></GridItem>
@@ -164,6 +166,15 @@ export function Rewrap() {
                   .then(() => {
                     toast(rewrapSuccess());
                     setIsRewrapping(false);
+                    setUpdatedResurrectionString(
+                      buildResurrectionDateString(
+                        BigNumber.from(resurrectionTime!.getUTCSeconds()),
+                        timestampMs,
+                        {
+                          hideDuration: true,
+                        },
+                      ),
+                    );
                   })
                   .catch((error) => {
                     console.log(error);

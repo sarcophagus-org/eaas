@@ -108,7 +108,7 @@ export const clientInviteFailed = (e: string): UseToastOptions => ({
   ...defaultOptions,
 });
 
-export const getClientSarcophagiFailed = (e: string): UseToastOptions => ({
+export const getUserSarcophagiFailed = (e: string): UseToastOptions => ({
   title: `Error fetching Sarcophagi: ${e}`,
   status: "error",
   ...defaultOptions,
@@ -150,6 +150,19 @@ export const resetPasswordSuccess = (): UseToastOptions => ({
 
 export const resetPasswordError = (e: string): UseToastOptions => ({
   title: "Failed to reset password",
+  description: e,
+  status: "error",
+  ...defaultOptions,
+});
+
+export const redownloadPdfSuccess = (): UseToastOptions => ({
+  title: "Redownloaded PDF",
+  status: "success",
+  ...defaultOptions,
+});
+
+export const redownloadPdfError = (e: string): UseToastOptions => ({
+  title: "Failed to redownload PDF",
   description: e,
   status: "error",
   ...defaultOptions,

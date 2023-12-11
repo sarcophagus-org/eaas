@@ -1,24 +1,45 @@
-import { NodeSarcoClient, SarcophagusData } from "@sarcophagus-org/sarcophagus-v2-sdk";
+import { NodeSarcoClient } from "@sarcophagus-org/sarcophagus-v2-sdk";
 import { envConfig } from "../../../src/config/env.config";
 import { apiErrors } from "../utils/errors";
 import { knex } from "../../../src/database";
+import { EaasUser, UserType } from "../../../src/types/EaasUser";
+import { SarcophagusDataWithClientEmail } from "../../../src/types/SarcophagusDataWithClientEmail";
 
-async function getClientSarcophagi(userId: string): Promise<SarcophagusData[]> {
-  const sarco = new NodeSarcoClient({
-    chainId: envConfig.chainId,
-    privateKey: envConfig.privateKey,
-    providerUrl: envConfig.providerUrl,
-    zeroExApiKey: envConfig.zeroExApiKey,
-  });
-
+async function getUserSarcophagi(user: EaasUser): Promise<SarcophagusDataWithClientEmail[]> {
   try {
-    const sarcoIds = await knex("created_sarcophagi")
-      .where({ client_id: userId })
-      .select("id")
-      .then((rows) => rows.map((x) => x["id"]));
+    const sarco = new NodeSarcoClient({
+      chainId: envConfig.chainId,
+      privateKey: envConfig.privateKey,
+      providerUrl: envConfig.providerUrl,
+      zeroExApiKey: envConfig.zeroExApiKey,
+    });
 
-    const sarcophagi = sarco.api.getSarcophagiByIds(sarcoIds);
-    return sarcophagi;
+    const sarcoIdsWithEmails = await knex("created_sarcophagi")
+      .where(user.type === UserType.client ? { client_id: user.id } : { embalmer_id: user.id })
+      .join("users", "users.id", "=", "created_sarcophagi.client_id")
+      .select("created_sarcophagi.id", "users.email")
+      .then((rows) => rows);
+
+    const sarcophagi = await sarco.api.getSarcophagiByIds(sarcoIdsWithEmails.map((x) => x["id"]));
+
+    switch (user.type) {
+      case UserType.client:
+        return sarcophagi;
+
+      case UserType.embalmer:
+        const embalmerSarco: SarcophagusDataWithClientEmail[] = [];
+
+        let i = 0;
+        for (const s of sarcophagi) {
+          const clientEmail = sarcoIdsWithEmails[i++]["email"] ?? "no client";
+
+          if (clientEmail !== "no client") {
+            embalmerSarco.push({ ...s, clientEmail });
+          }
+        }
+
+        return embalmerSarco;
+    }
   } catch (e) {
     console.log(e);
     throw apiErrors.fetchSarcophagiFailure;
@@ -104,10 +125,35 @@ async function cleanSarcophagus(sarcoId: string): Promise<void> {
   }
 }
 
+async function downloadRecipientPdf(args: { sarcoId: string; clientId: string }): Promise<string> {
+  const { sarcoId, clientId } = args;
+
+  let encryptedPdf: string;
+  try {
+    encryptedPdf = await knex("created_sarcophagi")
+      .where({ id: sarcoId, client_id: clientId })
+      .select("encrypted_pdf")
+      .then((rows) => {
+        const encryptedPdf = rows[0]["encrypted_pdf"] as string;
+        return encryptedPdf;
+      });
+  } catch (e) {
+    console.log(e);
+    throw apiErrors.downloadRecipientPdfFailure;
+  }
+
+  if (!encryptedPdf || encryptedPdf.length === 0) {
+    throw apiErrors.noRecipientPdf;
+  }
+
+  return encryptedPdf;
+}
+
 export const sarcophagiService = {
-  getClientSarcophagi,
+  getUserSarcophagi,
   getSarcoClientEmail,
   rewrapSarcophagus,
   cleanSarcophagus,
   burySarcophagus,
+  downloadRecipientPdf,
 };

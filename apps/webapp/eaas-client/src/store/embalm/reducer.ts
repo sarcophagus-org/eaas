@@ -32,6 +32,7 @@ export function embalmReducer(state: EmbalmState, action: Actions): EmbalmState 
           sarcoId: action.payload.sarcoId,
           privateKey: action.payload.privateKey,
           generatePDFState: action.payload.generatePDFState,
+          pdfBlob: action.payload.pdfBlob,
         },
       };
 

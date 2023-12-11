@@ -1,5 +1,5 @@
 import { NavLink, Route, Routes, useLocation, useNavigate } from "react-router-dom";
-import { Login, LogoutButton } from "./login";
+import { Login } from "./login";
 import { RouteKey, RoutesPathMap } from "./routerConstants";
 import { NotFoundPage } from "./notFound";
 import { EmbalmerDashboard } from "./embalmer/dashboard";
@@ -7,7 +7,7 @@ import { ClientDashboard } from "./client/dashboard";
 import { ClientOnboarding } from "./client/onboarding";
 import { useEffect } from "react";
 import { useSelector } from "../store";
-import { Flex, HStack, Link, Text } from "@chakra-ui/react";
+import { Box, Flex, HStack, Link, Text } from "@chakra-ui/react";
 import { Navbar } from "./components/navbar";
 import { SarcophagusDetailsPage } from "./sarcophagi/SarcophagusDetailsPage";
 import { UserType } from "types/userTypes";
@@ -16,6 +16,8 @@ import { Claim } from "./sarcophagi/components/Claim";
 import { ForgotPassword } from "./forgotPassword";
 import { ResetPassword } from "./resetPassword";
 import { InvitesPage } from "./embalmer/invites";
+import { RedownloadPdfPage } from "./client/RedownloadPdf";
+import { LogoutButton } from "./components/logoutButton";
 
 export function AppRoutes() {
   const navigate = useNavigate();
@@ -94,6 +96,13 @@ export function AppRoutes() {
       path: RoutesPathMap[RouteKey.INVITES_PAGE],
       element: <InvitesPage />,
       label: "Invites",
+      hidden: appUser?.type !== UserType.embalmer,
+    },
+    {
+      path: RoutesPathMap[RouteKey.REDOWNLOAD_PDF_PAGE],
+      element: <RedownloadPdfPage />,
+      label: "Redownload PDF",
+      hidden: true,
     },
   ];
 
@@ -149,14 +158,14 @@ export function AppRoutes() {
           </Flex>
         </Navbar>
       )}
-      <Flex alignSelf="center" my={10} width="1400px" maxW="90%">
+      <Box alignSelf="center" my={10} width="1400px" maxW="90%">
         <Routes>
           {routes.map((route) => (
             <Route key={route.path} path={route.path} element={route.element} />
           ))}
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
-      </Flex>
+      </Box>
     </Flex>
   );
 }
