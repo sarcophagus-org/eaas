@@ -1,21 +1,21 @@
-import { SarcophagusDataWithClientEmail } from "ui/sarcophagi/EmbalmerSarcophagi";
+import { SarcophagusDataWithClientEmail } from "types/sarcophagi";
 import { ActionMap } from "../ActionMap";
 
 export enum ActionType {
-  SetClientSarcophagi = "SARCO_SET_CLIENT_SARCOPHAGI",
+  SetUserSarcophagi = "SARCO_SET_USER_SARCOPHAGI",
 }
 
 type SarcophagiPayload = {
-  [ActionType.SetClientSarcophagi]: { clientSarcophagi: SarcophagusDataWithClientEmail[] };
+  [ActionType.SetUserSarcophagi]: { userSarcophagi: SarcophagusDataWithClientEmail[] };
 };
 
-export function setClientSarcophagi(
-  clientSarcophagi: SarcophagusDataWithClientEmail[],
+export function setUserSarcophagi(
+  userSarcophagi: SarcophagusDataWithClientEmail[],
 ): SarcophagiActions {
   return {
-    type: ActionType.SetClientSarcophagi,
+    type: ActionType.SetUserSarcophagi,
     payload: {
-      clientSarcophagi,
+      userSarcophagi,
     },
   };
 }

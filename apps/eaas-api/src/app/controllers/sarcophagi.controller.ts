@@ -2,19 +2,15 @@ import { Response } from "express";
 import { RequestWithUser } from "../../../src/types/EaasUser";
 import { sarcophagiService } from "../services";
 
-const getClientSarcophagi = async (req: RequestWithUser, res: Response) => {
+const getUserSarcophagi = async (req: RequestWithUser, res: Response) => {
   const { user } = req;
-
-  const clientSarcophagi = await sarcophagiService.getClientSarcophagi(user.id);
-
-  res.status(200).send(clientSarcophagi);
+  const sarcophagi = await sarcophagiService.getUserSarcophagi(user);
+  res.status(200).send(sarcophagi);
 };
 
 const getSarcoClientEmail = async (req: RequestWithUser, res: Response) => {
   const { sarcoId } = req.params;
-
   const clientEmail = await sarcophagiService.getSarcoClientEmail(sarcoId);
-
   res.status(200).send(clientEmail);
 };
 
@@ -47,7 +43,7 @@ const downloadRecipientPdf = async (req: RequestWithUser, res: Response) => {
 };
 
 export const sarcophagiController = {
-  getClientSarcophagi,
+  getUserSarcophagi,
   getSarcoClientEmail,
   rewrapSarcophagus,
   cleanSarcophagus,

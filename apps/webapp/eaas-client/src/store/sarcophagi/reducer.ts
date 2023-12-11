@@ -1,19 +1,19 @@
-import { SarcophagusDataWithClientEmail } from "ui/sarcophagi/EmbalmerSarcophagi";
+import { SarcophagusDataWithClientEmail } from "types/sarcophagi";
 import { Actions } from "..";
 import { ActionType } from "./actions";
 
 export interface SarcophagiState {
-  clientSarcophagi: SarcophagusDataWithClientEmail[];
+  userSarcophagi: SarcophagusDataWithClientEmail[];
 }
 
 export const sarcophagiInitialState: SarcophagiState = {
-  clientSarcophagi: [],
+  userSarcophagi: [],
 };
 
 export function sarcophagiReducer(state: SarcophagiState, action: Actions): SarcophagiState {
   switch (action.type) {
-    case ActionType.SetClientSarcophagi:
-      return { ...state, clientSarcophagi: action.payload.clientSarcophagi };
+    case ActionType.SetUserSarcophagi:
+      return { ...state, userSarcophagi: action.payload.userSarcophagi };
 
     default:
       return state;

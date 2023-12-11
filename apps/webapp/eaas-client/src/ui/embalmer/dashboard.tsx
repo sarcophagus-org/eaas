@@ -3,7 +3,6 @@ import { Box, Text } from "@chakra-ui/react";
 import { UserType } from "../../types/userTypes";
 import { useSelector } from "../../store";
 import { EmbalmerSarcophagi } from "ui/sarcophagi/EmbalmerSarcophagi";
-import { InviteForm } from "./inviteForm";
 
 export const EmbalmerDashboard: React.FC = () => {
   const appUser = useSelector((x) => x.userState.user);
@@ -14,7 +13,6 @@ export const EmbalmerDashboard: React.FC = () => {
     </Box>
   ) : (
     <Box>
-      <InviteForm />
       <EmbalmerSarcophagi />
     </Box>
   );

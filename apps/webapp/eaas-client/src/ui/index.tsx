@@ -1,5 +1,5 @@
 import { NavLink, Route, Routes, useLocation, useNavigate } from "react-router-dom";
-import { Login, LogoutButton } from "./login";
+import { Login } from "./login";
 import { RouteKey, RoutesPathMap } from "./routerConstants";
 import { NotFoundPage } from "./notFound";
 import { EmbalmerDashboard } from "./embalmer/dashboard";
@@ -17,6 +17,7 @@ import { ForgotPassword } from "./forgotPassword";
 import { ResetPassword } from "./resetPassword";
 import { InvitesPage } from "./embalmer/invites";
 import { RedownloadPdfPage } from "./client/RedownloadPdf";
+import { LogoutButton } from "./components/logoutButton";
 
 export function AppRoutes() {
   const navigate = useNavigate();
