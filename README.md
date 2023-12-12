@@ -27,7 +27,7 @@ If this is the first time running the API docker container, or if previously del
 
 ### Start the interface
 
-From interface directory (`cd apps/webapp/eaas-client`):
+From interface directory (`cd apps/eaas-client`):
 
 - `npm run start`
 
