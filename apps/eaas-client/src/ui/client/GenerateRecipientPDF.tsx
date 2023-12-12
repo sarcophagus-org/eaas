@@ -68,7 +68,7 @@ export function GenerateRecipientPDF() {
   let timer = useRef<NodeJS.Timeout>();
   useEffect(() => {
     if (payloadUploaded) {
-      timer.current = setTimeout(() => {
+      timer.current = setInterval(() => {
         sarco.api
           .getSarcophagiByIds([recipientState.sarcoId])
           .then((sarcophagi) => {

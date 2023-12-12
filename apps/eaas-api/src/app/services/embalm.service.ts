@@ -137,7 +137,6 @@ async function runEmbalm(options: EmbalmOptions) {
       arweaveTxId: sarcophagusPayloadTxId,
     });
 
-    console.log("submitSarcophagusArgs", submitSarcophagusArgs);
 
     await sarco.api.createSarcophagus(...submitSarcophagusArgs);
 
