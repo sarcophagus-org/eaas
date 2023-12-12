@@ -2,6 +2,8 @@ import axios, { AxiosRequestHeaders } from "axios";
 import { handleApiError } from "./utils";
 import { getAccessToken } from "../localStorage";
 
+console.log("process.env.REACT_APP_API_BASE_URL", process.env.REACT_APP_API_BASE_URL);
+
 const instance = axios.create({
   baseURL: process.env.REACT_APP_API_BASE_URL,
   timeout: 120000,
