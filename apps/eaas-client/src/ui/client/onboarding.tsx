@@ -110,7 +110,7 @@ export const ClientOnboarding: React.FC = () => {
           onChange={(e) => setPasswordConfirm(e.target.value)}
           onBlur={validatePassword}
         />
-        <FormErrorMessage>{formErrors.passwordConfirm}</FormErrorMessage>
+        <FormErrorMessage color={"red"}>{formErrors.passwordConfirm}</FormErrorMessage>
       </FormControl>
 
       <Button mt={4} colorScheme="teal" onClick={handleRegister}>
