@@ -27,15 +27,9 @@ export const InvitesPage: React.FC = () => {
     setLoadingInvites(true);
 
     getInvites()
-      .then((res) => {
-        dispatch(setInvites(res));
-      })
-      .catch((err) => {
-        console.log(err);
-      })
-      .finally(() => {
-        setLoadingInvites(false);
-      });
+      .then((res) => dispatch(setInvites(res)))
+      .catch((err) => console.log(err))
+      .finally(() => setLoadingInvites(false));
   }, [dispatch]);
 
   return appUser?.type === UserType.client ? (
@@ -78,18 +72,18 @@ export const InvitesPage: React.FC = () => {
               </SarcoTableHead>
             </Tr>
           </Thead>
-          <Tbody>
-            {loadingInvites && invites?.length === 0 ? (
-              <Center>
-                <Spinner />
-              </Center>
-            ) : invites?.length === 0 ? (
-              <Center>
-                <Text>No invites found</Text>
-              </Center>
-            ) : (
-              invites?.map((invite) => (
-                <Tr>
+          {loadingInvites && invites?.length === 0 ? (
+            <Center>
+              <Spinner />
+            </Center>
+          ) : invites?.length === 0 ? (
+            <Center>
+              <Text>No invites found</Text>
+            </Center>
+          ) : (
+            <Tbody>
+              {invites?.map((invite) => (
+                <Tr key={invite.clientEmail}>
                   <Td>
                     <Text>{invite.clientEmail}</Text>
                   </Td>
@@ -97,9 +91,9 @@ export const InvitesPage: React.FC = () => {
                     <Text>{invite.status}</Text>
                   </Td>
                 </Tr>
-              ))
-            )}
-          </Tbody>
+              ))}
+            </Tbody>
+          )}
         </Table>
       </TableContainer>
 
