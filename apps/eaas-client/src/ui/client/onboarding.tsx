@@ -64,6 +64,7 @@ export const ClientOnboarding: React.FC = () => {
 
     // If there are errors, stop registration process
     if (!!formErrors.password || !!formErrors.passwordConfirm) {
+      toast(createAccountFailure("Please fix the errors above"));
       return;
     }
 
@@ -98,7 +99,7 @@ export const ClientOnboarding: React.FC = () => {
           onChange={(e) => setPassword(e.target.value)}
           onBlur={validatePassword}
         />
-        <FormErrorMessage>{formErrors.password}</FormErrorMessage>
+        <FormErrorMessage color={"red"}>{formErrors.password}</FormErrorMessage>
       </FormControl>
 
       <FormControl id="password_confirm" isRequired isInvalid={!!formErrors.passwordConfirm}>
