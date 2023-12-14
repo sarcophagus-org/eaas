@@ -6,10 +6,10 @@ import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-if (process.env.NODE_ENV === "development") {
-  dotenv.config({ path: path.join(__dirname, "../../.env") });
-} else if (process.env.NODE_ENV === "test") {
+if (process.env.NODE_ENV === "test") {
   dotenv.config({ path: path.join(__dirname, "../../.env.test") });
+} else {
+  dotenv.config({ path: path.join(__dirname, "../../.env") });
 }
 
 const envVarsSchema = Joi.object()
