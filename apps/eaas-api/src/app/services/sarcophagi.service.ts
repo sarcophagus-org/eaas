@@ -14,8 +14,10 @@ async function getUserSarcophagi(user: EaasUser): Promise<SarcophagusDataWithCli
       zeroExApiKey: envConfig.zeroExApiKey,
     });
 
+    const userMatchesId = user.type === UserType.client ? { client_id: user.id } : { embalmer_id: user.id };
+
     const sarcoIdsWithEmails = await knex("created_sarcophagi")
-      .where(user.type === UserType.client ? { client_id: user.id } : { embalmer_id: user.id })
+      .where({ ...userMatchesId, chain_id: envConfig.chainId})
       .join("users", "users.id", "=", "created_sarcophagi.client_id")
       .select("created_sarcophagi.id", "users.email")
       .then((rows) => rows);
