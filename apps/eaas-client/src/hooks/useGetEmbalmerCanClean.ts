@@ -1,11 +1,12 @@
 import { ViewStateFacet__factory } from "@sarcophagus-org/sarcophagus-v2-contracts";
 import { BigNumber } from "ethers";
 import { SarcophagusData } from "@sarcophagus-org/sarcophagus-v2-sdk-client";
-import { useAccount, useContractRead } from "wagmi";
+import { useContractRead } from "wagmi";
 import { useGetGracePeriod } from "./useGetGracePeriod";
 import { useNetworkConfig } from "ui/embalmer/NetworkConfigProvider";
 import { useSelector } from "store";
 import { UserType } from "types/userTypes";
+import { ethers } from "ethers";
 
 /**
  * Uses `embalmerClaimWindow` from the contracts to check if the signed in user can clean the
@@ -23,12 +24,11 @@ export function useGetCanCleanSarcophagus(sarcophagus: SarcophagusData | undefin
     functionName: "getEmbalmerClaimWindow",
   });
 
-  const { address } = useAccount();
-
   const user = useSelector((s) => s.userState.user);
   if (user?.type !== UserType.client) return false;
   if (!data) return false;
   if (!sarcophagus || !sarcophagus.hasLockedBond) return false;
+  const address = new ethers.Wallet(process.env.REACT_APP_PRIVATE_KEY!).address;
   if (sarcophagus.embalmerAddress !== address) return false;
 
   const sarcoResurrectionTime = Number.parseInt(sarcophagus.resurrectionTime.toString());
