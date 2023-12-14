@@ -48,6 +48,9 @@ export function embalmReducer(state: EmbalmState, action: Actions): EmbalmState 
     case ActionType.SetCustomResurrectionDate:
       return { ...state, customResurrectionDate: action.payload.date };
 
+    case ActionType.ResetEmbalmState:
+      return embalmInitialState;
+
     default:
       return state;
   }

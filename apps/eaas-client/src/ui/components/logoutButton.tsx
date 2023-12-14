@@ -1,11 +1,9 @@
 import React from "react";
-import {
-  Button,
-  Text,
-} from "@chakra-ui/react";
+import { Button, Text } from "@chakra-ui/react";
 import { useDispatch } from "../../store";
-import { clearTokens, setUser } from "../../store/user/actions";
+import { clearTokens, setInvites, setUser } from "../../store/user/actions";
 import { setUserSarcophagi } from "store/sarcophagi/actions";
+import { resetEmbalmState } from "store/embalm/actions";
 
 export const LogoutButton: React.FC = () => {
   const dispatch = useDispatch();
@@ -14,6 +12,8 @@ export const LogoutButton: React.FC = () => {
     dispatch(clearTokens());
     dispatch(setUser(null));
     dispatch(setUserSarcophagi([]));
+    dispatch(setInvites([]));
+    dispatch(resetEmbalmState());
   };
 
   return (
