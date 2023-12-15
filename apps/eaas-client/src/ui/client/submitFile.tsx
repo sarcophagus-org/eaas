@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { Button, Input, Text, VStack, useToast } from '@chakra-ui/react';
+import { Button, Text, VStack, useToast } from '@chakra-ui/react';
 
 import { useGenerateRecipientPDF } from "../../hooks/useGenerateRecipientPDF";
 import { GeneratePDFState } from "../../store/embalm/actions";
@@ -14,6 +14,7 @@ import {
 } from "utils/toast";
 import { useNavigate } from "react-router-dom";
 import { sarco } from "@sarcophagus-org/sarcophagus-v2-sdk-client";
+import {PasswordInput} from 'ui/components/passwordInput';
 
 export function SubmitFile() {
   const { downloadRecipientPDF } = useGenerateRecipientPDF();
@@ -95,13 +96,7 @@ export function SubmitFile() {
           Enter a password that you will use in the future to securely redownload this pdf in case
           you lose it:
         </Text>
-        <Input
-          type="password"
-          mb={10}
-          onChange={(e) => setPdfPassword(e.target.value)}
-          value={pdfPassword}
-          resize="none"
-        />
+        <PasswordInput value={pdfPassword} onChange={setPdfPassword} />
 
         <Button
           w="100%"

@@ -54,9 +54,7 @@ export function GenerateRecipientPDF() {
         </Button>
       </VStack>
     ),
-    [GeneratePDFState.DOWNLOADED]: (
-      <SubmitFile />
-    ),
+    [GeneratePDFState.DOWNLOADED]: <SubmitFile />,
     [GeneratePDFState.GENERATED]: undefined,
   };
 
