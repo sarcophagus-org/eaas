@@ -112,6 +112,7 @@ export function AppRoutes() {
       RoutesPathMap[RouteKey.FORGOT_PASSWORD_PAGE],
       RoutesPathMap[RouteKey.RESET_PASSWORD_PAGE],
       RoutesPathMap[RouteKey.CLAIM_PAGE],
+      RoutesPathMap[RouteKey.CLIENT_ONBOARDING_PAGE],
     ];
 
     if (!unauthenticatedRoutes.includes(location.pathname) && !appUser) {

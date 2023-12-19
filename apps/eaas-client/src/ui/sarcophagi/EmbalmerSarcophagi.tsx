@@ -52,13 +52,7 @@ export function EmbalmerSarcophagi() {
 
   return (
     <Flex direction="column" w="100%" h="100%">
-      <Flex
-        cursor={"pointer"}
-        justify="center"
-        w="100%"
-        bg="whiteAlpha.400"
-        py={3}
-      >
+      <Flex cursor={"pointer"} justify="center" w="100%" bg="whiteAlpha.400" py={3}>
         <Text>MY SARCOPHAGI</Text>
       </Flex>
       <Tabs

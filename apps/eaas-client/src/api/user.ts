@@ -2,6 +2,11 @@ import { handleApiError } from "./utils";
 import { EaasUser, EaasLoginResponse, RegisterUser } from "../types/userTypes";
 import { axiosInstance as axios } from ".";
 
+import unauthedAxios from "axios";
+const unauthedAxiosInstance = unauthedAxios.create({
+  baseURL: process.env.REACT_APP_API_BASE_URL,
+});
+
 export async function login(params: {
   email: string;
   password: string;
@@ -9,7 +14,7 @@ export async function login(params: {
   try {
     const { email, password } = params;
 
-    const res = await axios.post(`auth/login`, {
+    const res = await unauthedAxiosInstance.post(`auth/login`, {
       email,
       password,
     });
@@ -22,7 +27,7 @@ export async function login(params: {
 
 export async function forgotPassword(email: string): Promise<void> {
   try {
-    await axios.post(`auth/forgot-password`, { email });
+    await unauthedAxiosInstance.post(`auth/forgot-password`, { email });
   } catch (error) {
     throw handleApiError(error);
   }
@@ -30,7 +35,7 @@ export async function forgotPassword(email: string): Promise<void> {
 
 export async function resetPassword(params: { password: string; token: string }): Promise<void> {
   try {
-    await axios.post(`auth/reset-password`, params);
+    await unauthedAxiosInstance.post(`auth/reset-password`, params);
   } catch (error) {
     throw handleApiError(error);
   }
@@ -43,7 +48,7 @@ export async function clientRegister(params: {
   try {
     const { user, inviteToken } = params;
 
-    const res = await axios.post(`user/register`, {
+    const res = await unauthedAxiosInstance.post(`user/register`, {
       user,
       inviteToken,
     });
