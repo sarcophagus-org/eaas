@@ -12,8 +12,9 @@ export const preparedEncryptedPayloadSchema = Joi.object({
 
 export const sendEncryptedPayloadSchema = Joi.object({
   preparedEncryptedPayload: preparedEncryptedPayloadSchema,
-  threshold: Joi.number().required(),
   resurrectionTime: Joi.number().required(),
+  sarcoId: Joi.string().required(),
+  encryptedPdfStr: Joi.string().required(),
 });
 
 export const createInvitationSchema = Joi.object({
@@ -35,5 +36,18 @@ const userSchema = Joi.object({
 
 export const createUserWithInviteSchema = Joi.object({
   user: userSchema,
-  inviteToken: Joi.string(),
+  inviteToken: Joi.string().required(),
+});
+
+export const rewrapSarcophagusSchema = Joi.object({
+  sarcoId: Joi.string().required(),
+  resurrectionTime: Joi.number().required(),
+});
+
+export const editSarcophagusSchema = Joi.object({
+  sarcoId: Joi.string().required(),
+});
+
+export const encryptedPdfSchema = Joi.object({
+  sarcoId: Joi.string().required(),
 });

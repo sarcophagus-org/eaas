@@ -6,10 +6,10 @@ import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-if (process.env.NODE_ENV === "development") {
-  dotenv.config({ path: path.join(__dirname, "../../.env") });
-} else if (process.env.NODE_ENV === "test") {
+if (process.env.NODE_ENV === "test") {
   dotenv.config({ path: path.join(__dirname, "../../.env.test") });
+} else {
+  dotenv.config({ path: path.join(__dirname, "../../.env") });
 }
 
 const envVarsSchema = Joi.object()
@@ -19,7 +19,7 @@ const envVarsSchema = Joi.object()
     PROVIDER_URL: Joi.string().required().description("Ethereum provider url"),
     ZERO_EX_API_KEY: Joi.string().required().description("0x API key"),
 
-    CLIENT_URL: Joi.string().default("http://localhost:5173"),
+    CLIENT_URL: Joi.string().default("http://localhost:3000"),
 
     /**
      * Required ENV Vars

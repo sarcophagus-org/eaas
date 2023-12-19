@@ -9,12 +9,12 @@
     "start": "sc -p tsconfig.json && NODE_ENV=production NODE_PATH=./build ts-node --experimental-specifier-resolution=node ./src/index.ts",
     "migrate:list": "NODE_OPTIONS=\"--loader ts-node/esm\" knex migrate:list help",
     "migrate:make": "NODE_OPTIONS=\"--loader ts-node/esm\" knex migrate:make -x ts",
-    "migrate:latest": "NODE_OPTIONS=\"--loader ts-node/esm\" knex migrate:latest --migrations-directory ./src/database/migrations --env developmentlocal",
+    "migrate:latest": "NODE_OPTIONS=\"--loader ts-node/esm\" knex migrate:latest --migrations-directory ./src/database/migrations --env development",
     "migrate:latest:production": "NODE_OPTIONS=\"--loader ts-node/esm\" NODE_ENV=production knex migrate:latest --env production",
     "migrate:test": "NODE_OPTIONS=\"--loader ts-node/esm\" NODE_ENV=test knex migrate:latest --env test",
     "migrate:test:ci": "NODE_OPTIONS=\"--loader ts-node/esm\" NODE_ENV=test knex migrate:latest --env test --connection postgres://postgres:postgres@localhost:5432/eaas_db",
     "seed:make": "NODE_OPTIONS=\"--loader ts-node/esm\" knex seed:make",
-    "seed:dev": "NODE_OPTIONS=\"--loader ts-node/esm\" knex seed:run --env developmentlocal",
+    "seed:dev": "NODE_OPTIONS=\"--loader ts-node/esm\" knex seed:run --env development",
     "test": ""
   },
   "repository": {
@@ -34,12 +34,11 @@
     "chalk": "^5.0.1",
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
-    "ecies-geth": "^1.6.14",
     "ethers": "^5.7.2",
     "express": "^5.0.0-beta.1",
-    "firebase": "^9.16.0",
     "fs": "^0.0.1-security",
     "joi": "^17.11.0",
+    "jsonfile": "^6.1.0",
     "jsonwebtoken": "^9.0.2",
     "knex": "^3.0.1",
     "moment": "^2.29.4",
@@ -49,12 +48,12 @@
     "passport": "^0.6.0",
     "passport-jwt": "^4.0.1",
     "pg": "^8.11.3",
-    "pg-escape": "^0.2.0",
-    "shamirs-secret-sharing-ts": "^1.0.2"
+    "pg-escape": "^0.2.0"
   },
   "devDependencies": {
     "@multiformats/multiaddr": "^12.1.7",
     "@types/express": "^4.17.16",
+    "@types/jsonfile": "^6.1.4",
     "@types/multiparty": "^0.0.36",
     "@types/node": "^18.11.18",
     "body-parser": "^2.0.0-beta.1",

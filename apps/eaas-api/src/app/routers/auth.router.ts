@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { authController } from "../controllers";
 import { validateRequestBody } from "../middleware";
-import { resetPasswordSchema } from "../validationSchemas";
+import { forgotPasswordSchema, resetPasswordSchema } from "../validationSchemas";
 
 export const authRoute = "/auth";
 export const authRouter = () => {
@@ -16,7 +16,11 @@ export const authRouter = () => {
     validateRequestBody(resetPasswordSchema),
     authController.resetPassword,
   );
-  // router.post("/forgot-password", validateRequestBody(forgotPasswordSchema), forgotPassword);
+  router.post(
+    "/forgot-password",
+    validateRequestBody(forgotPasswordSchema),
+    authController.forgotPassword,
+  );
   router.post("/verify-email", authController.verifyEmail);
   // router.post(
   //   "/send-verification-email",

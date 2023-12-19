@@ -1,6 +1,6 @@
 import { EaasUser } from "../../../src/types/EaasUser";
 import { knex } from "../../../src/database";
-import { Invitation } from "../../../src/types/Invitation";
+import { Invitation, InviteWithStatus } from "../../../src/types/Invitation";
 import { tokenService } from "./token.service";
 import { userService } from "./user.service";
 import { emailService } from "./email.service";
@@ -87,9 +87,30 @@ const validateInviteToken = async (inviteToken: string): Promise<EaasUser | unde
  * @param userId
  * @returns
  */
-const getSenderInvitations = async (userId: string) => {
-  const users = await knex("invitations").select("invitations.*").where({ sender_id: userId });
-  return users;
+const getSenderInvitations = async (userId: string): Promise<InviteWithStatus[]> => {
+  const pendingInvitations: InviteWithStatus[] = await knex("invitations")
+    .select("id", "recipient_email", "created_at")
+    .where({ sender_id: userId })
+    .then((x) =>
+      x.map((x) => ({
+        id: x["id"],
+        clientEmail: x["recipient_email"],
+        status: "pending",
+      })),
+    );
+
+  const acceptedInvitations = await knex("embalmer_has_clients")
+    .join("users", "embalmer_has_clients.client_id", "users.id")
+    .select("users.email as recipient_email")
+    .where({ embalmer_id: userId })
+    .then((x) =>
+      x.map((x) => ({
+        clientEmail: x["recipient_email"],
+        status: "accepted",
+      })),
+    );
+
+  return [...pendingInvitations, ...acceptedInvitations];
 };
 
 /**

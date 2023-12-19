@@ -15,5 +15,11 @@ export const embalmRouter = () => {
     embalmController.runEmbalm,
   );
 
+  router.get(
+    "/archaeologist-config",
+    passport.authenticate("jwt", { session: false }),
+    embalmController.getArchaeologistConfig,
+  );
+
   return router;
 };

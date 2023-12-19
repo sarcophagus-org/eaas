@@ -1,6 +1,8 @@
-import { ArchaeologistExceptionCode, NodeSarcoClient } from "@sarcophagus-org/sarcophagus-v2-sdk";
+import { NodeSarcoClient } from "@sarcophagus-org/sarcophagus-v2-sdk";
 import { PreparedEncryptedPayload } from "../../../src/types/embalmPayload";
-import { envConfig } from "src/config/env.config";
+import { envConfig } from "../../../src/config/env.config";
+import { knex } from "../../../src/database";
+import { loadArchaeologistAddressesFromFile } from "../utils/loadArchaeologists";
 
 interface ArweaveUploadArgs {
   sarco: NodeSarcoClient;
@@ -9,9 +11,11 @@ interface ArweaveUploadArgs {
 }
 
 interface EmbalmOptions {
+  clientId: string;
+  sarcoId: string;
   resurrectionTime: number;
-  requiredArchaeologists: number;
   preparedEncryptedPayload: PreparedEncryptedPayload;
+  encryptedPdfStr: string;
 }
 
 const uploadEncryptedPayloadToArweave = async (args: ArweaveUploadArgs) => {
@@ -52,7 +56,8 @@ const uploadEncryptedPayloadToArweave = async (args: ArweaveUploadArgs) => {
 };
 
 async function runEmbalm(options: EmbalmOptions) {
-  const { resurrectionTime, preparedEncryptedPayload, requiredArchaeologists } = options;
+  const { resurrectionTime, preparedEncryptedPayload, clientId, sarcoId, encryptedPdfStr } =
+    options;
 
   const sarco = new NodeSarcoClient({
     chainId: envConfig.chainId,
@@ -63,20 +68,14 @@ async function runEmbalm(options: EmbalmOptions) {
 
   await sarco.init();
 
-  const allArchaeologists = await sarco.archaeologist
-    .getFullArchProfiles({ filterOffline: false })
+  const archaeologistsConfig = await loadArchaeologistAddressesFromFile();
+
+  const selectedArchaeologists = await sarco.archaeologist
+    .getFullArchProfiles({ filterOffline: false, addresses: archaeologistsConfig.addresses })
     .catch((error) => {
       console.error("Failed to get archaeologist profiles", error);
       throw error;
     });
-
-  const nArchs = preparedEncryptedPayload.innerEncryptedkeyShares.length;
-
-  // TODO: select archaeologists
-  // Possible logic: randomly select` nArchs * 2` archaeologists.
-  // Select `nArchs` of these with the lowest fees and attempt to negotiate with them.
-  // Replace unreachable archaeologists with the next lowest fee archaeologist in unselected backup list.
-  const selectedArchaeologists = allArchaeologists.slice(0, nArchs);
 
   await Promise.all(
     selectedArchaeologists.map(async (arch) => {
@@ -102,6 +101,7 @@ async function runEmbalm(options: EmbalmOptions) {
     selectedArchaeologists.forEach((arch) => {
       const res = negotiationResult.get(arch.profile.peerId)!;
       if (res.exception) {
+        // TODO: handle this more gracefully
         console.log("arch exception:", arch.profile.archAddress, res.exception);
         // Sentry.captureException(res.exception);
       } else {
@@ -125,20 +125,31 @@ async function runEmbalm(options: EmbalmOptions) {
     });
 
     const { submitSarcophagusArgs } = sarco.utils.formatSubmitSarcophagusArgs({
-      name: `${preparedEncryptedPayload.encryptedPayloadMetadata.fileName}-${Date.now()}}`,
+      name: `${preparedEncryptedPayload.encryptedPayloadMetadata.fileName}-${Date.now()}`,
+      sarcophagusId: sarcoId,
       recipientPublicKey: preparedEncryptedPayload.recipientPublicKey,
       resurrection: resurrectionTime,
       selectedArchaeologists,
-      requiredArchaeologists,
+      requiredArchaeologists: archaeologistsConfig.requiredArchaeologists,
       negotiationTimestamp,
       archaeologistPublicKeys,
       archaeologistSignatures,
       arweaveTxId: sarcophagusPayloadTxId,
     });
 
-    ArchaeologistExceptionCode;
-    const tx = await sarco.api.createSarcophagus(...submitSarcophagusArgs);
-    await tx.wait();
+    await sarco.api.createSarcophagus(...submitSarcophagusArgs);
+
+    const { embalmer_id } = await knex("embalmer_has_clients")
+      .where({ client_id: clientId })
+      .select("embalmer_id")
+      .then((x) => x[0]);
+
+    await knex("created_sarcophagi").insert({
+      id: submitSarcophagusArgs[0],
+      client_id: clientId,
+      embalmer_id,
+      encrypted_pdf: encryptedPdfStr,
+    });
   } catch (e) {
     //   const errorMsg = handleRpcError(e);
     //   Sentry.captureException(errorMsg, { fingerprint: ['CREATE_SARCOPHAGUS_FAILURE'] });
@@ -147,6 +158,26 @@ async function runEmbalm(options: EmbalmOptions) {
   }
 }
 
+let cachedPreparePayloadArchConfig:
+  | {
+      count: number;
+      threshold: number;
+    }
+  | undefined;
+
+async function getArchaeologistConfig() {
+  if (cachedPreparePayloadArchConfig === undefined) {
+    const archaeologistsConfig = await loadArchaeologistAddressesFromFile();
+    cachedPreparePayloadArchConfig = {
+      count: archaeologistsConfig.addresses.length,
+      threshold: archaeologistsConfig.requiredArchaeologists,
+    };
+  }
+
+  return cachedPreparePayloadArchConfig;
+}
+
 export const embalmService = {
   runEmbalm,
+  getArchaeologistConfig,
 };

@@ -21,6 +21,16 @@ export interface ApiErrors {
   invalidInvitationToken: ApiError;
   noInvitationLinked: ApiError;
   invitationNotFound: ApiError;
+  fetchSarcophagiFailure: ApiError;
+  fetchSarcoClientEmailFailure: ApiError;
+  rewrapSarcophagusFailure: ApiError;
+  burySarcophagusFailure: ApiError;
+  cleanSarcophagusFailure: ApiError;
+  loadArchaeologistsFailure: ApiError;
+  downloadRecipientPdfFailure: ApiError;
+  noRecipientPdf: ApiError;
+  incorrectPdfPassword: ApiError;
+  editSarcophagusError: (e: string) => ApiError;
 }
 
 export const apiErrors: ApiErrors = {
@@ -62,7 +72,7 @@ export const apiErrors: ApiErrors = {
   },
   tokenExpired: {
     msg: "token expired",
-    errorCode: 404,
+    errorCode: 400,
   },
   noUserFoundOnToken: {
     msg: "no user found on token",
@@ -92,4 +102,44 @@ export const apiErrors: ApiErrors = {
     msg: "invitation not found",
     errorCode: 404,
   },
+  fetchSarcophagiFailure: {
+    msg: "failed to fetch sarcophagi",
+    errorCode: 500,
+  },
+  fetchSarcoClientEmailFailure: {
+    msg: "failed to fetch sarcophagus client email",
+    errorCode: 500,
+  },
+  rewrapSarcophagusFailure: {
+    msg: "failed to rewrap sarcophagus",
+    errorCode: 500,
+  },
+  burySarcophagusFailure: {
+    msg: "failed to bury sarcophagus",
+    errorCode: 500,
+  },
+  cleanSarcophagusFailure: {
+    msg: "failed to clean sarcophagus",
+    errorCode: 500,
+  },
+  loadArchaeologistsFailure: {
+    msg: "failed to load archaeologists",
+    errorCode: 500,
+  },
+  downloadRecipientPdfFailure: {
+    msg: "failed to download recipient pdf",
+    errorCode: 500,
+  },
+  noRecipientPdf: {
+    msg: "no recipient pdf",
+    errorCode: 404,
+  },
+  incorrectPdfPassword: {
+    msg: "incorrect pdf password",
+    errorCode: 400,
+  },
+  editSarcophagusError: (msg: string) => ({
+    msg,
+    errorCode: 400,
+  }),
 };
