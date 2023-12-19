@@ -13,6 +13,7 @@ import {
 } from "@chakra-ui/react";
 import { useDispatch } from "../store";
 import { setTokens, setUser } from "../store/user/actions";
+import { PasswordInput } from "./components/passwordInput";
 
 export const Login = () => {
   const [email, setEmail] = useState("");
@@ -24,10 +25,6 @@ export const Login = () => {
 
   const handleUsernameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(event.target.value);
-  };
-
-  const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setPassword(event.target.value);
   };
 
   const handleSubmit = async (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
@@ -58,7 +55,7 @@ export const Login = () => {
 
       <FormControl id="password">
         <FormLabel>Password</FormLabel>
-        <Input type="password" value={password} onChange={handlePasswordChange} />
+        <PasswordInput value={password} onChange={setPassword} />
       </FormControl>
 
       <Button colorScheme="blue" type="submit" onClick={handleSubmit}>
