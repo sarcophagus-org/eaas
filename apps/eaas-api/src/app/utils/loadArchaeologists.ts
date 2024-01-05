@@ -1,6 +1,7 @@
 import jsonfile from "jsonfile";
 import { apiErrors } from "./errors";
 
+
 interface ArchaeologistsConfig {
   addresses: string[];
   requiredArchaeologists: number;

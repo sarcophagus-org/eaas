@@ -1,9 +1,11 @@
-## Quick Start
+# Quick Start
 
-### Setup env
+## Setup env
+
+#### Archaeologists
+Setup the archaeologists that the eaas service will use, along with your desired threshold.
 
 From project root:
-
 - `cd apps/eaas-api && cp .env.example .env`
 - `cp archaeologists.example.json archaeologists.json`
 - `nano .env`
@@ -12,9 +14,15 @@ From project root:
   - Set `requiredArchaeologists` to the number of archaeologists you want to be present during resurrection (threshold)
   - Set `addresses` to an array of the addresses of your preferred archaeologists
   - Whenever you want to update your preferred archaeologists and threshold, you can do so by updating this file
+
+#### ENV File
 - `cd ../eaas-interface && cp .env.example .env`
 
-### Start the API
+`CHAIN_ID` is the chain that the service will run on.
+
+All env vars are required.
+
+## Start the API
 
 From project root:
 
@@ -26,7 +34,7 @@ If this is the first time running the API docker container, or if the database h
 - `npm run migrate:latest`
 - `npm run seed:dev`
 
-### Start the interface
+## Start the interface
 
 From interface directory (`cd apps/eaas-client`):
 
