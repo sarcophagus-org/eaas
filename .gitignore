@@ -7,3 +7,4 @@ archaeologists.json
 build
 build/*
 apps/eaas-api/build/tsconfig.tsbuildinfo
+.idea/
